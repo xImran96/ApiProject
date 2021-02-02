@@ -1,0 +1,49 @@
+version: "3.7"
+
+# Services
+services:
+  # PHP Service
+  app:
+    tty: true
+    build: .docker/app
+    environment:
+      XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9000 remote_enable=1
+    depends_on:
+      - mysql
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./:/var/www/html
+    # env_file: .env
+    privileged: true
+
+  # Mysql Service
+  mysql:
+    image: "mysql:5.7"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=app
+    volumes:
+      - "mysqldata:/bitnami"
+
+  # PhpMyAdmin Service
+  phpmyadmin:
+    image: "phpmyadmin/phpmyadmin"
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: mysql
+    depends_on:
+      - mysql
+    volumes:
+      - .docker/php/upload.ini:/usr/local/etc/php/conf.d/php-phpmyadmin.ini
+
+  # Redis Service
+  redis:
+    image: redis
+
+# Volumes
+volumes:
+  mysqldata:
+    driver: local
