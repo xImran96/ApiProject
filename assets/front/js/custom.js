@@ -1183,8 +1183,10 @@ prices = $(".product-attr:checked").map(function() {
                     url:mainurl+"/addbyone",
                     data:{id:pid,itemid:itemid,size_qty:size_qty,size_price:size_price},
                     success:function(data){
-                        if(data == 0)
+
+                        if(data == 0 || data[0]==-1)
                         {
+                          
                         }
                         else
                         {
@@ -1228,14 +1230,18 @@ prices = $(".product-attr:checked").map(function() {
                     url:mainurl+"/reducebyone",
                     data:{id:pid,itemid:itemid,size_qty:size_qty,size_price:size_price},
                     success:function(data){
-                        $(".discount").html($("#d-val").val());
-                        $(".cart-total").html(data[0]);
-                        $(".main-total").html(data[3]);
-                        $(".coupon-total").val(data[3]);
-                        $("#prc"+itemid).html(data[2]);
-                        $("#prct"+itemid).html(data[4]);
-                        $("#cqt"+itemid).html(data[1]);
-                        $("#qty"+itemid).html(data[1]);
+                      if(data[0]!=-1)
+                      {
+                          $(".discount").html($("#d-val").val());
+                          $(".cart-total").html(data[0]);
+                          $(".main-total").html(data[3]);
+                          $(".coupon-total").val(data[3]);
+                          $("#prc"+itemid).html(data[2]);
+                          $("#prct"+itemid).html(data[4]);
+                          $("#cqt"+itemid).html(data[1]);
+                          $("#qty"+itemid).html(data[1]);
+                        } 
+                 
                       }
               });
          }

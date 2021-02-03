@@ -20,11 +20,11 @@
 	    <meta property="og:title" content="{{$productt->name}}" />
 	    <meta property="og:description" content="{{ $productt->meta_description != null ? $productt->meta_description : strip_tags($productt->description) }}" />
 	    <meta property="og:image" content="{{asset('assets/images/thumbnails/'.$productt->thumbnail)}}" />
-	    <meta name="author" content="GeniusOcean">
+	    <meta name="author" content="hareer">
     	<title>{{substr($productt->name, 0,11)."-"}}{{$gs->title}}</title>
     @else
 	    <meta name="keywords" content="{{ $seo->meta_keys }}">
-	    <meta name="author" content="GeniusOcean">
+	    <meta name="author" content="hareer">
 		<title>{{$gs->title}}</title>
     @endif
 	<!-- favicon -->
@@ -221,7 +221,7 @@
 								<select name="category" id="category_select" class="categoris">
 									<option value="">{{ $langg->lang1 }}</option>
 									@foreach($categories as $data)
-									<option value="{{ $data->slug }}" {{ Request::route('category') == $data->slug ? 'selected' : '' }}>{{ $data->name }}</option>
+									<option value="{{ $data->slug }}" {{ Request::route('category') == $data->slug ? 'selected' : '' }}>@if(Session::get('language')==2) {{ $data->name_ar }} @else {{$data->name_en}} @endif</option>
 									@endforeach
 								</select>
 							</div>
@@ -396,7 +396,7 @@
 @yield('content')
 
 	<!-- Footer Area Start -->
-	<footer class="footer" id="footer" style="background: #fbcc3b">
+	<footer class="footer" id="footer" style="background: #000000">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-6 col-lg-4">

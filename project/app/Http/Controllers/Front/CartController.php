@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Currency;
 use App\Models\Coupon;
 use App\Models\Generalsetting;
+use Auth;
 use Session;
 
 class CartController extends Controller
@@ -544,6 +545,8 @@ class CartController extends Controller
 
     public function addbyone()
     {
+        if(Auth::guard('web')->check())
+        {
         if (Session::has('coupon')) {
             Session::forget('coupon');
         }
@@ -657,13 +660,18 @@ class CartController extends Controller
             $data[2] = $data[2].$curr->sign;
             $data[3] = $data[3].$curr->sign;
             $data[4] = $data[4].$curr->sign;
-        }     
+        }
+    }else {
+        $data[0]=-1;
+    }     
         return response()->json($data);          
     }  
 
     public function reducebyone()
     {
-    
+        if(Auth::guard('web')->check())
+    {
+
         if (Session::has('coupon')) {
             Session::forget('coupon');
         }
@@ -773,8 +781,13 @@ class CartController extends Controller
             $data[2] = $data[2].$curr->sign;
             $data[3] = $data[3].$curr->sign;
             $data[4] = $data[4].$curr->sign;
-        }       
-        return response()->json($data);        
+        } 
+    }
+    else {
+        $data[0]=-1;
+    }     
+        return response()->json($data);  
+          
     }  
 
     public function upcolor()

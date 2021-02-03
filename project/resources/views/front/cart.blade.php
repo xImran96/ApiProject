@@ -280,7 +280,8 @@ if(qty<min_order_qty)
                 url:mainurl+"/reducebyone",
                 data:{id:pid,itemid:itemid,size_qty:size_qty,size_price:size_price},
                 success:function(data){
-              
+              if(data[0]!=-1)
+                {
                     $(".discount").html($("#d-val").val());
                     $(".cart-total").html(data[0]);
                     $(".main-total").html(data[3]);
@@ -289,7 +290,8 @@ if(qty<min_order_qty)
                     $("#prct"+itemid).html(data[4]);
                     $("#cqt"+itemid).html(data[1]);
                     $("#qty"+itemid).html(data[1]);
-                  }
+                  } 
+                }
           });
      }
     //  $('.xloader').addClass('d-none');
