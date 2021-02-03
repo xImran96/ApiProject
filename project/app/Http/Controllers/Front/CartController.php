@@ -58,7 +58,7 @@ class CartController extends Controller
 
    public function addtocart($id)
     {
-        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
+        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name_en','name_ar','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
 
         // Set Attrubutes
 
@@ -191,7 +191,7 @@ class CartController extends Controller
 
    public function addcart($id)
     {
-        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
+        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name_en','name_ar','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
 
 
         // Set Attrubutes
@@ -339,7 +339,7 @@ class CartController extends Controller
         }
 
         $size_price = ($size_price / $curr->value);
-        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
+        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name_en','name_ar','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
 
 
         if($prod->user_id != 0){
@@ -447,7 +447,7 @@ class CartController extends Controller
         }
 
         $size_price = ($size_price / $curr->value);
-        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
+        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name_en','name_ar','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
 
         if (Session::has('language')) 
         {
@@ -560,7 +560,7 @@ class CartController extends Controller
         $itemid = $_GET['itemid'];
         $size_qty = $_GET['size_qty'];
         $size_price = $_GET['size_price'];
-        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
+        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name_en','name_ar','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
 
         if($prod->user_id != 0){
         $gs = Generalsetting::findOrFail(1);
@@ -682,7 +682,7 @@ class CartController extends Controller
         $size_qty = $_GET['size_qty'];
   
         $size_price = $_GET['size_price'];
-        $prod = Product::where('id','=',$id)->first(['id','user_id','min_order_qty','slug','name','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
+        $prod = Product::where('id','=',$id)->first(['id','user_id','min_order_qty','slug','name_en','name_ar','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
 
         if($prod->min_order_qty)
         if($prod->user_id != 0){
@@ -781,7 +781,7 @@ class CartController extends Controller
     {
          $id = $_GET['id'];
          $color = $_GET['color'];
-        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
+        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name_en','name_ar','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
          $oldCart = Session::has('cart') ? Session::get('cart') : null;
          $cart = new Cart($oldCart);
          $cart->updateColor($prod,$id,$color);  

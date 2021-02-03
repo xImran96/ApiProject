@@ -104,6 +104,7 @@ class Cart extends Model
 // **************** ADD TO CART MULTIPLE *******************
 
     public function addnum($item, $id, $qty, $size, $color, $size_qty, $size_price, $size_key, $keys, $values) {
+        $qty=(int)$qty;
         $size_cost = 0;
         $storedItem = ['qty' => 0,'size_key' => 0, 'size_qty' =>  $item->size_qty,'size_price' => $item->size_price, 'size' => $item->size, 'color' => $item->color, 'stock' => $item->stock, 'price' => $item->price, 'item' => $item, 'license' => '', 'dp' => '0','keys' => $keys, 'values' => $values,'item_price' => $item->price];
         if($item->type == 'Physical')
@@ -122,6 +123,7 @@ class Cart extends Model
                 }
             }
         }
+
         $storedItem['qty'] = $storedItem['qty'] + $qty;
         $stck = (string)$item->stock;
         if($stck != null){
