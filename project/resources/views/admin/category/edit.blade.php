@@ -20,7 +20,7 @@
                             </div>
                           </div>
                           <div class="col-lg-7">
-                            <input type="text" class="input-field" name="name_en" placeholder="{{ __('Enter Name') }}" required="" value="{{$data->name_en)}}">
+                            <input type="text" class="input-field" name="name_en" placeholder="{{ __('Enter Name') }}" required="" value="{{$data->name_en}}">
                           </div>
                         </div>
 

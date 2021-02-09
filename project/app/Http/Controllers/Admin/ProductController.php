@@ -14,6 +14,7 @@ use App\Models\Attribute;
 use App\Models\AttributeOption;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 use Validator;
@@ -80,7 +81,7 @@ class ProductController extends Controller
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
                             ->editColumn('name', function(Product $data) {
-                                $name =  mb_strlen($data->name,'UTF-8') > 50 ? mb_substr($data->name,0,50,'UTF-8').'...' : $data->name;
+                                $name =  mb_strlen($data->name_ar,'UTF-8') > 50 ? mb_substr($data->name_ar,0,50,'UTF-8').'...' : $data->name_ar;
              
                                 $id = '<small>'.__("ID").': <a href="'.route('front.product', $data->slug).'" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
 
@@ -125,8 +126,8 @@ class ProductController extends Controller
 
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
-                            ->editColumn('name_ar', function(Product $data) {
-                                $name = mb_strlen(strip_tags($data->name),'utf-8') > 50 ? mb_substr(strip_tags($data->name_ar),0,50,'utf-8').'...' : strip_tags($data->name_ar);
+                            ->editColumn('name', function(Product $data) {
+                                $name = mb_strlen(strip_tags($data->name_en),'utf-8') > 50 ? mb_substr(strip_tags($data->name_en),0,50,'utf-8').'...' : strip_tags($data->name_en);
                                 $id = '<small>ID: <a href="'.route('front.product', $data->slug).'" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
 
                                 $id3 = $data->type == 'Physical' ?'<small class="ml-2"> SKU: <a href="'.route('front.product', $data->slug).'" target="_blank">'.$data->sku.'</a>' : '';
@@ -747,14 +748,14 @@ class ProductController extends Controller
         $cats = Category::all();
         $data = Product::findOrFail($id);
         $sign = Currency::where('is_default','=',1)->first();
-
+        $vendors=User::where('is_vendor',2)->get();
 
         if($data->type == 'Digital')
-            return view('admin.product.edit.digital',compact('cats','data','sign'));
+            return view('admin.product.edit.digital',compact('cats','data','sign','vendors'));
         elseif($data->type == 'License')
-            return view('admin.product.edit.license',compact('cats','data','sign'));
+            return view('admin.product.edit.license',compact('cats','data','sign','vendors'));
         else
-            return view('admin.product.edit.physical',compact('cats','data','sign'));
+            return view('admin.product.edit.physical',compact('cats','data','sign','vendors'));
     }
 
     //*** POST Request

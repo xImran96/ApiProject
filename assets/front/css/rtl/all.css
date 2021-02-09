@@ -5919,9 +5919,9 @@ Logo Header Area Start
         color: #333;
         }
         .logo-header .search-box .categori-container .categoris option {
-          background: #143250; }
+          background: #FFFFFF; }
           .logo-header .search-box .categori-container .categoris option:hover {
-            background: #ff5500; }
+            background: #fbcc3b; }
     .logo-header .search-box .search-form {
       padding-right: 160px;
       position: relative; }
@@ -14161,8 +14161,8 @@ input[type=checkbox]:checked:disabled + label:before {
   color: #fff;
   font-size: 15px;
   text-align: left;
-  background: #143250;
-  border: 0.5px solid #143250;
+  background: #eeeeee;
+  border: 0.5px solid #01060c;
 }
 
 .docname a {

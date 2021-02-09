@@ -15,6 +15,7 @@
 				<div class="row">
 					<div class="col-lg-9">
 						<div class="row">
+						
 							@foreach($best_products as $prod)
 								@include('includes.product.home-product')
 							@endforeach

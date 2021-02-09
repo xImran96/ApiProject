@@ -137,6 +137,7 @@ class FrontendController extends Controller
         $sliders = DB::table('sliders')->get();
         $top_small_banners = DB::table('banners')->where('type','=','TopSmall')->get();
         $ps = DB::table('pagesettings')->find(1);
+        $vendors=User::whereIn('id',[123,30,328])->get();
         $feature_products =  Product::with('user')->where('featured','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(8)->get()->reject(function($item){
 
             if($item->user_id != 0){
@@ -148,7 +149,7 @@ class FrontendController extends Controller
 
           });
 
-	    return view('front.index',compact('ps','sliders','top_small_banners','feature_products'));
+	    return view('front.index',compact('ps','sliders','top_small_banners','feature_products','vendors'));
 	}
 
     public function extraIndex()
@@ -162,84 +163,85 @@ class FrontendController extends Controller
         $selectable = ['id','user_id','name_en','name_ar','slug','features','colors','thumbnail','price','previous_price','attributes','size','size_price','discount_date'];
         $discount_products =  Product::with('user')->where('is_discount','=',1)->where('status','=',1)->orderBy('id','desc')->take(8)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $best_products = Product::with('user')->where('best','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(6)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $top_products = Product::with('user')->where('top','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(8)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $big_products = Product::with('user')->where('big','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(6)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $hot_products =  Product::with('user')->where('hot','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(9)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $latest_products =  Product::with('user')->where('latest','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(9)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $trending_products =  Product::with('user')->where('trending','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(9)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $sale_products =  Product::with('user')->where('sale','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(9)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
+        
         return view('front.extraindex',compact('ps','services','reviews','large_banners','bottom_small_banners','best_products','top_products','hot_products','latest_products','big_products','trending_products','sale_products','discount_products','partners'));
     }
 
@@ -284,13 +286,13 @@ class FrontendController extends Controller
     {
         if(mb_strlen($slug,'utf-8') > 1){
             $search = $slug;
-            $prods = Product::where('status','=',1)->where('name', 'LIKE', "%{$search}%")->orWhere('name->ar', 'LIKE', "%{$search}%")->orWhere('name', 'like', $slug . '%')->take(10)->get()->reject(function($item){
+            $prods = Product::where('status','=',1)->where('name_en', 'LIKE', "%{$search}%")->orWhere('name_ar', 'LIKE', "%{$search}%")->orWhere('sku',$slug)->take(10)->get()->reject(function($item){
 
-                if($item->user_id != 0){
-                  if($item->user->is_vendor != 2){
-                    return true;
-                  }
-                }
+                // if($item->user_id != 0){
+                //   if($item->user->is_vendor != 2){
+                //     return true;
+                //   }
+                // }
                     return false;
             });
 

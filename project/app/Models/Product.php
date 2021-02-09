@@ -383,10 +383,15 @@ class Product extends Model
     }
 
     public function showName() {
-        if(Session::get('language')==2) 
-        $name = mb_strlen( $this->name_ar,'utf-8') > 55 ? mb_substr( $this->name_ar,0,55,'utf-8').'...' :  $this->name_ar; 
-         else
-         $name = mb_strlen($this->name_en,'utf-8') > 55 ? mb_substr($this->name_en,0,55,'utf-8').'...' : $this->name_en;
+        if(Session::get('language')==2) {
+            $name = mb_strlen( $this->name_ar,'utf-8') > 55 ? mb_substr( $this->name_ar,0,55,'utf-8').'...' :  $this->name_ar; 
+
+        }
+         else 
+         {
+            $name = mb_strlen($this->name_en,'utf-8') > 55 ? mb_substr($this->name_en,0,55,'utf-8').'...' : $this->name_en;
+
+         }
         return $name;
     }
 

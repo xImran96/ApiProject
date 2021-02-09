@@ -320,7 +320,7 @@
 									</div>
 
 								@else
-									<a href="{{ route('front.category',$category->slug) }}"><img src="{{ asset('assets/images/categories/'.$category->photo) }}"> {{ $category->name }}</a>
+									<a href="{{ route('front.category',$category->slug) }}"><img src="{{ asset('assets/images/categories/'.$category->photo) }}">@if(Session::get('language')==2)   {{ $category->name_ar }} @else  {{ $category->name_en }} @endif</a>
 
 								@endif
 									@if(count($category->subs) > 0)

@@ -11,17 +11,17 @@
                </li>
                @if (!empty($cat))
                <li>
-                  <a href="{{route('front.category', $cat->slug)}}">{{ $cat->name }}</a>
+                  <a href="{{route('front.category', $cat->slug)}}">@if(Session::get('language')==2) {{ $cat->name_ar }} @else {{$cat->name_en}} @endif</a>
                </li>
                @endif
                @if (!empty($subcat))
                <li>
-                  <a href="{{route('front.category', [$cat->slug, $subcat->slug])}}">{{ $subcat->name }}</a>
+                  <a href="{{route('front.category', [$cat->slug, $subcat->slug])}}">@if(Session::get('language')==2) {{ $subcat->name_ar }} @else {{$subcat->name_en}} @endif</a>
                </li>
                @endif
                @if (!empty($childcat))
                <li>
-                  <a href="{{route('front.category', [$cat->slug, $subcat->slug, $childcat->slug])}}">{{ $childcat->name }}</a>
+                  <a href="{{route('front.category', [$cat->slug, $subcat->slug, $childcat->slug])}}">@if(Session::get('language')==2) {{ $childcat->name_ar }} @else {{$childcat->name_en}} @endif</a>
                </li>
                @endif
                @if (empty($childcat) && empty($subcat) && empty($cat))

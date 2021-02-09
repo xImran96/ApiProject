@@ -65,7 +65,7 @@
 						<a href="{{ route('front.category',$cat->slug) }}" class="single-category">
 							<div class="left">
 								<h5 class="title">
-									{{ $cat->name }}
+									@if(Session::get('language')==2) {{ $cat->name_ar }} @else {{$cat->name_en}} @endif
 								</h5>
 								<p class="count">
 									{{ count($cat->products) }} {{ $langg->lang4 }}
@@ -101,9 +101,29 @@
 				<div class="row">
 					<div class="col-lg-12 remove-padding">
 						<div class="trending-item-slider">
-							@foreach($feature_products as $prod)
-								@include('includes.product.slider-product')
-							@endforeach
+						
+							@foreach($vendors as $vender)
+							<a href="{{ route('front.vendor', $vender->shop_name) }}" class="item">
+								<div class="item-img">
+								
+								
+									<img class="img-fluid" src="{{ $vender->photo ? asset('assets/images/users/'.$vender->photo):asset('assets/images/noimage.png') }}" alt="">
+								</div>
+								<div class="info">
+								
+											<h5 class="name">{{ $vender->shop_name }}</h5>
+								</div>
+
+								<h4 class="price"><span class="add-to-cart-quick add-to-cart-btn login-to-show-price"
+									data-href="{{ route('front.vendor', $vender->shop_name) }}">
+									<i class="icofont-eye"></i> {{ $langg->lang249 }}
+					
+								</span></h4>
+							</a>
+							@endforeach  
+							{{--  {{--  @foreach($feature_products as $prod)
+								@include('includes.product.slider-product')  --}}
+						
 						</div>
 					</div>
 
