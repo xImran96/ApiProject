@@ -18,19 +18,30 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    protected function userToken(){
+    private function userToken()
+    {
         $value = request()->header('authorization');
         $values = explode(" ", $value);
-        return $value[1];
+        return $values[1];
     }
+
 
 
     public function index()
     { 
-       $token = $this->userToken();     
-        $user = User::where('token', $token)->first();
-        $datas = $user->orders;
-        return response()->json($datas);
+        try {
+            $user = User::where('token', $this->userToken())->first();
+             if(count($user->orders)!=0){
+                 return response()->json(['status'=>'Success 200', 'orders'=>$user->orders]);
+             }else{
+                 return response()->json(['status'=>'Not Found 404', 'orders'=>`You Don't Have Any Orders`]);  
+             }
+
+     } catch (\Throwable $th) {
+         return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+     }
+        
+
     } 
 
     /**

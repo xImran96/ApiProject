@@ -28,13 +28,13 @@ Route::post('login', 'Api\AuthController@login');
 
 
 Route::middleware('jwt.verify')->group(function () {
-
+    
     Route::resource('/products', 'Api\ProductController');
     Route::resource('/invoices','Api\InvoiceController');
     Route::resource('/categories', 'Api\CategoriesController');
     Route::resource('/orders', 'Api\OrdersController');
    
-
+    
     
 });
   

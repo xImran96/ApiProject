@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\User;
 
 class ProductController extends Controller
 {
@@ -14,22 +15,30 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    protected function userToken(){
+
+    private function userToken()
+    {
         $value = request()->header('authorization');
         $values = explode(" ", $value);
-        return $value[1];
-
+        return $values[1];
     }
 
-    
+
     public function index()
     {
-  
-        $token = $this->userToken();     
-        $user = User::where('token', $token)->first();
-        $datas = $user->myProducts;
-        return response()->json($datas);
         
+        
+            try {
+                   $user = User::where('token', $this->userToken())->first();
+                    if(count($user->myProducts)!=0){
+                        return response()->json(['status'=>'Success 200', 'products'=>$user->myProducts]);
+                    }else{
+                        return response()->json(['status'=>'Not Found 404', 'products'=>`You Don't Have Any Imports`]);  
+                    }
+
+            } catch (\Throwable $th) {
+                return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+            }
         
     }
 

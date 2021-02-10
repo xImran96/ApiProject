@@ -313,7 +313,7 @@
 
 
 
-                                @if(count(auth()->user()->myProducts->where('product_id' , $productt->id)) == 0)
+                      @if(count(auth()->user()->myProducts->where('product_id' , $productt->id)) == 0)
 
                                  <li class="addtocart">
                                     <button class="btn-warning btn" data-toggle="modal" data-target="#exampleModal">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Invoice;
+use App\Models\User;
 
 class InvoiceController extends Controller
 {
@@ -13,21 +14,34 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    protected function userToken(){
+
+    private function userToken()
+    {
         $value = request()->header('authorization');
         $values = explode(" ", $value);
-        return $value[1];
-
+        return $values[1];
     }
+
+
 
     public function index()
-    {
-        $token = $this->userToken();     
-        $user = User::where('token', $token)->first();
-        $datas = $user->orders;
-        return response()->json($datas);
-    }
+    { 
+        
+        try {
+            $user = User::where('token', $this->userToken())->first();
+             if(count($user->invoices)!=0){
+                 return response()->json(['status'=>'Success 200', 'invoices'=>$user->invoices]);
+             }else{
+                 return response()->json(['status'=>'Not Found 404', 'orders'=>`You Don't Have Any Invoices`]);  
+             }
 
+     } catch (\Throwable $th) {
+         return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+     }
+        
+
+    } 
+   
     /**
      * Show the form for creating a new resource.
      *
