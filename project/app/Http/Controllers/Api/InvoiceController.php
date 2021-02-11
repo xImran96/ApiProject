@@ -36,7 +36,7 @@ class InvoiceController extends Controller
              }
 
      } catch (\Throwable $th) {
-         return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+         return response()->json(['status'=>'500', 'Error'=>$th]);
      }
         
 
@@ -71,6 +71,7 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
+         try {
         if(!Invoice::where('id',$id)->exists())
         {
             return "Sorry the page does not exist.";
@@ -78,6 +79,9 @@ class InvoiceController extends Controller
         $invoice = Invoice::findOrFail($id);
        
         return response()->json(['success'=>$invoice]);
+         }catch(\Throwable $th){
+     return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+    }
     }
 
     /**

@@ -62,6 +62,7 @@ class OrdersController extends Controller
      */
     public function store(Request $request)
     {
+        try{
         $order  = new Order;
         $order->user_id =  $request->user_id;
         $order->cart =    $request->cart;
@@ -157,6 +158,9 @@ class OrdersController extends Controller
        }else{
         return response()->json(['error'=>'something went wrong']);
        }
+        }catch(\Throwable $th){
+     return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+    }
       
 
 
@@ -170,6 +174,7 @@ class OrdersController extends Controller
      */
     public function show($id)
     {
+        try{
         if(!Order::where('id',$id)->exists())
         {
             return "Sorry the page does not exist.";
@@ -177,6 +182,9 @@ class OrdersController extends Controller
         $order = Order::findOrFail($id);
        
         return response()->json(['success'=>$order]);
+         }catch(\Throwable $th){
+     return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+    }
     //    return $order;
     }
 

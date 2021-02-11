@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\User;
-
+use App\ImportProduct;
 class ProductController extends Controller
 {
     /**
@@ -71,8 +71,31 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+    //       try {
+    //                $user = User::where('token', $this->userToken())->first();
+    //                 if(count($user->myProducts)!=0){
+    //                     return response()->json(['status'=>'Success 200', 'products'=>$user->myProducts]);
+
+    //                 }else{
+    //                     return response()->json(['status'=>'Not Found 404', 'products'=>`You Don't Have Any Imports`]);  
+    //                 }
+
+    //         } catch (\Throwable $th) {
+    //             return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+    //         }
+         try {
+         if(!ImportProduct::where('id',$id)->exists())
+        {
+            return "Sorry the page does not exist.";
+        }
+        $roduct = ImportProduct::findOrFail($id);
+       
+        return response()->json(['success'=>$roduct]);
+    }catch(\Throwable $th){
+     return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
     }
+    }
+
 
     /**
      * Show the form for editing the specified resource.

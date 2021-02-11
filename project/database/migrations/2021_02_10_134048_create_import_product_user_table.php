@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateImportproductsUserTable extends Migration
+class CreateImportProductUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,8 +15,8 @@ class CreateImportproductsUserTable extends Migration
     {
         Schema::create('import_product_user', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unsigned()->nullabe()->index();
-            $table->integer('import_product_id')->unsigned()->nullabe()->index();
+            $table->integer('user_id')->unsigned()->nullable()->index();
+            $table->integer('import_product_id')->unsigned()->nullable()->index();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateImportproductsUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('importproduct_user');
+        Schema::dropIfExists('import_product_user');
     }
 }
