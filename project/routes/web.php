@@ -1060,6 +1060,9 @@ Route::prefix('vendor')->group(function() {
   // Vendor Dashboard
   Route::get('/dashboard', 'Vendor\VendorController@index')->name('vendor-dashboard');
 
+  Route::get('/catalog', 'Vendor\VendorController@index')->name('vendor-catalog');
+
+
 
     //IMPORT SECTION
     Route::get('/products/import/create', 'Vendor\ImportController@createImport')->name('vendor-import-create');

@@ -134,7 +134,7 @@
 							</li>
 
 							<li>
-								<a href="{{ route('vendor-dashboard') }}" class="wave-effect "><i class="fa fa-home mr-2"></i>
+								<a href="{{ route('vendor-catalog') }}" class="wave-effect "><i class="fa fa-home mr-2"></i>
 									<!-- {{ $langg->lang441 }} -->
 									Catalog
 								</a>
