@@ -132,6 +132,13 @@
 							<li>
 								<a href="{{ route('vendor-dashboard') }}" class="wave-effect "><i class="fa fa-home mr-2"></i>{{ $langg->lang441 }}</a>
 							</li>
+
+							<li>
+								<a href="{{ route('vendor-catalog') }}" class="wave-effect "><i class="fa fa-home mr-2"></i>
+									<!-- {{ $langg->lang441 }} -->
+									Catalog
+								</a>
+							</li>
 							<li>
 								<a href="#order" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false"><i class="fas fa-hand-holding-usd"></i>{{ $langg->lang442 }}</a>
 								<ul class="collapse list-unstyled" id="order" data-parent="#accordion" >
