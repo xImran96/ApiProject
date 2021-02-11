@@ -38,7 +38,8 @@
               @if(Auth::user()->IsVendor())
                 <li>
                   <a href="{{ route('vendor-dashboard') }}">
-                    {{ $langg->lang230 }}
+                    <!-- {{ $langg->lang230 }} -->
+                    Drop Shipping
                   </a>
                 </li>
               @endif

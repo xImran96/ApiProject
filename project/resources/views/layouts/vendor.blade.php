@@ -132,6 +132,13 @@
 							<li>
 								<a href="{{ route('vendor-dashboard') }}" class="wave-effect "><i class="fa fa-home mr-2"></i>{{ $langg->lang441 }}</a>
 							</li>
+
+							<li>
+								<a href="{{ route('vendor-dashboard') }}" class="wave-effect "><i class="fa fa-home mr-2"></i>
+									<!-- {{ $langg->lang441 }} -->
+									Catalog
+								</a>
+							</li>
 							<li>
 								<a href="#order" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false"><i class="fas fa-hand-holding-usd"></i>{{ $langg->lang442 }}</a>
 								<ul class="collapse list-unstyled" id="order" data-parent="#accordion" >
@@ -203,6 +210,47 @@
 	                                @endif
                                     <li>
                                     	<a href="{{ route('vendor-social-index') }}"><span>{{ $langg->lang456 }}</span></a>
+                                    </li>
+								</ul>
+							</li>
+
+							<li>
+								<a href="#general2" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false">
+									<i class="fas fa-cogs"></i>Account
+								</a>
+								<ul class="collapse list-unstyled" id="general2" data-parent="#accordion">
+                                    <li>
+                                    	<a href="{{ route('vendor-service-index') }}"><span>
+                                    		<!-- {{ $langg->lang453 }} -->
+                                    		Link Your Store
+                                    	</span></a>
+                                    </li>
+                                    <li>
+                                    	<a href="{{ route('vendor-banner') }}"><span>
+                                    		<!-- {{ $langg->lang454 }} -->
+                                    		Finance
+                                    	</span></a>
+                                    </li>
+                                    @if($gs->vendor_ship_info == 1)
+	                                    <li>
+	                                    	<a href="{{ route('vendor-shipping-index') }}"><span>
+	                                    		<!-- {{ $langg->lang719 }} -->
+	                                    		Logs
+	                                    	</span></a>
+	                                    </li>
+	                                @endif
+	                                @if($gs->multiple_packaging == 1)
+	                                    <li>
+	                                    	<a href="{{ route('vendor-package-index') }}"><span>
+	                                    		<!-- {{ $langg->lang721 }} -->
+	                                    		Set Profit Percentage
+	                                    	</span></a>
+	                                    </li>
+	                                @endif
+                                    <li>
+                                    	<a href="{{ route('vendor-social-index') }}"><span>
+                                    		<!-- {{ $langg->lang456 }} -->
+                                    	</span></a>
                                     </li>
 								</ul>
 							</li>
