@@ -1271,7 +1271,7 @@ Route::get('/package/delete/{id}', 'Vendor\PackageController@destroy')->name('ve
   // TAG SECTION ENDS
 
   // TAG SECTION
-  Route::get('/search/','Front\CatalogController@search')->name('front.search');
+  Route::get('/search','Front\CatalogController@search')->name('front.search');
   // TAG SECTION ENDS
 
 

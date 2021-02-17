@@ -6923,8 +6923,8 @@ nav button {
 }
 
 .item .item-img img {
-  width: 100%;
-  height: auto;
+  width: 200px;
+    height: 160px;
   -webkit-transition: all 0.3s ease-in;
   -o-transition: all 0.3s ease-in;
   transition: all 0.3s ease-in;

@@ -15,10 +15,11 @@
 
    @media (min-width:320px)  {   
     #overflowTest {
-
+      width: 100%;
+      height: 250px;
+      overflow: scroll;
+      border: 1px solid #ccc;
   }
- }
-
   </style>
   </head>
 <!-- Breadcrumb Area Start -->
@@ -84,7 +85,7 @@
                       </a>
                     </li>
                   </ul>
-                  <div id="overflowTest">  @if(Session::get('language')==2) {{$blog->getTranslation('details','ar')}} @else {{$blog->getTranslation('details','en')}} </div>
+                  <div id="overflowTest"> {!! $blog->details !!}</div>
                  
 
                   <div class="tag-social-link">

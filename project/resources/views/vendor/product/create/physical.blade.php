@@ -71,6 +71,7 @@
 											<div class="left-area">
 												<h4 class="heading">{{ $langg->lang632 }}* </h4>
 												<p class="sub-heading">{{ $langg->product_by_arabic}}</p>
+											
 											</div>
 										</div>
 										<div class="col-lg-12">
@@ -448,7 +449,7 @@
 										</div>
 										<div class="col-lg-12">
 											<div class="text-editor">
-												<textarea class="nic-edit-p" name="details"></textarea>
+												<textarea class="nic-edit-p" name="details_en"></textarea>
 											</div>
 										</div>
 									</div>

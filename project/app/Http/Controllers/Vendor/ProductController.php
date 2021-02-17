@@ -49,14 +49,15 @@ class ProductController extends Controller
     //*** JSON Request
     public function datatables()
     {
-    	 $user = Auth::user();
+         $user = Auth::user();
+         
          $datas = $user->products()->where('product_type','normal')->orderBy('id','desc')->get();
 
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
                             ->editColumn('name', function(Product $data) {
                                 $name = strlen(strip_tags($data->name_en)) > 50 ? substr(strip_tags($data->name_en),0,50).'...' : strip_tags($data->name_en);
-                                $id = '<small>Product ID: <a href="'.route('front.product', $data->slug).'" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
+                                $id = '<small>Product ID: <a href="" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
                                 return  $name.'<br>'.$id;
                             })
                             ->editColumn('price', function(Product $data) {
@@ -431,14 +432,7 @@ class ProductController extends Controller
         $sign = Currency::where('is_default','=',1)->first();
         $input = $request->all();
         // Check File
-            $input['name'] = [
-                'ar'=>$request->input('name_ar'),
-                'en'=>$request->input('name_en')
-            ];
-            $input['details'] = [
-                'ar'=>$request->input('details_ar'),
-                'en'=>$request->input('details')
-            ];
+           
             if ($file = $request->file('file'))
             {
                 $name = time().str_replace(' ', '', $file->getClientOriginalName());
@@ -791,14 +785,7 @@ class ProductController extends Controller
         $data = Product::findOrFail($id);
         $sign = Currency::where('is_default','=',1)->first();
         $input = $request->all();
-                        $input['name'] = [
-                            'ar'=>$request->input('name_ar'),
-                            'en'=>$request->input('name_en')
-                        ];
-                        $input['details'] = [
-                            'ar'=>$request->input('details_ar'),
-                            'en'=>$request->input('details')
-                        ];
+                    
         if ($file = $request->file('photo')) 
         {              
             $name = time().str_replace(' ', '', $file->getClientOriginalName());

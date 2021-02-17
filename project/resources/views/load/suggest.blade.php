@@ -7,7 +7,16 @@
 				@else 
 				<p>{!! mb_strlen($prod->id,'utf-8') > 66 ? str_replace($slug,'<b>'.$slug.'</b>',mb_substr($prod->name_en,0,66,'utf-8')).'...' : str_replace($slug,'<b>'.$slug.'</b>',$prod->name_en)  !!} </p>
 				@endif
+				@if(Auth::guard('web')->check())
 				<span style="font-size: 14px; font-weight:600; display:block;">{{ $prod->showPrice() }}</span>
+			@else 
+			<h4 class="price"><span class="add-to-cart-quick add-to-cart-btn login-to-show-price"
+				data-href="{{ route('user.login') }}">
+				<i class="icofont-eye"></i> {{ __('custom.login_to_show_price') }}
+
+			</span></h4>
+			@endif
+				
 			</div>
 		</a>
 	</div> 

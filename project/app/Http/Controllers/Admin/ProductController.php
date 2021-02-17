@@ -191,7 +191,8 @@ class ProductController extends Controller
     {
         $cats = Category::all();
         $sign = Currency::where('is_default','=',1)->first();
-        return view('admin.product.create.physical',compact('cats','sign'));
+        $vendors=User::where('is_vendor',2)->get();
+        return view('admin.product.create.physical',compact('cats','sign','vendors'));
     }
 
     //*** GET Request
@@ -425,6 +426,10 @@ class ProductController extends Controller
             if (!empty($request->meta_tag))
             {
                 $input['meta_tag'] = implode(',', $request->meta_tag);
+            }
+            if (!empty($request->meta_tag_ar))
+            {
+                $input['meta_tag_ar'] = implode(',', $request->meta_tag_ar);
             }
         }
 

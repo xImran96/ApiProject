@@ -18,7 +18,8 @@ class Product extends Model
       'color', 'details_en','details_ar','price','previous_price','stock','policy','status',
        'views','tags','featured','best','top','hot','latest','big','trending',
        'sale','features','colors','product_condition','ship','meta_tag',
-       'meta_description','youtube','type','file','license','license_qty'
+       'meta_description','meta_tag_ar',
+       'meta_description_ar','youtube','type','file','license','license_qty'
        ,'link','platform','region','licence_type','measure','discount_date',
        'is_discount','whole_sell_qty','whole_sell_discount','catalog_id','slug'];
 
@@ -27,11 +28,11 @@ class Product extends Model
     public static function filterProducts($collection)  
     {
         foreach ($collection as $key => $data) {
-            if($data->user_id != 0){
-                if($data->user->is_vendor != 2){
-                    unset($collection[$key]);
-                }
-            }
+            // if($data->user_id != 0){
+            //     if($data->user->is_vendor != 2){
+            //         unset($collection[$key]);
+            //     }
+            // }
             if(isset($_GET['max'])){
                  if($data->vendorSizePrice() >= $_GET['max']) {
                     unset($collection[$key]);
@@ -197,9 +198,9 @@ class Product extends Model
         });
         $price = $this->price;
 
-        if($this->user_id != 0){
-        $price = $this->price + $gs->fixed_commission + ($this->price/100) * $gs->percentage_commission ;
-        }
+        // if($this->user_id != 0){
+        // $price = $this->price + $gs->fixed_commission + ($this->price/100) * $gs->percentage_commission ;
+        // }
 
         if(!empty($this->size) && !empty($this->size_price)){
             $price += $this->size_price[0];
@@ -244,7 +245,7 @@ class Product extends Model
  
 
 
-        $price = round(($price) * $curr->value,2);
+        // $price = round(($price) * $curr->value,2);
         if($gs->currency_format == 0){
             return $curr->sign.$price;
         }
@@ -306,7 +307,7 @@ class Product extends Model
             return DB::table('currencies')->where('is_default','=',1)->first();
         });
     }
-        $price = round($price * $curr->value,2);
+      //  $price = round($price * $curr->value,2);
         if($gs->currency_format == 0){
             return $curr->sign.$price;
         }
@@ -477,6 +478,15 @@ class Product extends Model
     }
 
     public function getMetaTagAttribute($value)
+    {
+        if($value == null)
+        {
+            return '';
+        }
+        return explode(',', $value);
+    }
+
+    public function getMetaTagArAttribute($value)
     {
         if($value == null)
         {

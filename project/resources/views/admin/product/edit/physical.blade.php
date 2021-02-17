@@ -825,6 +825,37 @@
 						                                <textarea name="meta_description" class="input-field" placeholder="{{ __('Details') }}">{{ $data->meta_description }}</textarea>
 						                              </div>
 						                            </div>
+												  </div>
+												  <div class="row">
+						                            <div class="col-lg-12">
+						                              <div class="left-area">
+						                                  <h4 class="heading">{{ __('Meta Tags') }} *</h4>
+						                              </div>
+						                            </div>
+						                            <div class="col-lg-12">
+						                              <ul id="metatags_ar" class="myTags">
+						                              	@if(!empty($data->meta_tag_ar))
+							                                @foreach ($data->meta_tag_ar as $element)
+							                                  <li>{{  $element }}</li>
+							                                @endforeach
+						                                @endif
+						                              </ul>
+						                            </div>
+						                          </div>
+
+						                          <div class="row">
+						                            <div class="col-lg-12">
+						                              <div class="left-area">
+						                                <h4 class="heading">
+						                                    {{ __('Meta Description') }} *
+						                                </h4>
+						                              </div>
+						                            </div>
+						                            <div class="col-lg-12">
+						                              <div class="text-editor">
+						                                <textarea name="meta_description" class="input-field" placeholder="{{ __('Details') }}">{{ $data->meta_description_ar }}</textarea>
+						                              </div>
+						                            </div>
 						                          </div>
 						                        </div>
 

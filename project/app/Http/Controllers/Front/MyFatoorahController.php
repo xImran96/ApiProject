@@ -109,8 +109,9 @@ class MyFatoorahController extends Controller
             $x = (string)$prod['qty'];
            // dd((int)$x);
             //dd($product->price * (int)$x);
+         
             $data = array(
-                'ItemName' => $product->name,
+                'ItemName' => $product->name_en,
                 'Quantity' => (int)$x,
                 'UnitPrice' => $product->price * (int)$x,
             );

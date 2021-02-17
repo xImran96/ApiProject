@@ -136,11 +136,11 @@
 													<option value="">{{ $langg->lang639 }}</option>
 										  @if($data->subcategory_id == null)
 										  @foreach($data->category->subs as $sub)
-										  <option data-href="{{ route('vendor-childcat-load',$sub->id) }}" value="{{$sub->id}}" >{{$sub->name}}</option>
+										  <option data-href="{{ route('vendor-childcat-load',$sub->id) }}" value="{{$sub->id}}" >  @if(Session::get('language')==2)   {{ $sub->name_ar }} @else  {{ $sub->name_en }} @endif   </option>
 										  @endforeach
 										  @else
 										  @foreach($data->category->subs as $sub)
-										  <option data-href="{{ route('vendor-childcat-load',$sub->id) }}" value="{{$sub->id}}" {{$sub->id == $data->subcategory_id ? "selected":""}} >{{$sub->name}}</option>
+										  <option data-href="{{ route('vendor-childcat-load',$sub->id) }}" value="{{$sub->id}}" {{$sub->id == $data->subcategory_id ? "selected":""}} > @if(Session::get('language')==2)   {{ $sub->name_ar }} @else  {{ $sub->name_en }} @endif </option>
 										  @endforeach
 										  @endif
 
@@ -742,7 +742,7 @@
 										</div>
 										<div class="col-lg-12">
 											<div class="text-editor">
-												<textarea name="details" class="nic-edit-p">{{$data->details_en}}</textarea>
+												<textarea name="details_en" class="nic-edit-p">{{$data->details_en}}</textarea>
 											</div>
 										</div>
 									</div>

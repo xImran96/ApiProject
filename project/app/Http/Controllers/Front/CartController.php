@@ -695,7 +695,8 @@ class CartController extends Controller
         if($prod->min_order_qty)
         if($prod->user_id != 0){
         $gs = Generalsetting::findOrFail(1);
-        $prc = $prod->price + $gs->fixed_commission + ($prod->price/100) * $gs->percentage_commission ;
+        // $prc = $prod->price + $gs->fixed_commission + ($prod->price/100) * $gs->percentage_commission ;
+          $prc=$prod->price;
         $prod->price = round($prc,2);
         }
 
