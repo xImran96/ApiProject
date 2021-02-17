@@ -21,6 +21,6 @@ class DatabaseSeeder extends Seeder
         Subcategory::truncate();
 
         User::where('id','>',33)->delete();
-         $this->call([MainCateogry::class,SubCateogry::class,ChildCateogry::class,SellerSeeder::class]);
+         $this->call([MainCateogry::class,SubCateogry::class,ChildCateogry::class,SellerSeeder::class,ProductSeeder::class]);
     }
 }
