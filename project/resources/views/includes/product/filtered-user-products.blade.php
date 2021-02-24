@@ -1,9 +1,7 @@
 			@if (count($prods) > 0)
 					@foreach ($prods as $key => $prod)
 									<div class="col-lg-4 col-md-4 col-6 remove-padding">
-
-
-										<a href="{{ route('front.product', $prod->slug) }}" class="item">
+										<a href="{{ route('vendor.product', $prod->slug) }}" class="item">
 											<div class="item-img">
 												@if(!empty($prod->features))
 													<div class="sell-area">
@@ -43,11 +41,11 @@
 											</div>
 											<div class="info">
 												<div class="stars">
-                            <div class="ratings">
-                                <div class="empty-stars"></div>
-                                <div class="full-stars" style="width:{{App\Models\Rating::ratings($prod->id)}}%"></div>
-                            </div>
-												</div>
+		                         				   <div class="ratings">
+		                                				<div class="empty-stars"></div>
+		                                						<div class="full-stars" style="width:{{App\Models\Rating::ratings($prod->id)}}%"></div>
+		                            						</div>
+														</div>
 
 												
 												@if(Auth::guard('web')->check())

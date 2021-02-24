@@ -105,7 +105,8 @@ class OrdersController extends Controller
         $order->pay_id =  $request->pay_id;
         $order->vendor_shipping_id =  $request->vendor_shipping_id;
         $order->vendor_packing_id = $request->vendor_packing_id;
-       if($order->save()){
+        $order->save();
+       if(){
          
         $invoice  = new Invoice;
         $invoice->user_id =  $request->user_id;

@@ -1,62 +1,84 @@
-@extends('layouts.front')
+@extends('layouts.vendor')
 @section('content')
 
-<section class="user-dashbord">
+
+<div class="content-area">
+                        <div class="mr-breadcrumb">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                        <h4 class="heading">Upgrade Plan</h4>
+                                        <ul class="links">
+                                            <li>
+                                                <a href="">{{ $langg->lang441 }} </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;">Subscribe Plan</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Payment</a>
+                                            </li>
+                                        </ul>
+                                </div>
+                            </div>
+                        </div>
+
+<section class="col-lg-8 mx-auto mt-2">
     <div class="container">
       <div class="row">
-        @include('includes.user-dashboard-sidebar')
-                <div class="col-lg-8">
+
+<div style="background-color: #FFF; padding: 20px; width: 100%">
 <div class="user-profile-details">                     
         <div class="account-info">
                             <div class="header-area">
                                 <h4 class="title">
-                                    {{ $langg->lang409 }} <a class="mybtn1" href="{{route('user-package')}}"> <i class="fas fa-arrow-left"></i> {{ $langg->lang410 }}</a>
+                                    {{ $langg->lang409 }} 
+                                    <!-- <a class="mybtn1" href="{{route('user-package')}}"> <i class="fas fa-arrow-left"></i> {{ $langg->lang410 }}</a> -->
                                 </h4>
                             </div>
                             <div class="pack-details">
                                 <div class="row">
 
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
                                         <h5 class="title">
                                             {{ $langg->lang411 }}
                                         </h5>
                                     </div>
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-6">
                                         <p class="value">
                                             {{$subs->title}}
                                         </p>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
                                         <h5 class="title">
                                             {{ $langg->lang412 }}
                                         </h5>
                                     </div>
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-6">
                                         <p class="value">
                                             {{$subs->price}}{{$subs->currency}}
                                         </p>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
                                         <h5 class="title">
                                             {{ $langg->lang413 }}
                                         </h5>
                                     </div>
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-6">
                                         <p class="value">
                                             {{$subs->days}} {{ $langg->lang403 }}
                                     </p></div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
                                         <h5 class="title">
                                             {{ $langg->lang414 }}
                                         </h5>
                                     </div>
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-6">
                                         <p class="value">
                                             {{ $subs->allowed_products == 0 ? 'Unlimited':  $subs->allowed_products}}
                                         </p>
@@ -178,12 +200,12 @@
                                  @if($subs->price != 0)       
 
                                 <div class="row">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-5">
                                         <h5 class="title pt-1">
                                             {{ $langg->lang418 }} *
                                         </h5>
                                     </div>
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-7">
 
                                             <select name="method" id="option" onchange="meThods(this)" class="option" required="">
                                                 <option value="">{{ $langg->lang419 }}</option>
@@ -308,6 +330,7 @@
       </div>
     </div>
   </section>
+</div>  
 
 @endsection
 
@@ -401,13 +424,13 @@ if($('#ck').val() == '0') {
 @if($subs->price != 0)
 <script type="text/javascript">
         function meThods(val) {
-            var action1 = "{{route('user.paypal.submit')}}";
-            var action2 = "{{route('user.stripe.submit')}}";
-            var action3 = "{{route('user.instamojo.submit')}}";
-            var action4 = "{{route('user.paystack.submit')}}";
-            var action5 = "{{route('user.molly.submit')}}";
+            var action1 = "{{route('user.paypal.update')}}";
+            var action2 = "{{route('user.stripe.update')}}";
+            var action3 = "{{route('user.instamojo.update')}}";
+            var action4 = "{{route('user.paystack.update')}}";
+            var action5 = "{{route('user.molly.update')}}";
             var action6 = "{{route('user.paytm.submit')}}";
-            var action7 = "{{route('user.razorpay.submit')}}";
+            var action7 = "{{route('user.razorpay.update')}}";
 
              if (val.value == "Paypal") {
                $('.pay-form').attr('id','subscribe-form');

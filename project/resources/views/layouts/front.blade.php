@@ -221,7 +221,7 @@
 								<select name="category" id="category_select" class="categoris">
 									<option value="">{{ $langg->lang1 }}</option>
 									@foreach($categories as $data)
-									<option value="{{ $data->slug }}" {{ Request::route('category') == $data->slug ? 'selected' : '' }}>{{ $data->name }}</option>
+									<option value="{{ $data->slug }}" {{ Request::route('category') == $data->slug ? 'selected' : '' }}>{{ $data->name_en }}</option>
 									@endforeach
 								</select>
 							</div>
@@ -247,9 +247,11 @@
 					</div>
 				</div>
 				<div class="col-lg-2 col-sm-6 col-7 remove-padding order-lg-last">
-					<div class="helpful-links">b
-						<ul class="helpful-links-inner">
+					<div class="helpful-links">
+						<ul class="helpful-links-inner inline-block">
+
 							<li class="my-dropdown"  data-toggle="tooltip" data-placement="top" title="{{ $langg->lang3 }}">
+
 								<a href="javascript:;" class="cart carticon">
 									<div class="icon">
 										<i class="icofont-cart"></i>
@@ -282,8 +284,6 @@
 									</div>
 								</a>
 							</li>
-
-
 						</ul>
 					</div>
 				</div>
@@ -320,7 +320,7 @@
 									</div>
 
 								@else
-									<a href="{{ route('front.category',$category->slug) }}"><img src="{{ asset('assets/images/categories/'.$category->photo) }}"> {{ $category->name }}</a>
+									<a href="{{ route('front.category',$category->slug) }}"><img src="{{ asset('assets/images/categories/'.$category->photo) }}"> {{ $category->name_en }}</a>
 
 								@endif
 									@if(count($category->subs) > 0)
@@ -384,6 +384,11 @@
 							<li>
 								<a href="javascript:;" data-toggle="modal" data-target="#track-order-modal" class="track-btn">{{ $langg->lang16 }}</a>
 							</li>
+							@if(auth()->user())
+							@if(auth()->user()->subscribes()->where('status',1)->first() != null)
+							<li><a href="{{ route('vendor-dashboard') }}">Drop-Shipping</a></li>
+							@endif
+							@endif
 						</ul>
 
 					</nav>
@@ -1038,7 +1043,7 @@
 </script>
 
 	<!-- jquery -->
-	{{-- <script src="{{asset('assets/front/js/all.js')}}"></script> --}}
+	<script src="{{asset('assets/front/js/all.js')}}"></script>
 	<script src="{{asset('assets/front/js/jquery.js')}}"></script>
 	<script src="{{asset('assets/front/js/vue.js')}}"></script>
 	<script src="{{asset('assets/front/jquery-ui/jquery-ui.min.js')}}"></script>

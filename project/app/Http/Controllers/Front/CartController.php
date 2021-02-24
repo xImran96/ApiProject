@@ -58,7 +58,7 @@ class CartController extends Controller
 
    public function addtocart($id)
     {
-        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
+        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name_en', 'name_ar','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
 
         // Set Attrubutes
 
@@ -191,7 +191,7 @@ class CartController extends Controller
 
    public function addcart($id)
     {
-        $prod = Product::where('id','=',$id)->first(['id','user_id','slug','name','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
+        $prod = Product::where('id','=',$id)->first(['id','user_id','slug', 'name_en', 'name_ar','photo','size','size_qty','size_price','color','price','stock','type','file','link','license','license_qty','measure','whole_sell_qty','whole_sell_discount','attributes']);
 
 
         // Set Attrubutes

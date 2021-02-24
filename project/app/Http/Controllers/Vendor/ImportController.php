@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Gallery;
+use App\ImportProduct;
 use App\Models\Product;
+use App\Models\Log;
 use Auth;
 use Carbon\Carbon;
 use Datatables;
@@ -687,5 +689,113 @@ class ImportController extends Controller
         $msg = 'Product Updated Successfully.<a href="'.route('vendor-import-index').'">View Product Lists.</a>';
         return response()->json($msg);      
         //--- Redirect Section Ends    
+    }
+
+
+
+     public function importProducts($product_id) {
+    
+        // dd(auth()->user()->logs());
+        // $checkVendorProduct = auth()->user()->myProducts->count();
+        $check = auth()->user()->myProducts->where('product_id', $product_id)->count();
+
+        
+        if($check == 0){
+
+        $product   = Product::find($product_id);
+
+        $defaultProfit = auth()->user()->profit;
+        
+
+        $getProfit = ($defaultProfit/100)*$product->price;
+        $newPrice  = $product->price + $getProfit;
+
+        // dd($newPrice);
+
+
+        $input = [
+                 'category_id' => $product->category_id,
+                 'product_type'=> $product->product_type,
+                 'product_id'=>$product->id,
+                 'affiliate_link' => $product->affiliate_link,
+                 'sku'=>$product->sku ,
+                 'min_order_qty'=>$product->min_order_qty,
+                 'subcategory_id'=>$product->subcategory_id,
+                 'childcategory_id'=>$product->childcategory_id,
+                 'attributes'=>$product->attributes,
+                 'name_en'=>$product->name_en,
+                 'name_ar'=>$product->name_ar,
+                 'photo'=>$product->photo,
+                 'size'=>$product->size,
+                 'size_qty'=>$product->size_qty,
+                 'size_price'=>$product->size_price,
+                 'color'=>$product->color,
+                 'details_en'=>$product->details_en,
+                 'details_ar'=>$product->details_ar,
+                 'price'=>$product->price,
+                 'previous_price'=>$product->previous_price,
+                 'stock'=>$product->stock,
+                 'policy'=>$product->policy,
+                 'status'=>$product->status,
+                 'views'=>$product->views,
+                 'tags'=>$product->tags,
+                 'featured'=>$product->featured,
+                 'best'=>$product->best,
+                 'top'=>$product->top,
+                 'hot'=>$product->hot,
+                 'latest'=>$product->latest,
+                 'big'=>$product->big,
+                 'trending'=>$product->trending,
+                 'sale'=>$product->sale,
+                 'features'=>$product->features,
+                 'colors'=>$product->colors,
+                 'product_condition'=>$product->product_condition,
+                 'ship'=>$product->ship,
+                 'meta_tag'=>$product->meta_tag,
+                 'meta_description'=>$product->meta_description,
+                 'youtube'=>$product->youtube,
+                 'type'=>$product->type,
+                 'file'=>$product->file,
+                 'license'=>$product->license,
+                 'license_qty'=>$product->license_qty,
+                 'link'=>$product->link,
+                 'platform'=>$product->platform,
+                 'region'=>$product->region,
+                 'license_type'=>$product->license_type,
+                 'measure'=>$product->measure,
+                 'discount_date'=>$product->discount_date,
+                 'is_discount'=>$product->is_discount,
+                 'whole_sell_qty'=>$product->whole_sell_qty,
+                 'whole_sell_discount'=>$product->whole_sell_discount,
+                 'is_catalog'=>$product->is_catalog,   
+                 'catalog_id'=>$product->catalog_id,
+                 'slug'=>$product->slug,
+                 'profit_percentage'=>$defaultProfit,
+                 'import_price'=>$newPrice
+             ];    
+                $import = new ImportProduct($input);
+
+                auth()->user()->myProducts()->save($import);
+
+                $log = new Log([
+                        'topic'=>'Imported',
+                        'code'=>200,
+                        'log_topic'=>'Product-Imported',
+                        'log_message'=> $import->sku.' '.$import->name_en.' is Imported Successfully.',
+                        'log_level'=>'Creation',
+                        ]);
+
+                auth()->user()->logs()->save($log);
+            
+
+      
+
+        return back()->with('import', 'Product Imported Successfully.');
+        }else{
+            return back()->with('import', 'Product Already Imported.');
+        }
+
+
+        
     }
 }

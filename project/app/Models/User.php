@@ -26,6 +26,12 @@ class User extends Authenticatable implements JWTSubject
         return false;
     }
 
+    public function logs()
+    {
+        return $this->hasMany('App\Models\Log');
+    }
+
+    
     public function orders()
     {
         return $this->hasMany('App\Models\Order');
@@ -238,6 +244,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->getKey();
     }
+
+        public function dealer_orders()
+    {
+        return $this->hasMany('App\Models\DealerOrder', 'dealer_id');
+    }
+
 
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.

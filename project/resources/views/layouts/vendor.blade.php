@@ -33,6 +33,11 @@
 	<link href="{{asset('assets/admin/css/rtl/custom.css')}}" rel="stylesheet"/>
 	<link href="{{asset('assets/admin/css/rtl/responsive.css')}}" rel="stylesheet" />
 	<link href="{{asset('assets/admin/css/common.css')}}" rel="stylesheet" />
+	<!-- stylesheet -->
+	<link rel="stylesheet" href="{{asset('assets/front/css/rtl/all.css')}}">
+
+    <!--Updated CSS-->
+ 	<link rel="stylesheet" href="{{ asset('assets/front/css/rtl/styles.php?color='.str_replace('#','',$gs->colors).'&amp;'.'header_color='.str_replace('#','',$gs->header_color).'&amp;'.'footer_color='.str_replace('#','',$gs->footer_color).'&amp;'.'copyright_color='.str_replace('#','',$gs->copyright_color).'&amp;'.'menu_color='.str_replace('#','',$gs->menu_color).'&amp;'.'menu_hover_color='.str_replace('#','',$gs->menu_hover_color)) }}">
 
 	@else
 
@@ -40,6 +45,12 @@
 	<link href="{{asset('assets/admin/css/custom.css')}}" rel="stylesheet"/>
 	<link href="{{asset('assets/admin/css/responsive.css')}}" rel="stylesheet" />
 	<link href="{{asset('assets/admin/css/common.css')}}" rel="stylesheet" />
+
+	<!-- stylesheet -->
+	<link rel="stylesheet" href="{{asset('assets/front/css/rtl/all.css')}}">
+
+	  <!--Updated CSS-->
+ 	<link rel="stylesheet" href="{{ asset('assets/front/css/styles.php?color='.str_replace('#','',$gs->colors).'&amp;'.'header_color='.str_replace('#','',$gs->header_color).'&amp;'.'footer_color='.str_replace('#','',$gs->footer_color).'&amp;'.'copyright_color='.str_replace('#','',$gs->copyright_color).'&amp;'.'menu_color='.str_replace('#','',$gs->menu_color).'&amp;'.'menu_hover_color='.str_replace('#','',$gs->menu_hover_color)) }}">
 
 	@endif
 
@@ -88,7 +99,7 @@
               @else
               <img src="{{ Auth::user()->photo ? asset('assets/images/users/'.Auth::user()->photo ):asset('assets/images/noimage.png') }}" alt="">
               @endif
-											</div>
+									</div>
 										</a>
 										<div class="dropdown-menu">
 											<div class="dropdownmenu-wrapper">
@@ -140,10 +151,23 @@
 								</a>
 							</li>
 							<li>
-								<a href="#order" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false"><i class="fas fa-hand-holding-usd"></i>{{ $langg->lang442 }}</a>
+								<a href="#order" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false"><i class="fas fa-hand-holding-usd"></i>
+									{{ $langg->lang442 }}
+								</a>
 								<ul class="collapse list-unstyled" id="order" data-parent="#accordion" >
                                    	<li>
                                     	<a href="{{route('vendor-order-index')}}"> {{ $langg->lang443 }}</a>
+                                	</li>
+								</ul>
+							</li>
+
+							<li>
+								<a href="#dealerorder" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false"><i class="fas fa-hand-holding-usd"></i>
+									<!-- {{ $langg->lang442 }} -->Vendor Orders
+								</a>
+								<ul class="collapse list-unstyled" id="dealerorder" data-parent="#accordion" >
+                                   	<li>
+                                    	<a href="{{route('dealer-order-index')}}"> {{ $langg->lang443 }}</a>
                                 	</li>
 								</ul>
 							</li>
@@ -230,10 +254,11 @@
                                     		<!-- {{ $langg->lang454 }} -->
                                     		Finance
                                     	</span></a>
+
                                     </li>
                                     @if($gs->vendor_ship_info == 1)
 	                                    <li>
-	                                    	<a href="{{ route('vendor-shipping-index') }}"><span>
+	                                    	<a href="{{ route('vendor-logs') }}"><span>
 	                                    		<!-- {{ $langg->lang719 }} -->
 	                                    		Logs
 	                                    	</span></a>
@@ -248,8 +273,13 @@
 	                                    </li>
 	                                @endif
                                     <li>
-                                    	<a href="{{ route('vendor-social-index') }}"><span>
-                                    		<!-- {{ $langg->lang456 }} -->
+                                    	<a href="{{ route('vendor-packages') }}"><span>
+                                  					Upgrade PLan
+                                    	</span></a>
+                                    </li>
+                                    <li>
+                                    	<a href="{{ route('vendor-token') }}"><span>
+                                  					API Token
                                     	</span></a>
                                     </li>
 								</ul>
@@ -283,6 +313,8 @@
 		<script src="{{asset('assets/vendor/js/vendors/jquery-1.12.4.min.js')}}"></script>
 		<script src="{{asset('assets/vendor/js/vendors/bootstrap.min.js')}}"></script>
 		<script src="{{asset('assets/vendor/js/jqueryui.min.js')}}"></script>
+		<!-- <script src="{{asset('assets/front/js/all.js')}}"></script> -->
+	
 		<!-- Fullside-menu Js-->
 		<script src="{{asset('assets/vendor/plugins/fullside-menu/jquery.slimscroll.min.js')}}"></script>
 		<script src="{{asset('assets/vendor/plugins/fullside-menu/waves.min.js')}}"></script>
@@ -299,6 +331,8 @@
 		<script src="{{asset('assets/vendor/js/custom.js')}}"></script>
 		<!-- AJAX Js-->
 		<script src="{{asset('assets/vendor/js/myscript.js')}}"></script>
+		<script src="{{asset('assets/front/js/vue.js')}}"></script>
+
 		@yield('scripts')
 
 @if($gs->is_admin_loader == 0)
