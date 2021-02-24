@@ -67,6 +67,7 @@ class UserController extends Controller
             } 
         $data->update($input);
         $msg = 'Successfully updated your profile';
+        
         return response()->json($msg); 
     }
 
