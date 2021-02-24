@@ -20,6 +20,37 @@ class ImportProduct extends Model
        'meta_description','youtube','type','file','license','license_qty'
        ,'link','platform','region','licence_type','measure','discount_date',
        'is_discount','whole_sell_qty','whole_sell_discount','catalog_id','slug','profit_percentage','import_price'];
+public function category()
+    {
+        return $this->belongsTo('App\Models\Category')->withDefault(function ($data) {
+            foreach($data->getFillable() as $dt){
+                $data[$dt] = __('Deleted');
+            }
+        });
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo('App\Models\Subcategory')->withDefault(function ($data) {
+            foreach($data->getFillable() as $dt){
+                $data[$dt] = __('Deleted');
+            }
+        });
+    }
+
+    public function childcategory()
+    {
+        return $this->belongsTo('App\Models\Childcategory')->withDefault(function ($data) {
+            foreach($data->getFillable() as $dt){
+                $data[$dt] = __('Deleted');
+            }
+        });
+    }
+
+    public function galleries()
+    {
+        return $this->hasMany('App\Models\VendorGallery');
+    }
 
 
     public function users()

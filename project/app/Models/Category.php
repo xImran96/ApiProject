@@ -22,6 +22,11 @@ class Category extends Model
         return $this->hasMany('App\Models\Product');
     }
 
+    public function ImportProducts()
+    {
+        return $this->hasMany('App\ImportProduct');
+    }
+
     public function setSlugAttribute($value)
     {
         $this->attributes['slug'] = str_replace(' ', '-', $value);

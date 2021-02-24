@@ -154,6 +154,14 @@
 								<a href="#order" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false"><i class="fas fa-hand-holding-usd"></i>
 									{{ $langg->lang442 }}
 								</a>
+								<a href="{{ url('/myProducts') }}" class="wave-effect "><i class="fa fa-home mr-2"></i>
+									My Products
+									
+								</a>
+							</li>
+							
+							<li>
+								<a href="#order" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false"><i class="fas fa-hand-holding-usd"></i>{{ $langg->lang442 }}</a>
 								<ul class="collapse list-unstyled" id="order" data-parent="#accordion" >
                                    	<li>
                                     	<a href="{{route('vendor-order-index')}}"> {{ $langg->lang443 }}</a>
@@ -237,41 +245,27 @@
                                     </li>
 								</ul>
 							</li>
-
+                           <!-- Accounts Start -->
 							<li>
-								<a href="#general2" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false">
-									<i class="fas fa-cogs"></i>Account
+								<a href="#generall" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false">
+									<i class="fas fa-cogs"></i>Accounts
 								</a>
-								<ul class="collapse list-unstyled" id="general2" data-parent="#accordion">
+								<ul class="collapse list-unstyled" id="generall" data-parent="#accordion">
                                     <li>
-                                    	<a href="{{ route('vendor-service-index') }}"><span>
-                                    		<!-- {{ $langg->lang453 }} -->
-                                    		Link Your Store
-                                    	</span></a>
+                                    	<a href="{{ url('/profit') }}"><span> Profit </span></a>
                                     </li>
                                     <li>
-                                    	<a href="{{ route('vendor-banner') }}"><span>
-                                    		<!-- {{ $langg->lang454 }} -->
-                                    		Finance
-                                    	</span></a>
-
+                                    	<a href="{{ route('vendor-banner') }}"><span>Finance </span></a>
                                     </li>
-                                    @if($gs->vendor_ship_info == 1)
+                                  
 	                                    <li>
-	                                    	<a href="{{ route('vendor-logs') }}"><span>
-	                                    		<!-- {{ $langg->lang719 }} -->
-	                                    		Logs
-	                                    	</span></a>
+	                                    	<a href="{{ route('vendor-link-store') }}"><span> Link Your Store</span></a>
 	                                    </li>
-	                                @endif
-	                                @if($gs->multiple_packaging == 1)
+	                             
 	                                    <li>
-	                                    	<a href="{{ route('vendor-package-index') }}"><span>
-	                                    		<!-- {{ $langg->lang721 }} -->
-	                                    		Set Profit Percentage
-	                                    	</span></a>
+	                                    	<a href="{{ route('vendor-logs') }}"><span>Logs</span></a>
 	                                    </li>
-	                                @endif
+	                        
                                     <li>
                                     	<a href="{{ route('vendor-packages') }}"><span>
                                   					Upgrade PLan
@@ -284,6 +278,7 @@
                                     </li>
 								</ul>
 							</li>
+							<!-- Accounts End -->
 
 						</ul>
 					</nav>

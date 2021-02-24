@@ -1,4 +1,36 @@
 <?php
+/*
+
+                      SALMAN ROUTES
+
+
+*/
+
+
+Route::get('/profit','myControllers\ProfitController@showProfitForm');
+Route::POST('/profitApply','myControllers\ProfitController@profitApply');
+Route::POST('/import_Product','myControllers\ImportProductController@importProduct');
+Route::get('/myProducts','myControllers\ImportProductController@showMyProducts')->name('my-products');
+Route::GET('/subcategory','myControllers\ImportProductController@subCategory');
+Route::GET('/childcategory','myControllers\ImportProductController@childCategory');
+Route::GET('/subchildcategory','myControllers\ImportProductController@subChildCategory');
+Route::GET('/searchproduct','myControllers\ImportProductController@searchProduct');
+Route::GET('/deletemyproduct/{id}','myControllers\ImportProductController@deleteMyProduct');
+
+Route::GET('/editmyproduct/{id}','myControllers\ImportProductController@editMyProduct');
+
+Route::post('/vendorproducts/edit/{id}', 'myControllers\ImportProductController@update')->name('vendor-product-update');
+Route::post('/gallery/storegallery', 'myControllers\ImportProductController@storegallery')->name('vendor-gallery-stores');
+Route::get('/gallery/deletegallery', 'myControllers\ImportProductController@destroygallery')->name('vendor-gallery-deletes');
+Route::post('/vendorproducts/upload/update/{id}', 'myControllers\ImportProductController@uploadUpdate')->name('vendor-product-upload-updates');
+Route::get('/vendorgallery/show', 'myControllers\ImportProductController@showgallery')->name('vendor-gallery-shows');
+Route::get('/linkstore/show', 'myControllers\ImportProductController@showlinkstore')->name('vendor-link-store');
+
+
+// Route::get('import_Product',function(){
+// return "helo";
+// });
+
 
 // ************************************ ADMIN SECTION **********************************************
 
@@ -1448,3 +1480,6 @@ Route::get('/package/delete/{id}', 'Vendor\PackageController@destroy')->name('ve
 
 
   });
+
+
+

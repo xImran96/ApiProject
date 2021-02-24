@@ -1,6 +1,50 @@
 @extends('layouts.vendor') 
-
+@section('styles')  
+<style>
+	/*#import{
+		color: orange;
+	}
+	#import:hover{
+		cursor: pointer;
+	}*/
+	.importBtn{
+		border: none;
+		outline: none;
+		color: orange;
+		font-size: 20px;
+	}
+	.importBtn:hover{
+        cursor: pointer;
+	}
+		.myBtn{
+		border: none;
+		outline: none;
+		background: #3498db;
+		padding: 10px;
+		width: 100px;
+		border-radius: 30px;
+		color: white;
+		transition: 300ms;
+		font-weight: bold;
+		font-size: 16px;
+		
+	}
+	.myBtn:hover{
+		background: #f1c40f;
+		cursor: pointer;
+	}
+</style>
+@endsection
 @section('content')  
+  @php
+ 
+   $products = App\Models\Product::paginate(10);
+ 
+
+  $categories = App\Models\Category::all();
+
+  @endphp
+
 					<input type="hidden" id="headerdata" value="PRODUCT">
 					<div class="content-area">
 						<div class="mr-breadcrumb">
@@ -21,10 +65,51 @@
 								</div>
 							</div>
 						</div>
+
 						<div class="product-area">
 							<div class="row">
 								<div class="col-lg-12">
+									<h3 class="text-center pt-5 pb-5">SELECT CATEGORY</h3>
+								</div>
+							</div>
+
+							<form action="{{url('/searchproduct')}}"  method="get">
+                            <div class="row">
+                         <!--   	<h4>Select Category</h4> -->
+                            	<div class="col-lg-3">
+                            		
+                            		<label>Categories</label>
+                            		<select onchange="myftn()" id="category" name="category">
+                            			@foreach($categories as $category)
+                            			<option value="{{$category->id}}">{{$category->name_en}}</option>
+                            		    @endforeach
+                            		</select>
+                            	</div>
+                            	<div class="col-lg-3">
+                            		<label>Sub Categories</label>
+                          <select id="subcategory" onchange="myftn2()" name="subcategory"></select>
+                            	</div>
+                            	<div class="col-lg-3">
+                            		<label>Child Categories</label>
+                           		<select id="childcategory" onchange="myftn3()" name="childcategory"></select>
+                            	</div>
+                            	<div class="col-lg-3">
+                            		<label>Sub Child Categories</label>
+                            <select id="subchildcategory" name="subchildcategory"></select>
+                            	</div>
+                            </div>
+                            <div class="row pt-5 pb-5">
+								<div class="col-lg-12 text-center">
+									<button type="submit"  class="myBtn">Search</button>
+									
+								</div>
+
+							</div>
+							</form>
+							<div class="row">
+								<div class="col-lg-12">
 									<div class="mr-table allproduct">
+						
 
                         @include('includes.vendor.form-success')  
 
@@ -32,20 +117,84 @@
 												<table id="geniustable" class="table table-hover dt-responsive" cellspacing="0" width="100%">
 													<thead>
 														<tr>
+															<th>Image</th>
 									                        <th>{{ $langg->lang608 }}</th>
 									                        <th>{{ $langg->lang609 }}</th>
+									                        <th>Stock</th>
 									                        <th>{{ $langg->lang610 }}</th>
 									                        <th>{{ $langg->lang611 }}</th>
 									                        <th>{{ $langg->lang612 }}</th>
 														</tr>
 													</thead>
+													<tbody>
+														@if(!empty($categoriesWiseProducts))
+														@foreach($categoriesWiseProducts as $product)
+														<tr>
+															<td><img src="{{$product->photo}}"></td>
+															<td>{{$product->slug}}</td>
+															<td>{{$product->type}}</td>
+															<td>{{$product->stock}}</td>
+															<td>{{$product->price}}</td>
+															<td>{{$product->status}}</td>
+															<td id="import">
+																
+													<!-- 			<i class="fas fa-cloud-upload-alt">
+											<input type="hidden" value="{{$product->id}}">
+																</i> -->
+												<form action="{{url('/import_Product')}}" method="POST">
+													@csrf
+					<input type="hidden" name="product_id" value="{{$product->id}}">
+													<button type="submit" class="importBtn">
+																	<i class="fas fa-cloud-upload-alt">
+																</i>
+																</button>
+																</form>
+																
+																
+															</td>
+														</tr>
+														@endforeach
+														@else
+														@foreach($products as $product)
+														<tr>
+															<td><img src="{{$product->photo}}"></td>
+															<td>{{$product->slug}}</td>
+															<td>{{$product->type}}</td>
+															<td>{{$product->stock}}</td>
+															<td>{{$product->price}}</td>
+															<td>{{$product->status}}</td>
+															<td id="import">
+																
+													<!-- 			<i class="fas fa-cloud-upload-alt">
+											<input type="hidden" value="{{$product->id}}">
+																</i> -->
+												<form action="{{url('/import_Product')}}" method="POST">
+													@csrf
+					<input type="hidden" name="product_id" value="{{$product->id}}">
+													<button type="submit" class="importBtn">
+																	<i class="fas fa-cloud-upload-alt">
+																</i>
+																</button>
+																</form>
+																
+																
+															</td>
+														</tr>
+														@endforeach
+														@endif
+														
+													</tbody>
 												</table>
 										</div>
 									</div>
 								</div>
 							</div>
+							<div class="col-lg-12">
+								{{ $products->links() }}
+							</div>
 						</div>
 					</div>
+
 
 {{-- HIGHLIGHT MODAL --}}
 										<div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="modal2" aria-hidden="true">
@@ -148,17 +297,137 @@
 			</div>
 		</div>
 
-
 {{-- GALLERY MODAL ENDS --}}
 
 @endsection    
 
 @section('scripts')
+<!-- my script -->
+<script>
+	function myftn(){
+		
+		let id = document.querySelector('#category').value;
+		
+		
+		$.ajax({
+               type:'GET',
+                url:'{{ url("/subcategory") }}',
+                 data:{
+                 id :  id
+               },
+               success:function(response) {     
+               console.log(response);   
+                $("#subcategory").empty();     
+               $.each(response,function(key,value){
+
+          $("#subcategory").append('<option value="'+value.id+'">'+value.name_en+'</option>');
+        });
+            },
+            error:function(error){
+           console.log(error);
+            }
+              });
+	}
+	function myftn2(){
+		
+		let id = document.querySelector('#subcategory').value;
+		
+
+		$.ajax({
+               type:'GET',
+                url:'{{ url("/childcategory") }}',
+                 data:{
+                 id :  id
+               },
+               success:function(response) {     
+               console.log(response);   
+                $("#childcategory").empty();     
+               $.each(response,function(key,value){
+
+          $("#childcategory").append('<option value="'+value.id+'">'+value.name_en+'</option>');
+        });
+            },
+            error:function(error){
+           console.log(error);
+            }
+              });
+	}
+	function myftn3(){
+		
+		let id = document.querySelector('#childcategory').value;
+		
+		
+		$.ajax({
+               type:'GET',
+                url:'{{ url("/subchildcategory") }}',
+                 data:{
+                 id :  id
+               },
+               success:function(response) {     
+               console.log(response);   
+                $("#subchildcategory").empty();     
+               $.each(response,function(key,value){
+
+          $("#subchildcategory").append('<option value="'+value.id+'">'+value.name_en+'</option>');
+        });
+            },
+            error:function(error){
+           console.log(error);
+            }
+              });
+	}
+	
+	// realted to jquery
+	// let imprt = document.querySelectorAll('#import');
+	
+	// const importProdcut = (event)=>{
+   
+ //   let productId = event.target.querySelector('input').value;
+
+   // end jquery
 
 
-{{-- DATA TABLE --}}
+   // console.log(productId);
+   // try{
+   // 	const response = await fetch('http://localhost:8081/hareer/ApiProject/import_Product',productId).then(response =>{
+   // 		console.log(response);
+   // 	});
+    
+  
+   // }catch(error){
+   // console.log(error);
+   // }
+  
 
-    <script type="text/javascript">
+  // realted to jquery
+ //   $.ajax({
+ //               type:'GET',
+ //               url:'{{ url("import_Product") }}',
+ //               data:{
+ //                product_id :  productId
+ //               },
+ //               success:function(response) {             
+ //                  console.log(response);       
+ //            },
+ //            error:function(error){
+ //           console.log(error);
+ //            }
+ //              });
+	// }
+
+	// //end jquery
+
+	// imprt.forEach((el,index,imprt)=>{
+ //    el.addEventListener('click',importProdcut);
+	// });
+
+	
+	
+</script>
+<!-- my script  end-->
+<!-- {{-- DATA TABLE --}} -->
+
+  <!--   <script type="text/javascript">
 
 		var table = $('#geniustable').DataTable({
 			   ordering: false,
@@ -187,13 +456,13 @@
           '<i class="fas fa-plus"></i> <span class="remove-mobile">{{ $langg->lang623 }}<span>'+
           '</a>'+
           '</div>');
-      });											
+      });	//										
 									
 
 
 {{-- DATA TABLE ENDS--}}
 
-</script>
+</script> -->
 
 <script type="text/javascript">
 	
