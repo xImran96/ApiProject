@@ -122,10 +122,10 @@ class VendorOrdersController extends Controller
                         'log_level'=>'recieved_order',
                         ]);
 
-        $user->logs()->save()
+             $user->logs()->save()
 
 
-           if(){
+           if($user->logs()->save()){
 
              return response()->json(['status'=>'Success 200', 'message'=>'Order Has Been Placed Succesfully.']);
            }

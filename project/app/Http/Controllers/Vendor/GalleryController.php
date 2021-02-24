@@ -53,6 +53,7 @@ class GalleryController extends Controller
                   }
             }
         }
+        
         return response()->json($data);      
     } 
 
