@@ -26,6 +26,10 @@ class Childcategory extends Model
     {
         return $this->hasMany('App\Models\Product');
     }
+       public function ImportProducts()
+    {
+        return $this->hasMany('App\ImportProduct');
+    }
 
     public function setSlugAttribute($value)
     {

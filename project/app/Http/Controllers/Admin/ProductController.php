@@ -750,7 +750,7 @@ class ProductController extends Controller
         $data = Product::findOrFail($id);
         $sign = Currency::where('is_default','=',1)->first();
 
-
+ 
         if($data->type == 'Digital')
             return view('admin.product.edit.digital',compact('cats','data','sign'));
         elseif($data->type == 'License')
