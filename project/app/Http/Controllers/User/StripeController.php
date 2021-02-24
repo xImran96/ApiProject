@@ -144,6 +144,16 @@ class StripeController extends Controller
                     mail($user->email,'Your Vendor Account Activated','Your Vendor Account Activated Successfully. Please Login to your account and build your own shop.',$headers);
                     }
 
+                        $log = new Log([
+                        'topic'=>'Subscription',
+                        'code'=>200,
+                        'log_topic'=>'Make-Subscription',
+                        'log_message'=> $sub->id.' Subscription Created Successfully.',
+                        'log_level'=>'make_subscription',
+                        ]);
+
+                    $user->logs()->save()
+
                     return redirect()->route('user-dashboard')->with('success','Vendor Account Activated Successfully');
 
                 }
@@ -250,6 +260,18 @@ class StripeController extends Controller
                     $headers = "From: ".$settings->from_name."<".$settings->from_email.">";
                     mail($user->email,'Your Vendor Plan is Upgraded Successfully','Please Login to your account and build your own shop.',$headers);
                     }
+
+
+                    $log = new Log([
+                        'topic'=>'Subscription',
+                        'code'=>200,
+                        'log_topic'=>'Subscription-Upgrade',
+                        'log_message'=> $sub->id.' is Upgraded Successfully.',
+                        'log_level'=>'upgrade_subscription',
+                        ]);
+
+                    $user->logs()->save()
+
 
                     return redirect()->route('vendor-dashboard')->with('success','Vendor Plan Upgraded Successfully');
 

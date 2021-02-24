@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
-use Session;
+use App\Models\Log;
 
 use Validator;
 
@@ -29,6 +29,8 @@ class LoginController extends Controller
                   'email'   => 'required|email',
                   'password' => 'required'
                 ];
+
+         // dd($request->all());       
 
         $validator = Validator::make($request->all(), $rules);
         
@@ -58,20 +60,31 @@ class LoginController extends Controller
           if(!empty($request->modal))
           {
              // Login as Vendor
-            if(!empty($request->vendor))
-            {
+            // if(!empty($request->vendor))
+            // {
               if(Auth::guard('web')->user()->is_vendor == 2)
               {
+                 $log = new Log([
+                        'topic'=>'Vendor',
+                        'code'=>200,
+                        'log_topic'=>'Vendor-Login',
+                        'log_message'=> auth()->user()->email.' '.auth()->user()->id.' Login Successfully.',
+                        'log_level'=>'vendor_user',
+                        ]);
+
+                  Auth::guard('web')->user()->logs()->save($log);
+
                 return response()->json(route('vendor-dashboard'));
               }
               else {
                 return response()->json(route('user-package'));
                 }
-            }
+            // }
           // Login as User
           return response()->json(1);          
           }
           // Login as User
+          
           return response()->json(route('user-dashboard'));
       }
 

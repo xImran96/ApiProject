@@ -19,6 +19,7 @@ class DealerOrdersController extends Controller
         $orders = DealerOrderDetail::where('dealer_id', '=', $user->id)->orderBy('id', 'desc')->get()->groupBy('order_number');
 
         return view('vendor.dealer.index', compact('user', 'orders'));
+
     }
 
 
@@ -34,14 +35,7 @@ class DealerOrdersController extends Controller
         $order_value = DealerOrder::where('customer_email', $order->customer_email)->whereBetween('created_at', [$dateS, $dateE])->sum('pay_amount');
         //customer  has paid before before and date and complete order 
         $last_post_paid = DealerOrder::where('customer_email', $order->customer_email)->where([['status', 'completed'], ['method', 'post_paid']])->latest('created_at')->first();
-        if($order->post_paid_confirm>=1)
-        {
-            $installments = Installment::where('order_number',$order->order_number)->get();
-        }
-        $last_post_paid_date = null;
-        if ($last_post_paid) {
-            $last_post_paid_date = $last_post_paid->created_at;
-        }
+
 
         $bronze = false;
         $sliver = false;

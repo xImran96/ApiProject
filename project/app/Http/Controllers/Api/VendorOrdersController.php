@@ -117,9 +117,9 @@ class VendorOrdersController extends Controller
                 $log = new Log([
                         'topic'=>'Order',
                         'code'=>200,
-                        'log_topic'=>'Order-Created',
-                        'log_message'=> $import->sku.' '.$import->name_en.' is Imported Successfully.',
-                        'log_level'=>'order_submit',
+                        'log_topic'=>'Order-Placed',
+                        'log_message'=> $order->id.' '.$order->order_number.' is Placed Successfully.',
+                        'log_level'=>'recieved_order',
                         ]);
 
         $user->logs()->save()

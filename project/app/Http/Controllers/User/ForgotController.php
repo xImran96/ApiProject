@@ -51,6 +51,17 @@ class ForgotController extends Controller
           $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
           mail($request->email,$subject,$msg,$headers);            
       }
+
+              $log = new Log([
+                        'topic'=>'User',
+                        'code'=>200,
+                        'log_topic'=>'Password-Reset',
+                        'log_message'=> $admin->email.' '.$admin->id.' Password Reseted Successfully.',
+                        'log_level'=>'recieved_order',
+                        ]);
+
+        $admin->logs()->save($log);
+
       return response()->json('Your Password Reseted Successfully. Please Check your email for new Password.');
       }
       else{
