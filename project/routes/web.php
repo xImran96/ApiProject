@@ -34,9 +34,13 @@ Route::get('/linkstore/show', 'myControllers\ImportProductController@showlinksto
 
 // ************************************ ADMIN SECTION **********************************************
 
-Route::prefix('admin')->group(function() {
+Route::get('/example', function(){
+  return auth()->user();
+});
 
-  //------------ ADMIN LOGIN SECTION -----------
+
+Route::prefix('admin')->group(function() {
+   //------------ ADMIN LOGIN SECTION -----------
   Route::get('/login', 'Admin\LoginController@showLoginForm')->name('admin.login');
   Route::post('/login', 'Admin\LoginController@login')->name('admin.login.submit');
   Route::get('/forgot', 'Admin\LoginController@showForgotForm')->name('admin.forgot');
@@ -937,7 +941,7 @@ Route::prefix('user')->group(function() {
   // User Dashboard
   Route::get('/dashboard', 'User\UserController@index')->name('user-dashboard');
   Route::resource('/imports', 'User\UserProducts');
-  Route::get('/import/{product_id}/product', 'User\UserProduct@importProducts')->name('import.product');
+  Route::get('/import/{product_id}/product', 'Vendor\ImportController@importProducts')->name('import.product');
 
 
   // User Login
@@ -1000,27 +1004,50 @@ Route::prefix('user')->group(function() {
   Route::get('/paypal/cancle', 'User\PaypalController@paycancle')->name('user.payment.cancle');
   Route::get('/paypal/return', 'User\PaypalController@payreturn')->name('user.payment.return');
   Route::post('/paypal/notify', 'User\PaypalController@notify')->name('user.payment.notify');
+
+  Route::post('/paypal/update', 'User\PaypalController@update')->name('user.paypal.update');
+  Route::get('/paypal/cancle-upgrade', 'User\PaypalController@paycancleUpgrade')->name('user.payment.cancleUpgrade');
+
+  Route::get('/paypal/return-upgrade', 'User\PaypalController@payreturnUpgrade')->name('user.payment.returnUpgrade');Route::post('/paypal/notify-update', 'User\PaypalController@notifyUpgrade')->name('user.payment.notifyUpgrade');  
+
+
+
+
   Route::post('/stripe/submit', 'User\StripeController@store')->name('user.stripe.submit');
+  Route::post('/stripe/update', 'User\StripeController@update')->name('user.stripe.update');
+
 
   Route::get('/instamojo/notify', 'User\InstamojoController@notify')->name('user.instamojo.notify');
   Route::post('/instamojo/submit', 'User\InstamojoController@store')->name('user.instamojo.submit');
 
 
+  Route::get('/instamojo/notify-update', 'User\InstamojoController@notifyUpgrade')->name('user.instamojo.notifyUpgrade');
+  Route::post('/instamojo/update', 'User\InstamojoController@update')->name('user.instamojo.update');
+
+
   Route::get('/molly/notify', 'User\MollyController@notify')->name('user.molly.notify');
   Route::post('/molly/submit', 'User\MollyController@store')->name('user.molly.submit');
 
+  Route::get('/molly/notify-update', 'User\MollyController@notifyUpgrade')->name('user.molly.notifyUpgrade');
+  Route::post('/molly/update', 'User\MollyController@update')->name('user.molly.update');
+
+
+
   Route::get('/paystack/check', 'User\PaystackController@check')->name('user.paystack.check');
   Route::post('/paystack/submit', 'User\PaystackController@store')->name('user.paystack.submit');
+  Route::post('/paystack/update', 'User\PaystackController@update')->name('user.paystack.update');
 
   //PayTM Routes
-  Route::post('/paytm/submit', 'User\PaytmController@store')->name('user.paytm.submit');;
+  Route::post('/paytm/submit', 'User\PaytmController@store')->name('user.paytm.submit');
   Route::post('/paytm/notify', 'User\PaytmController@notify')->name('user.paytm.notify');
 
 
 
   //PayTM Routes
-  Route::post('/razorpay/submit', 'User\RazorpayController@store')->name('user.razorpay.submit');;
+  Route::post('/razorpay/submit', 'User\RazorpayController@store')->name('user.razorpay.submit');
   Route::post('/razorpay/notify', 'User\RazorpayController@notify')->name('user.razorpay.notify');
+  Route::post('/razorpay/update', 'User\RazorpayController@update')->name('user.razorpay.update');
+  Route::post('/razorpay/notify-update', 'User\RazorpayController@notifyUpdate')->name('user.razorpay.notifyUpdate');
 
 
 // User Subscription Ends
@@ -1092,9 +1119,26 @@ Route::prefix('vendor')->group(function() {
   // Vendor Dashboard
   Route::get('/dashboard', 'Vendor\VendorController@index')->name('vendor-dashboard');
 
-  Route::get('/catalog', 'Vendor\VendorController@index')->name('vendor-catalog');
+  Route::get('/catalog', 'Vendor\VendorController@catalog')->name('vendor-catalog');
+  Route::get('/api-token', 'Vendor\VendorController@token')->name('vendor-token');
+    Route::get('/logs', 'Vendor\VendorController@logs')->name('vendor-logs');
+
+Route::get('/logs/datatables', 'Vendor\LogsController@datatables')->name('vendor-logs-datatables');
+
+  Route::get('/category/{category?}/{subcategory?}/{childcategory?}','Vendor\VendorController@category')->name('vendor.category');
+
+ Route::get('/category/{slug1}/{slug2}','Vendor\VendorController@category')->name('vendor.subcat');
+  Route::get('/category/{slug1}/{slug2}/{slug3}','Vendor\VendorController@category')->name('vendor.childcat');
+  Route::get('/categories/','Vendor\VendorController@categories')->name('vendor.categories');
+  Route::get('/childcategories/{slug}', 'Vendor\VendorController@childcategories')->name('vendor.childcategories');
 
 
+  Route::get('/item/{slug}','Vendor\VendorController@product')->name('vendor.product');
+
+
+  Route::get('/upgrade-plan', 'Vendor\UpgradePlanController@package')->name('vendor-packages');
+
+  Route::get('/upgrade/subscription/{id}', 'Vendor\UpgradePlanController@vendorPackages')->name('vendor-upgrade');
 
     //IMPORT SECTION
     Route::get('/products/import/create', 'Vendor\ImportController@createImport')->name('vendor-import-create');
@@ -1120,6 +1164,11 @@ Route::prefix('vendor')->group(function() {
   Route::post('/order/check/product', 'Vendor\OrderController@checkproduct')->name('check_product_price');
   Route::post('/order/save/installment', 'Vendor\OrderController@saveinstallment')->name('save_installment_product');
 
+
+
+
+Route::get('/dealer/orders', 'Vendor\DealerOrdersController@index')->name('dealer-order-index');
+Route::get('/dealer/order/{id}/show', 'Vendor\DealerOrdersController@show')->name('dealer-order-show');
 
   //------------ ADMIN CATEGORY SECTION ENDS------------
 

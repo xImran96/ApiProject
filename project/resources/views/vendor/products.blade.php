@@ -6,7 +6,7 @@
         <div class="row">
             @include('includes.user-dashboard-sidebar')
             <div class="col-lg-8 row ">
-@include('includes.product.filtered-user-products')
+    @include('includes.product.filtered-user-products')
     </div>
 </section>
 

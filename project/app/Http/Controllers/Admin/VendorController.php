@@ -11,7 +11,6 @@ use App\Models\Generalsetting;
 use App\Models\Withdraw;
 use App\Models\Currency;
 use App\Models\UserSubscription;
-
 use Validator;
 use Auth;
 
@@ -48,6 +47,7 @@ class VendorController extends Controller
     {
         return view('admin.vendor.index');
     }
+
 
     //*** GET Request
     public function color()

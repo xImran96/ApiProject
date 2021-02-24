@@ -312,7 +312,7 @@
                       @endif
 
 
-
+                      @if(auth()->user())
                       @if(count(auth()->user()->myProducts->where('product_id' , $productt->id)) == 0)
 
                                  <li class="addtocart">
@@ -321,6 +321,7 @@
                                   </button>
                                 </li>
                                 @endif
+                          @endif      
 
                       @endif
 
@@ -1063,6 +1064,7 @@ $('.qtminus').click(function(){
 
   var qty = $('.qttotal').html();
   var min_order=1;
+  
     @if($productt->min_order_qty) 
   min_order =  {{$productt->min_order_qty}}
   if(min_order+1 >= qty)
