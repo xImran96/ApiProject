@@ -115,8 +115,9 @@
                                                 $user = App\Models\User::find($product['item']['user_id']);
                                                 @endphp
                                                 @if(isset($user))
+                                                <?php $productt = App\Models\Product::find($product['item']['id']) ?>
                                                 <a target="_blank"
-                                                    href="{{ route('front.product', $product['item']['slug']) }}">{{ $product['item']['name']}}</a>
+                                                    href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}">{{ $product['item']['name']}}</a>
                                                 @else
                                                 <a href="javascript:;">{{$product['item']['name']}}</a>
                                                 @endif

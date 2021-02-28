@@ -247,6 +247,7 @@
                                     </thead>
                                     <tbody>
                                         @foreach($cart->items as $product)
+                                        <?php $productt = App\Models\Product::find($product['item']['id']) ?>
                                         <tr>
                                             <td>{{ $product['item']['id'] }}</td>
                                             <td>
@@ -258,15 +259,15 @@
                                                 @endphp
                                                 @if(isset($user))
                                                 <a target="_blank"
-                                                    href="{{ route('front.product', $product['item']['slug']) }}">{{mb_strlen($product['item']['name'],'utf-8') > 30 ? mb_substr($product['item']['name'],0,30,'utf-8').'...' : $product['item']['name']}}</a>
+                                                    href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}">{{mb_strlen($product['item']['name'],'utf-8') > 30 ? mb_substr($product['item']['name'],0,30,'utf-8').'...' : $product['item']['name']}}</a>
                                                 @else
                                                 <a target="_blank"
-                                                    href="{{ route('front.product', $product['item']['slug']) }}">{{mb_strlen($product['item']['name'],'utf-8') > 30 ? mb_substr($product['item']['name'],0,30,'utf-8').'...' : $product['item']['name']}}</a>
+                                                    href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}">{{mb_strlen($product['item']['name'],'utf-8') > 30 ? mb_substr($product['item']['name'],0,30,'utf-8').'...' : $product['item']['name']}}</a>
                                                 @endif
                                                 @else
 
                                                 <a target="_blank" class="d-block"
-                                                    href="{{ route('front.product', $product['item']['slug']) }}">{{mb_strlen($product['item']['name'],'utf-8') > 30 ? mb_substr($product['item']['name'],0,30,'utf-8').'...' : $product['item']['name']}}</a>
+                                                    href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}">{{mb_strlen($product['item']['name'],'utf-8') > 30 ? mb_substr($product['item']['name'],0,30,'utf-8').'...' : $product['item']['name']}}</a>
 
                                                 @endif
                                                 @if($product['item']['type'] != 'Physical')

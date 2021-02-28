@@ -46,12 +46,13 @@
                     @if(Session::has('cart'))
 
                     @foreach($products as $product)
+                    <?php $productt = App\Models\Product::find($product['item']['id']) ?>
 
                     <tr class="cremove{{ $product['item']['id'].$product['size'].$product['color'].str_replace(str_split(' ,'),'',$product['values']) }}">
                       <td class="product-img">
                         <div class="item">
                           <img src="{{ $product['item']['photo'] ? asset('assets/images/products/'.$product['item']['photo']):asset('assets/images/noimage.png') }}" alt="">
-                          <p class="name"><a href="{{ route('front.product', $product['item']['slug']) }}">{{mb_strlen($product['item']['name'],'utf-8') > 35 ? mb_substr($product['item']['name'],0,35,'utf-8').'...' : $product['item']['name']}}</a></p>
+                          <p class="name"><a href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}">{{mb_strlen($product['item']['name'],'utf-8') > 35 ? mb_substr($product['item']['name'],0,35,'utf-8').'...' : $product['item']['name']}}</a></p>
                         </div>
                       </td>
                                             <td>

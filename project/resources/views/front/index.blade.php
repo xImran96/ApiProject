@@ -107,7 +107,7 @@
 								<div class="item-img">
 								
 								
-									<img class="img-fluid" src="{{ $vender->photo ? asset('assets/images/users/'.$vender->photo):asset('assets/images/noimage.png') }}" alt="">
+									<img class="img-fluid" src="{{ $vender->photo ? asset('assets/images/users/'.$vender->photo):asset('assets/images/noimage.png') }}" alt="{{ $vender->shop_name }}"  title="{{ $vender->shop_name }}">
 								</div>
 								<div class="info">
 								

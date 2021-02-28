@@ -12,6 +12,13 @@ class Blog extends Model
 
     public $timestamps = false;
 
+    protected $appends = array('slug_title');
+
+    public function getSlugtitleAttribute()
+    {
+      return $this->slug_title('-');
+    }
+
     public static function boot()
     {
         parent::boot();
@@ -28,6 +35,20 @@ class Blog extends Model
 				$data[$dt] = __('Deleted');
 			}
 		});
-    }    
+    }
 
+    private function slug_title($separator = '-')
+    {
+        $string = trim($this->title);
+        $string = mb_strtolower($string, 'UTF-8');
+
+        $string = preg_replace("/[^\\pL\\pN]+/u", " ", $string);
+        
+        // Remove multiple dashes or whitespaces
+        $string = preg_replace("/[\s-]+/", " ", $string);
+        // Convert whitespaces and underscore to the given separator
+        $string = preg_replace("/[\s_]/", $separator, $string);
+
+       return rawurldecode($string);
+    }
 }

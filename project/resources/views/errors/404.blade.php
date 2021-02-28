@@ -6,16 +6,18 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
-        <ul class="pages">
-          <li>
-            <a href="{{ route('front.index') }}">
-              {{ $langg->lang17 }}
+        <ul class="pages" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="{{ route('front.index') }}" itemprop="item">
+              <span itemprop="name">{{ $langg->lang17 }}</span>
             </a>
+            <meta itemprop="position" content="1">
           </li>
-          <li>
-            <a href="javascript:;">
-              {{ $langg->lang427 }}
+          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="javascript:;" itemprop="item">
+              <span itemprop="name">{{ $langg->lang427 }}</span>
             </a>
+            <meta itemprop="position" content="2">
           </li>
         </ul>
       </div>
@@ -30,9 +32,7 @@
         <div class="col-lg-12">
           <div class="content">
             <img src="{{ $gs->error_banner ? asset('assets/images/'.$gs->error_banner):asset('assets/images/noimage.png') }}" alt="">
-            <h4 class="heading">
-              {{ $langg->lang428 }}
-            </h4>
+            <h1 class="heading">{{ $langg->lang428 }}</h1>
             <p class="text">
               {{ $langg->lang429 }}
             </p>

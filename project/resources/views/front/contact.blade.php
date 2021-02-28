@@ -8,16 +8,18 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <ul class="pages">
-                    <li>
-                        <a href="{{ route('front.index') }}">
-                            {{ $langg->lang17 }}
+                <ul class="pages" itemscope itemtype="http://schema.org/BreadcrumbList">
+                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                        <a href="{{ route('front.index') }}" itemprop="item">
+                            <span itemprop="name">{{ $langg->lang17 }}</span>
                         </a>
+                        <meta itemprop="position" content="1">
                     </li>
-                    <li>
-                        <a href="{{ route('front.contact') }}">
-                            {{ $langg->lang20 }}
+                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                        <a href="{{ route('front.contact') }}" itemprop="item">
+                            <span itemprop="name">{{ $langg->lang20 }}</span>
                         </a>
+                        <meta itemprop="position" content="2">
                     </li>
                 </ul>
             </div>
@@ -28,11 +30,12 @@
 
 
     <!-- Contact Us Area Start -->
-    <section class="contact-us">
+    <section class="contact-us" itemscope itemtype="http://schema.org/ContactPage">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="contact-section-title">
+                            <h1 style="text-align:center;font-size:30px" itemprop="name">{{ $langg->lang20 }}</h1>
                             {!! $ps->contact_title !!}
                             {!! $ps->contact_text !!}
                     </div>

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use InvalidArgumentException;
 use Markury\MarkuryPost;
+use Butschster\Head\Facades\Meta;
 
 class FrontendController extends Controller
 {
@@ -148,7 +149,10 @@ class FrontendController extends Controller
             return false;
 
           });
-
+      $seo = DB::table('seotools')->first();
+      Meta::setKeywords($seo->meta_keys)
+          ->setDescription(isset($seo->meta_description) ? $seo->meta_description : null)
+          ->setCanonical(route('front.index'));
 	    return view('front.index',compact('ps','sliders','top_small_banners','feature_products','vendors'));
 	}
 
@@ -311,6 +315,8 @@ class FrontendController extends Controller
             if($request->ajax()){
                 return view('front.pagination.blog',compact('blogs'));
             }
+    Meta::setPaginationLinks($blogs)
+        ->setCanonical(route('front.blog'));
 		return view('front.blog',compact('blogs'));
 	}
 
@@ -357,13 +363,16 @@ class FrontendController extends Controller
         return view('front.blog',compact('blogs','date'));
     }
 
-    public function blogshow($id)
+    public function blogshow($id, $slug)
     {
         $this->code_image();
         $tags = null;
         $tagz = '';
         $bcats = BlogCategory::all();
         $blog = Blog::findOrFail($id);
+        if ($blog->slug_title != $slug) {
+            return redirect()->route('front.blogshow', [$blog->id, $blog->slug_title])->setStatusCode(301);
+        }
         $blog->views = $blog->views + 1;
         $blog->update();
         $name = Blog::pluck('tags')->toArray();
@@ -374,9 +383,36 @@ class FrontendController extends Controller
         $tags = array_unique(explode(',',$tagz));
 
         $archives= Blog::orderBy('created_at','desc')->get()->groupBy(function($item){ return $item->created_at->format('F Y'); })->take(5)->toArray();
-        $blog_meta_tag = $blog->meta_tag;
-        $blog_meta_description = $blog->meta_description;
-        return view('front.blogshow',compact('blog','bcats','tags','archives','blog_meta_tag','blog_meta_description'));
+
+        $gs = Generalsetting::findOrFail(1);
+        $blog_title = $blog->title;
+        $blog_description = trim(preg_replace('/\s\s+/', ' ', strip_tags(html_entity_decode($blog->meta_description))));
+        $og = new \Butschster\Head\Packages\Entities\OpenGraphPackage('og');
+        $og->setType('article')
+           ->setSiteName($gs->title)
+           ->setTitle($blog_title)
+           ->setDescription(substr($blog_description, 0, 255))
+           ->setUrl(route('front.blogshow', [$blog->id, $blog->slug_title]))
+           ->addImage(asset('assets/images/blogs/'.$blog->photo));
+
+        $card = new \Butschster\Head\Packages\Entities\TwitterCardPackage('card');
+        $card->setType('summary')
+             ->setSite('@'.$gs->title)
+             ->setTitle($blog_title)
+             ->setDescription(substr($blog_description, 0, 255));
+
+        Meta::setTitleSeparator('|')
+            ->prependTitle($blog_title)
+            ->setKeywords($blog->meta_tag)
+            ->setDescription($blog_description)
+            ->addMeta('author', [
+                'content' => $gs->title,
+            ])
+            ->setCanonical(route('front.blogshow', [$blog->id, $blog->slug_title]))
+            ->registerPackage($og)
+            ->registerPackage($card);
+
+        return view('front.blogshow',compact('blog','bcats','tags','archives','blog_title'));
     }
 
 
@@ -403,7 +439,11 @@ class FrontendController extends Controller
         {
             return response()->view('errors.404')->setStatusCode(404);
         }
-
+        Meta::setTitleSeparator('|')
+            ->prependTitle($page->title)
+            ->setKeywords($page->meta_tag)
+            ->setDescription($page->meta_description)
+            ->setCanonical(route('front.page', $slug));
         return view('front.page',compact('page'));
     }
 // -------------------------------- PAGE SECTION ENDS----------------------------------------

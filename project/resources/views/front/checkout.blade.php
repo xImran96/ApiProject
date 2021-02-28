@@ -240,6 +240,7 @@
 										
 										<div class="order-area">
 											@foreach($products as $product)
+                      <?php $productt = App\Models\Product::find($product['item']['id']) ?>
 											<div class="order-item">
 												<div class="product-img">
 													<div class="d-flex">
@@ -250,7 +251,7 @@
 												</div>
 												<div class="product-content">
 													<p class="name"><a
-															href="{{ route('front.product', $product['item']['slug']) }}"
+															href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}"
 															target="_blank">{{ $product['item']['name'] }}</a></p>
 													<div class="unit-price">
 														<h5 class="label">{{ $langg->lang754 }} : </h5>

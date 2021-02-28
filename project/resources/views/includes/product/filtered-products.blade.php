@@ -1,9 +1,9 @@
 			@if (count($prods) > 0)
 					@foreach ($prods as $key => $prod)
-									<div class="col-lg-4 col-md-4 col-6 remove-padding">
+									<div class="col-lg-4 col-md-4 col-6 remove-padding" itemscope itemtype="http://schema.org/Product">
 
 
-										<a href="{{ route('front.product', $prod->slug) }}" class="item">
+										<a href="{{ route('front.product', [$prod->id, $prod->slug_name]) }}" class="item">
 											<div class="item-img">
 												@if(!empty($prod->features))
 													<div class="sell-area">
@@ -39,7 +39,7 @@
 															</li>
 														</ul>
 													</div>
-												<img class="img-fluid" src="{{ $prod->photo ? asset('assets/images/thumbnails/'.$prod->photo):asset('assets/images/noimage.png') }}" alt="">
+												<img class="img-fluid" src="{{ $prod->photo ? asset('assets/images/thumbnails/'.$prod->photo):asset('assets/images/noimage.png') }}" alt="{{ Session::get('language') != 1 ? $prod->name_ar : $prod->name_en }}" title="{{ Session::get('language') != 1 ? $prod->name_ar : $prod->name_en }}">
 											</div>
 											<div class="info">
 												<div class="stars">
@@ -51,7 +51,7 @@
 
 												
 												@if(Auth::guard('web')->check())
-												<h4 class="price">{{ $prod->showPrice() }} <del><small>{{ $prod->showPreviousPrice() }}</small></del></h4>
+												<h4 class="price" itemprop="price">{{ $prod->showPrice() }} <del><small>{{ $prod->showPreviousPrice() }}</small></del></h4>
 												@else 
 												<h4 class="price"><span class="add-to-cart-quick add-to-cart-btn login-to-show-price"
 													data-href="{{ route('user.login') }}">
@@ -60,7 +60,7 @@
 												</span></h4>
 												@endif
 												
-														<h5 class="name">{{ $prod->showName() }}</h5>
+														<h5 class="name" itemprop="name">{{ $prod->showName() }}</h5>
 														<div class="item-cart-area">
 															@if($prod->product_type == "affiliate")
 																<span class="add-to-cart-btn affilate-btn"

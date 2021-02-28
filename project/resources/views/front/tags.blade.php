@@ -6,12 +6,14 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
-					<ul class="pages">
-			            <li>
-			            	<a href="{{route('front.index')}}">{{ $langg->lang17 }}</a>
+					<ul class="pages" class="pages" itemscope itemtype="http://schema.org/BreadcrumbList">
+			            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+			            	<a href="{{route('front.index')}}" itemprop="item"><span itemprop="name">{{ $langg->lang17 }}</span></a>
+                    <meta itemprop="position" content="1">
 			            </li>
-			            <li>
-			            	<a href="{{route('front.tag',$tags)}}">{{ $langg->lang59 }}: {{$tags}}</a>
+			            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+			            	<a href="{{route('front.tag',$tags)}}" itemprop="item"><span itemprop="name">{{ $langg->lang59 }}: {{$tags}}</span></a>
+                    <meta itemprop="position" content="2">
 			            </li>
 					</ul>
 				</div>

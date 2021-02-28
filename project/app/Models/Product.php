@@ -23,7 +23,12 @@ class Product extends Model
        ,'link','platform','region','licence_type','measure','discount_date',
        'is_discount','whole_sell_qty','whole_sell_discount','catalog_id','slug'];
 
-    
+    protected $appends = array('slug_name');
+
+    public function getSlugNameAttribute()
+    {
+        return $this->slug_name('-');
+    }
 
     public static function filterProducts($collection)  
     {
@@ -549,5 +554,22 @@ class Product extends Model
         return explode(',', $value);
     }
 
+    private function slug_name($separator = '-')
+    {
+        if(!empty($this->name_en)) {
+            $string = trim($this->name_en);
+        } else if(!empty($this->name_ar)) {
+            $string = trim($this->name_ar);
+        }
+        $string = mb_strtolower($string, 'UTF-8');
 
+        $string = preg_replace("/[^\\pL\\pN]+/u", " ", $string);
+        
+        // Remove multiple dashes or whitespaces
+        $string = preg_replace("/[\s-]+/", " ", $string);
+        // Convert whitespaces and underscore to the given separator
+        $string = preg_replace("/[\s_]/", $separator, $string);
+
+       return rawurldecode($string);
+    }
 }

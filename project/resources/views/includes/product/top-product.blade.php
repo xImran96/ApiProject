@@ -1,6 +1,6 @@
 	<div class="col-lg-3 col-md-4 col-6 remove-padding">
 
-		<a class="item" href="{{ route('front.product', $prod->slug) }}">
+		<a class="item" href="{{ route('front.product', [$prod->id, $prod->slug_name]) }}">
 			<div class="item-img">
 			@if(!empty($prod->features))
 					<div class="sell-area">
@@ -36,7 +36,7 @@
 							</li>
 						</ul>
 					</div>
-				<img class="img-fluid" src="{{ $prod->thumbnail ? asset('assets/images/thumbnails/'.$prod->thumbnail):asset('assets/images/noimage.png') }}" alt="">
+				<img class="img-fluid" src="{{ $prod->thumbnail ? asset('assets/images/thumbnails/'.$prod->thumbnail):asset('assets/images/noimage.png') }}" alt="{{ Session::get('language') != 1 ? $prod->name_ar : $prod->name_en }}" title="{{ Session::get('language') != 1 ? $prod->name_ar : $prod->name_en }}">
 			</div>
 			<div class="info">
 				<div class="stars">

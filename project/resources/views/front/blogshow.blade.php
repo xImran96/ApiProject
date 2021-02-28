@@ -27,21 +27,24 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
-          <ul class="pages">
-            <li>
-              <a href="{{ route('front.index') }}">
-                {{ $langg->lang17 }}
+          <ul class="pages" itemscope itemtype="http://schema.org/BreadcrumbList">
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+              <a href="{{ route('front.index') }}" itemprop="item">
+                <span itemprop="name">{{ $langg->lang17 }}</span>
               </a>
+              <meta itemprop="position" content="1">
             </li>
-            <li>
-              <a href="{{ route('front.blog') }}">
-                {{ $langg->lang18 }}
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+              <a href="{{ route('front.blog') }}" itemprop="item">
+                <span itemprop="name">{{ $langg->lang18 }}</span>
               </a>
+              <meta itemprop="position" content="2">
             </li>
-            <li>
-              <a href="{{ route('front.blogshow',$blog->id) }}">
-                {{ $langg->lang39 }}
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+              <a href="{{ route('front.blogshow', [$blog->id, $blog->slug_title]) }}" itemprop="item">
+                <span itemprop="name">{{ $langg->lang39 }}</span>
               </a>
+              <meta itemprop="position" content="3">
             </li>
           </ul>
       </div>
@@ -53,23 +56,22 @@
 
 
   <!-- Blog Details Area Start -->
-  <section class="blog-details" id="blog-details">
+  <section class="blog-details" id="blog-details" itemprop='blogPost' itemscope='itemscope' itemtype='http://schema.org/BlogPosting'>
+    <meta content='{{ route('front.blogshow', [$blog->id, $blog->slug_title]) }}' itemprop='url'/>
     <div class="container">
       <div class="row">
         <div class="col-lg-8">
           <div class="blog-content">
             <div class="feature-image">
-              <img class="img-fluid" src="{{ asset('assets/images/blogs/'.$blog->photo) }}" alt="">
+              <img class="img-fluid" src="{{ asset('assets/images/blogs/'.$blog->photo) }}" alt="{{ $blog->title }}" title="{{ $blog->title }}" itemprop="image">
             </div>
             <div class="content">
-                <h3 class="title">
-                    {{ $blog->title }}
-                  </h3>
+                <h1 class="title" itemprop='name'>{{ $blog->title }}</h1>
                   <ul class="post-meta">
                     <li>
                       <a href="javascript:;">
                         <i class="icofont-calendar"></i>
-                        {{ date('d M, Y',strtotime($blog->created_at)) }}
+                        <span itemprop='datePublished'>{{ date('d M, Y',strtotime($blog->created_at)) }}</span>
                       </a>
                     </li>
                     <li>
@@ -85,7 +87,7 @@
                       </a>
                     </li>
                   </ul>
-                  <div id="overflowTest"> {!! $blog->details !!}</div>
+                  <div id="overflowTest" itemprop='description articleBody'> {!! $blog->details !!}</div>
                  
 
                   <div class="tag-social-link">
@@ -174,10 +176,10 @@
                 <li>
                   <div class="post">
                     <div class="post-img">
-                      <img style="width: 73px; height: 59px;" src="{{ asset('assets/images/blogs/'.$blog->photo) }}" alt="">
+                      <img style="width: 73px; height: 59px;" src="{{ asset('assets/images/blogs/'.$blog->photo) }}" alt="{{ $blog->title }}" title="{{ $blog->title }}">
                     </div>
                     <div class="post-details">
-                      <a href="{{ route('front.blogshow',$blog->id) }}">
+                      <a href="{{ route('front.blogshow', [$blog->id, $blog->slug_title]) }}">
                           <h4 class="post-title">
                               {{mb_strlen($blog->title,'utf-8') > 45 ? mb_substr($blog->title,0,45,'utf-8')." .." : $blog->title}}
                           </h4>

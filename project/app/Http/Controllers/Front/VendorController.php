@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Collection;
+use Butschster\Head\Facades\Meta;
 
 
 class VendorController extends Controller
@@ -63,6 +64,10 @@ class VendorController extends Controller
         $vprods = (new Collection(Product::filterProducts($prods)))->paginate(9);
         $data['vprods'] = $vprods;
 
+        Meta::setTitleSeparator('|')
+            ->prependTitle($vendor->shop_name)
+            ->setPaginationLinks($vprods)
+            ->setCanonical(route('front.vendor', $vendor->shop_name));
 
         return view('front.vendor', $data);
     }

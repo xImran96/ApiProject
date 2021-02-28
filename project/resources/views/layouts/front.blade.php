@@ -1,30 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ Session::get('language') != 1 ? 'ar' : 'en' }}">
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="f+e-Ww4=[Pp4wyEPLdVx4LxTsQ">
+  {!! Meta::toHtml() !!}
     @if(isset($page->meta_tag) && isset($page->meta_description))
         <meta name="keywords" content="{{ $page->meta_tag }}">
         <meta name="description" content="{{ $page->meta_description }}">
-		<title>{{$gs->title}}</title>
-    @elseif(isset($blog->meta_tag) && isset($blog->meta_description))
-        <meta name="keywords" content="{{ $blog->meta_tag }}">
-        <meta name="description" content="{{ $blog->meta_description }}">
-		<title>{{$gs->title}}</title>
-    @elseif(isset($productt))
-		<meta name="keywords" content="{{ !empty($productt->meta_tag) ? implode(',', $productt->meta_tag ): '' }}">
-		<meta name="description" content="{{ $productt->meta_description != null ? $productt->meta_description : strip_tags($productt->description) }}">
-	    <meta property="og:title" content="{{$productt->name}}" />
-	    <meta property="og:description" content="{{ $productt->meta_description != null ? $productt->meta_description : strip_tags($productt->description) }}" />
-	    <meta property="og:image" content="{{asset('assets/images/thumbnails/'.$productt->thumbnail)}}" />
-	    <meta name="author" content="hareer">
-    	<title>{{substr($productt->name, 0,11)."-"}}{{$gs->title}}</title>
-    @else
-	    <meta name="keywords" content="{{ $seo->meta_keys }}">
-	    <meta name="author" content="hareer">
 		<title>{{$gs->title}}</title>
     @endif
 	<!-- favicon -->
@@ -209,9 +193,11 @@
 			<div class="row ">
 				<div class="col-lg-2 col-sm-6 col-5 remove-padding">
 					<div class="logo">
-						<a href="{{ route('front.index') }}">
-							<img src="{{asset('assets/images/'.$gs->logo)}}" alt="">
-						</a>
+            <h1>
+  						<a href="{{ route('front.index') }}">
+  							<img src="{{asset('assets/images/'.$gs->logo)}}" alt="{{ env('APP_NAME') }}" title="{{ env('APP_NAME') }}">
+  						</a>
+            </h1>
 					</div>
 				</div>
 				<div class="col-lg-8 col-sm-12 remove-padding order-last order-sm-2 order-md-2">
@@ -221,7 +207,7 @@
 								<select name="category" id="category_select" class="categoris">
 									<option value="">{{ $langg->lang1 }}</option>
 									@foreach($categories as $data)
-									<option value="{{ $data->slug }}" {{ Request::route('category') == $data->slug ? 'selected' : '' }}>@if(Session::get('language')==2) {{ $data->name_ar }} @else {{$data->name_en}} @endif</option>
+									<option value="{{ $data->slug }}" {{ Request::route('category') == $data->slug ? 'selected' : '' }}>@if(Session::get('language')==1) {{ $data->name_en }} @else {{$data->name_ar}} @endif</option>
 									@endforeach
 								</select>
 							</div>
@@ -311,7 +297,7 @@ $category=App\Models\Category::find(71);
 								@foreach($subcats as $sub)
 
 							<li>
-									<a href="{{ route('front.subcat',['slug1' => $category->slug, 'slug2' => $sub->slug]) }}">@if(Session::get('language')==2)   {{ $sub->name_ar }} @else  {{ $sub->name_en }} @endif</a>
+									<a href="{{ route('front.subcat',['slug1' => $category->slug, 'slug2' => $sub->slug]) }}">@if(Session::get('language')==1)   {{ $sub->name_en }} @else  {{ $sub->name_ar }} @endif</a>
 
 							
 								
@@ -462,10 +448,10 @@ $category=App\Models\Category::find(71);
 							<li>
 								<div class="post">
 								  <div class="post-img">
-									<img style="width: 73px; height: 59px;" src="{{ asset('assets/images/blogs/'.$blog->photo) }}" alt="">
+									<img style="width: 73px; height: 59px;" src="{{ asset('assets/images/blogs/'.$blog->photo) }}" alt="{{$blog->title}}" title="{{$blog->title}}">
 								  </div>
 								  <div class="post-details">
-									<a href="{{ route('front.blogshow',$blog->id) }}">
+									<a href="{{ route('front.blogshow', [$blog->id, $blog->slug_title]) }}">
 										<h4 class="post-title">
 											{{mb_strlen($blog->title,'utf-8') > 45 ? mb_substr($blog->title,0,45,'utf-8')." .." : $blog->title}}
 										</h4>

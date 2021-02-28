@@ -38,9 +38,9 @@ class ProductController extends Controller
                             ->editColumn('name', function(Product $data) {
                                 $name =  mb_strlen($data->name_en,'UTF-8') > 50 ? mb_substr($data->name_en,0,50,'UTF-8').'...' : $data->name_en;
              
-                                $id = '<small>'.__("ID").': <a href="'.route('front.product', $data->slug).'" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
+                                $id = '<small>'.__("ID").': <a href="'.route('front.product', [$data->id, $data->slug_name]).'" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
 
-                                $id3 = $data->type == 'Physical' ?'<small class="ml-2"> '.__("SKU").': <a href="'.route('front.product', $data->slug).'" target="_blank">'.$data->sku.'</a>' : '';
+                                $id3 = $data->type == 'Physical' ?'<small class="ml-2"> '.__("SKU").': <a href="'.route('front.product', [$data->id, $data->slug_name]).'" target="_blank">'.$data->sku.'</a>' : '';
 
                                 return  $name.'<br>'.$id.$id3.$data->checkVendor();
                             })
@@ -83,9 +83,9 @@ class ProductController extends Controller
                             ->editColumn('name', function(Product $data) {
                                 $name =  mb_strlen($data->name_ar,'UTF-8') > 50 ? mb_substr($data->name_ar,0,50,'UTF-8').'...' : $data->name_ar;
              
-                                $id = '<small>'.__("ID").': <a href="'.route('front.product', $data->slug).'" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
+                                $id = '<small>'.__("ID").': <a href="'.route('front.product', [$data->id, $data->slug_name]).'" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
 
-                                $id3 = $data->type == 'Physical' ?'<small class="ml-2"> '.__("SKU").': <a href="'.route('front.product', $data->slug).'" target="_blank">'.$data->sku.'</a>' : '';
+                                $id3 = $data->type == 'Physical' ?'<small class="ml-2"> '.__("SKU").': <a href="'.route('front.product', [$data->id, $data->slug_name]).'" target="_blank">'.$data->sku.'</a>' : '';
 
                                 return  $name.'<br>'.$id.$id3.$data->checkVendor();
                             })
@@ -128,9 +128,9 @@ class ProductController extends Controller
          return Datatables::of($datas)
                             ->editColumn('name', function(Product $data) {
                                 $name = mb_strlen(strip_tags($data->name_en),'utf-8') > 50 ? mb_substr(strip_tags($data->name_en),0,50,'utf-8').'...' : strip_tags($data->name_en);
-                                $id = '<small>ID: <a href="'.route('front.product', $data->slug).'" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
+                                $id = '<small>ID: <a href="'.route('front.product', [$data->id, $data->slug_name]).'" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
 
-                                $id3 = $data->type == 'Physical' ?'<small class="ml-2"> SKU: <a href="'.route('front.product', $data->slug).'" target="_blank">'.$data->sku.'</a>' : '';
+                                $id3 = $data->type == 'Physical' ?'<small class="ml-2"> SKU: <a href="'.route('front.product', [$data->id, $data->slug_name]).'" target="_blank">'.$data->sku.'</a>' : '';
 
                                 return  $name.'<br>'.$id.$id3;
                             })

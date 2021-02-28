@@ -1,6 +1,6 @@
 @foreach($prods as $prod)
 	<div class="docname">
-		<a href="{{ route('front.product', $prod->slug) }}">
+		<a href="{{ route('front.product', [$prod->id, $prod->slug_name]) }}">
 			<img src="{{ asset('assets/images/thumbnails/'.$prod->thumbnail) }}" alt="">
 			<div class="search-content">
 				@if(Session::get('language')==2)	<p>{!! mb_strlen($prod->id,'utf-8') > 66 ? str_replace($slug,'<b>'.$slug.'</b>',mb_substr($prod->name_ar,0,66,'utf-8')).'...' : str_replace($slug,'<b>'.$slug.'</b>',$prod->name_ar)  !!} </p>
