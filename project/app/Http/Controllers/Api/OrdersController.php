@@ -29,10 +29,15 @@ class OrdersController extends Controller
 
     public function index()
     { 
+        // return $this->userToken();
+        // $user = User::where('token', $this->userToken())->first();
+        // return $user;
         try {
+           
             $user = User::where('token', $this->userToken())->first();
-             if(count($user->orders)!=0){
-                 return response()->json(['status'=>'Success 200', 'orders'=>$user->orders]);
+         
+            if(count($user->orders)!=0){
+                 return response()->json(['status'=>'Success 200']);
              }else{
                  return response()->json(['status'=>'Not Found 404', 'orders'=>`You Don't Have Any Orders`]);  
              }
@@ -178,7 +183,7 @@ class OrdersController extends Controller
         try{
         if(!Order::where('id',$id)->exists())
         {
-            return "Sorry the page does not exist.";
+            return response()->json(['status'=>'Not Found 404', 'orders'=>`You Don't Have Any Orders`]);  
         }
         $order = Order::findOrFail($id);
        
@@ -222,4 +227,6 @@ class OrdersController extends Controller
     {
         //
     }
+    
+   
 }

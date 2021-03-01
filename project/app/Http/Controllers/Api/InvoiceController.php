@@ -74,7 +74,7 @@ class InvoiceController extends Controller
          try {
         if(!Invoice::where('id',$id)->exists())
         {
-            return "Sorry the page does not exist.";
+            return response()->json(['status'=>'Not Found 404', 'orders'=>`You Don't Have Any Invoices`]);  
         }
         $invoice = Invoice::findOrFail($id);
        

@@ -480,7 +480,9 @@ public function category()
         return explode(',', $value);
     }
 
-
+     public function dealerOrder(){
+       return $this->hasMany('App\Models\DealerOrder');
+     }
     
 
 

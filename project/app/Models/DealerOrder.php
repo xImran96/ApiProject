@@ -13,5 +13,8 @@ class DealerOrder extends Model
     {
         return $this->hasMany('App\Models\DealerOrderDetail');
     }
+    public function importProduct(){
+        return $this->belongsTo('App\ImportProduct');
+    }
 
 }

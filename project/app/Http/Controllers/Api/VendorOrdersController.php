@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DealerOrder;
+use App\Models\DealerOrderDetail;
 use App\Models\User;
 use Illuminate\Support\Str;
 
@@ -26,7 +27,7 @@ class VendorOrdersController extends Controller
 
     public function index()
     {
-
+          
        
 
         try{
@@ -180,5 +181,33 @@ class VendorOrdersController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function cancel($id){
+       
+        try{
+            $user = User::where('token', $this->userToken())->first();
+            if(!$user){
+                return response()->json(['status'=>'Access token is missing or invalid, request new one 401']);  
+            }
+         if(!DealerOrder::where('id',$id)->where('dealer_id',$user->id)->exists())
+        {
+            return response()->json(['status'=>'Not Found 404', 'VendorOrder'=>`This Order Does Not Exist`]);  
+        }
+        $vendororder = DealerOrder::findOrFail($id);
+        $vendororder->status = 'declined';
+        $vendororder->update();
+        $vendororderDetail = DealerOrderDetail::where('dealer_id',$user->id)->where('dealer_order_id',$id)->first();
+        if($vendororderDetail){
+          $vendororderDetail->status = 'declined';
+          $vendororderDetail->update();
+        }
+         
+        
+       
+        return response()->json(['success'=>'Order Declined']);
+    }catch(\Throwable $th){
+     return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+    }
     }
 }

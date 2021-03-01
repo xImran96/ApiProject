@@ -252,7 +252,7 @@
                                     	<a href="{{ url('/profit') }}"><span> Profit </span></a>
                                     </li>
                                     <li>
-                                    	<a href="{{ route('vendor-banner') }}"><span>
+                                    	<a href="{{ route('finance') }}"><span>
                                     		<!-- {{ $langg->lang454 }} -->
                                     		Finance
                                     	</span></a>
