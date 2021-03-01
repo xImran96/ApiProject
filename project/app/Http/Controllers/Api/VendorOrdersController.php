@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DealerOrder;
+use App\Models\DealerOrderDetail;
 use App\Models\User;
+use DB;
+use App\Models\Log;
 use Illuminate\Support\Str;
 
 class VendorOrdersController extends Controller
@@ -65,11 +68,32 @@ class VendorOrdersController extends Controller
     public function store(Request $request)
     {
 
+             // dd($request->cart['items']);
+
+            $myArray =[];
+
+            for ($i=0; $i < count($request->cart['items']) ; $i++) { 
+                    
+                    $myArray[] = serialize($request->cart['items'][$i]);
+                     
+
+             }
+
+            $myArray2 = implode(",", $myArray);
+
+            // dd($myArray2);
+            $user = User::where('token', $this->userToken())->first();
+
+    
         try{
- 
+
+
+        DB::beginTransaction();
+
+        
         $order  = new DealerOrder;
-        $order->dealer_id = $request->dealer_id;
-        $order->cart      =    $request->cart;
+        $order->dealer_id = $user->id;
+        $order->cart      = $myArray2;
         $order->method    =  $request->method;
         $order->shipping  = $request->shipping;
         $order->pickup_location =  $request->pickup_location;
@@ -79,56 +103,66 @@ class VendorOrdersController extends Controller
         $order->charge_id = $request->charge_id;
         $order->order_number = Str::random(10);
         $order->payment_status = $request->payment_status;
-        $order->customer_email = $request->customer_email;
-        $order->customer_name = $request->customer_name;
-        $order->customer_country =  $request->customer_country;
-        $order->customer_phone = $request->customer_phone;
-        $order->customer_address = $request->customer_address;
-        $order->customer_city = $request->customer_city;
-        $order->customer_zip = $request->customer_zip;
-        $order->shipping_name = $request->shipping_name;
-        $order->shipping_country =$request->shipping_country;
-        $order->shipping_email = $request->shipping_email;
-        $order->shipping_phone =$request->shipping_phone;
-        $order->shipping_address = $request->shipping_address;
-        $order->shipping_city = $request->shipping_city;
-        $order->shipping_zip = $request->shipping_zip;
+        $order->customer_email = $request->customer['email'];
+        $order->customer_name = $request->customer['name'];
+        $order->customer_country =  $request->customer['country'];
+        $order->customer_phone = $request->customer['phone'];
+        $order->customer_address = $request->customer['address'];
+        $order->customer_city = $request->customer['city'];
+        $order->customer_zip = $request->customer['zip'];
+        $order->shipping_name = $request->shipping_details['name'];
+        $order->shipping_country =$request->shipping_details['country'];
+        $order->shipping_email = $request->shipping_details['email'];
+        $order->shipping_phone =$request->shipping_details['phone'];
+        $order->shipping_address = $request->shipping_details['address'];
+        $order->shipping_city = $request->shipping_details['city'];
+        $order->shipping_zip = $request->shipping_details['zip'];
         $order->order_note=$request->order_note;
         $order->coupon_code = $request->coupon_code;
         $order->coupon_discount = $request->coupon_discount ;
         $order->status = $request->status;
-        $order->post_paid_confirm = $request->post_paid_confirm;
-        $order->affilate_user = $request->affilate_user;
-        $order->affilate_charge = $request->affilate_charge;
-        $order->currency_sign = $request->currency_sign;
-        $order->currency_value = $request->currency_value;
+        $order->currency_sign = $request->currency['sign'];
+        $order->currency_value = $request->currency['value'];
         $order->shipping_cost =  $request->shipping_cost;
         $order->packing_cost = $request->packing_cost;
-        $order->tax =  $request->tax;
-        $order->dp = $request->dp ;
+        $order->tax = 0;
+        $order->dp = $request->dp;
         $order->pay_id =  $request->pay_id;
-        $order->dealer_shipping_id =  $request->dealer_shipping_id;
-        $order->dealer_packing_id = $request->dealer_packing_id;
+
         $order->save();
 
-        $user = User::where('token', $this->userToken())->first();
 
+        $details = DealerOrderDetail::create([
+                                'dealer_id'=>$user->id,
+                                'dealer_order_id'=>$order->id,
+                                'qty'=> count($request->cart['items']),
+                                'price'=>$order->pay_amount,
+                                'dealer_order_number'=>$order->order_number,
+                                'status'=>'pending'
+                                ]);
+        
 
-                $log = new Log([
-                        'topic'=>'Order',
+        $log = Log::create([
+                        'user_id'=>$user->id,
+                        'topic'=>'Vendor',
                         'code'=>200,
-                        'log_topic'=>'Order-Placed',
-                        'log_message'=> $order->id.' '.$order->order_number.' is Placed Successfully.',
-                        'log_level'=>'recieved_order',
-                        ]);
+                        'log_topic'=>'Vendor-Order',
+                        'log_message'=> $order->order_number.' '.$order->customer_name.' has place order Successfully.',
+                        'log_level'=>'order-placed',
+        ]);
 
-             $user->logs()->save()
+        if ($order && $details && $log) {
+                DB::commit();
+                 return response()->json(['status'=>'Success 200', 'message'=>'Order Has Been Placed Succesfully.']);
+        }else{
+            DB::rollback();
+             return response()->json(['status'=>'Success 404', 'message'=>'Check Your Daata.']);
+        }
 
+              
 
-           if($user->logs()->save()){
-
-             return response()->json(['status'=>'Success 200', 'message'=>'Order Has Been Placed Succesfully.']);
-           }
+       
+           
 
         }catch(\Throwable $th){
 
@@ -145,7 +179,29 @@ class VendorOrdersController extends Controller
      */
     public function show($id)
     {
-        //
+         try{
+
+        $user = User::where('token', $this->userToken())->first();
+
+
+
+        if(!$user->dealer_orders()->where('id', $id)->first())
+        {
+
+            return "Sorry the order does not exist.";
+
+        }
+        // $order = Order::findOrFail($id);
+        $order = $user->dealer_orders()->where('id', $id)->first();
+       
+          return response()->json(['status'=>'200', 'Order'=>$order]);
+        // return response()->json(['success'=>$order]);
+      
+         }catch(\Throwable $th){
+     
+            return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+        
+        }
     }
 
     /**

@@ -1140,6 +1140,9 @@ Route::get('/logs/datatables', 'Vendor\LogsController@datatables')->name('vendor
 
   Route::get('/upgrade/subscription/{id}', 'Vendor\UpgradePlanController@vendorPackages')->name('vendor-upgrade');
 
+  Route::post('/make-order', 'Vendor\DealerHareerController@makeOrder')->name('vendor-hareer-order');
+
+
     //IMPORT SECTION
     Route::get('/products/import/create', 'Vendor\ImportController@createImport')->name('vendor-import-create');
     Route::get('/products/import/edit/{id}', 'Vendor\ImportController@edit')->name('vendor-import-edit');

@@ -152,7 +152,7 @@ class StripeController extends Controller
                         'log_level'=>'make_subscription',
                         ]);
 
-                    $user->logs()->save()
+                    $user->logs()->save($log);
 
                     return redirect()->route('user-dashboard')->with('success','Vendor Account Activated Successfully');
 
@@ -270,7 +270,7 @@ class StripeController extends Controller
                         'log_level'=>'upgrade_subscription',
                         ]);
 
-                    $user->logs()->save()
+                    $user->logs()->save($log);
 
 
                     return redirect()->route('vendor-dashboard')->with('success','Vendor Plan Upgraded Successfully');

@@ -62,6 +62,7 @@ class OrdersController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         try{
         $order  = new Order;
         $order->user_id =  $request->user_id;

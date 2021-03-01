@@ -30,6 +30,16 @@ class ProfitController extends Controller
           $getSingleRecord->save();
        	  
        }
+
+
+        $log = Log::create([
+                        'user_id'=>auth()->user()->id,
+                        'topic'=>'Profit',
+                        'code'=>200,
+                        'log_topic'=>'Vendor-Set-Profit',
+                        'log_message'=>'Profit added has place order Successfully.',
+                        'log_level'=>'order-placed',
+        ]);
        return back();
     }
 }

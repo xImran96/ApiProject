@@ -151,9 +151,6 @@
 								</a>
 							</li>
 							<li>
-								<a href="#order" class="accordion-toggle wave-effect" data-toggle="collapse" aria-expanded="false"><i class="fas fa-hand-holding-usd"></i>
-									{{ $langg->lang442 }}
-								</a>
 								<a href="{{ url('/myProducts') }}" class="wave-effect "><i class="fa fa-home mr-2"></i>
 									My Products
 									
@@ -252,20 +249,24 @@
 								</a>
 								<ul class="collapse list-unstyled" id="generall" data-parent="#accordion">
                                     <li>
-                                    	<a href="{{ url('/profit') }}"><span> Profit </span></a>
+                                    	<a href="{{ url('/profit') }}"><span> Profit</span></a>
                                     </li>
                                     <li>
                                     	<a href="{{ route('vendor-banner') }}"><span>Finance </span></a>
                                     </li>
                                   
 	                                    <li>
+	                                    
 	                                    	<a href="{{ route('vendor-link-store') }}"><span> Link Your Store</span></a>
 	                                    </li>
 	                             
 	                                    <li>
-	                                    	<a href="{{ route('vendor-logs') }}"><span>Logs</span></a>
+										<a href="{{ route('vendor-logs') }}"><span>
+	                                    		<!-- {{ $langg->lang719 }} -->
+	                                    		Logs
+	                                    	</span></a>
 	                                    </li>
-	                        
+	                            
                                     <li>
                                     	<a href="{{ route('vendor-packages') }}"><span>
                                   					Upgrade PLan

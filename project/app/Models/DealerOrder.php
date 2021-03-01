@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class DealerOrder extends Model
 {
-    //
+    
+    	protected $guarded = [];
 
 
         public function dealerOrder()

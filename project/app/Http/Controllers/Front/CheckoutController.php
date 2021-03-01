@@ -60,6 +60,8 @@ class CheckoutController extends Controller
         if (!Session::has('cart')) {
             return redirect()->route('front.cart')->with('success',"You don't have any product to checkout.");
         }
+
+        
         $gs = Generalsetting::findOrFail(1);
         $dp = 1;
         $vendor_shipping_id = 0;
