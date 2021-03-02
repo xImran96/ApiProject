@@ -644,9 +644,7 @@ class ImportProductController extends Controller
       // }
 
        $sum = auth()->user()->orders()->sum('per_order_profit');
-       // dd($sum);
-       return $invoices = Invoice::with('order')->get();
-       dd($invoices);         
+             
       $active_balance = User::where('id',auth()->user()->id)->first();
       $blc =  $active_balance->active_balance;
       return view('layouts.My-product.finance',compact('sum','blc'));
@@ -654,7 +652,6 @@ class ImportProductController extends Controller
     
     public function profitPerOrder(){
       $vOrders = auth()->user()->orders;
-      // dd($vOrders);
       return view('layouts.My-product.ProfitPerOrder',compact('vOrders'));
     }
 
