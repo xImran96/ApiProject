@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\User;
+use App\ImportProduct;
 use App\Models\Category;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 
 class CategoriesController extends Controller
@@ -14,9 +16,39 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private function userToken()
+    {
+        $value = request()->header('authorization');
+        $values = explode(" ", $value);
+        return $values[1];
+    }
+
     public function index()
     {
-        $datas = Category::orderBy('id','desc')->get();
+       
+        try{
+            $category = [];
+            $user = User::where('token', $this->userToken())->first();
+            if(!$user){
+                return response()->json(['status'=>'Access token is missing or invalid, request new one 401']);  
+            }
+            $products = ImportProduct::where('user_id',$user->id)->get();
+            if(!$products)
+            {
+                return response()->json(['status'=>'Not Found 404', 'Categories'=>`Does not exist`]);  
+            }
+            foreach($products as $product){
+                array_push($category,$product->category);
+                 
+            }
+            
+           
+           
+            return response()->json(['success'=>$category]);
+             }catch(\Throwable $th){
+         return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+        }
+        
         return response()->json($datas);
     }
 
@@ -85,4 +117,5 @@ class CategoriesController extends Controller
     {
         //
     }
+    
 }

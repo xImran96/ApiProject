@@ -19,6 +19,7 @@ use Stripe\Error\Card;
 use URL;
 use Validator;
 use Illuminate\Support\Str;
+use App\Models\Log;
 
 use App\Http\Controllers\Controller;
 
@@ -123,6 +124,9 @@ class StripeController extends Controller
                     $sub->txnid = $charge['balance_transaction'];
                     $sub->charge_id = $charge['id'];
                     $sub->status = 1;
+                    $sub->per_delivery_charges = $subs->per_delivery_charges;
+                    $sub->per_order_charges = $subs->per_order_charges;
+                    $sub->preparation_cost = $subs->preparation_cost; 
                     $sub->save();
                     if($settings->is_smtp == 1)
                     {
@@ -240,6 +244,9 @@ class StripeController extends Controller
                     $sub->txnid = $charge['balance_transaction'];
                     $sub->charge_id = $charge['id'];
                     $sub->status = 1;
+                    $sub->per_delivery_charges = $subs->per_delivery_charges;
+                    $sub->per_order_charges = $subs->per_order_charges;
+                    $sub->preparation_cost = $subs->preparation_cost; 
                     $sub->save();
                     if($settings->is_smtp == 1)
                     {

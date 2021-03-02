@@ -12,10 +12,15 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\UserNotification;
 use App\Models\VendorOrder;
+use App\Models\OrderTrack;
 use Session;
+use App\Models\Notification;
 use Str;
+use Carbon\Carbon;
+use App\Models\Pagesetting;
+use App\Classes\GeniusMailer;
 use Auth;
-
+use AshAllenDesign\LaravelExchangeRates\Classes\ExchangeRate;
 
 class DealerHareerController extends Controller
 {
@@ -26,6 +31,8 @@ class DealerHareerController extends Controller
 
     	 $vOrder = DealerOrder::where('order_number', $request->order_number)->first();
        // dd($vOrder);
+       $subs = auth()->user()->subscribes()->where('status',1)->orderBy('id','desc')->first();
+ // dd($subs);
     	 $gt = PaymentGateway::where('title', $request->method)->first();
     	 $currency = Currency::where('name', $vOrder->currency_sign)->first();
        $user = Auth::user();
@@ -34,6 +41,11 @@ class DealerHareerController extends Controller
     	switch ($request->method){
     			case 'My fatoora':
     				//my fatoora
+
+
+               $myItems=[];
+              $totalQty=0;
+              $totalPrice=0;
 
                 $cart_items = explode(',', $vOrder->cart);
                 foreach ($cart_items as $key => $item) {
@@ -54,13 +66,16 @@ class DealerHareerController extends Controller
 
 
                     $myItems[] =  $myCartItem;
+                    $totalQty++;
+                    $totalPrice +=$myCartItem['price'];
+               
 
-                     $cart = new VendorCart($myItems, $vOrder->totalQty, $myCartItem['price']);
 
                
            }
 
-
+              $serviceCharges =  ($subs->per_delivery_charges + $subs->per_order_charges + $subs->preparation);            
+              $cart = new VendorCart($myItems, $vOrder->totalQty, $totalPrice);
 
 
         // dd($cart);
@@ -68,17 +83,17 @@ class DealerHareerController extends Controller
         $order = new Order();
         $paypal_email = $settings->paypal_business;
      
-        // $return_url = action('Front\MyFatoorahController@payreturn');
-         $return_url = 'https://www.youtube.com/';
-        // $cancel_url = action('Front\MyFatoorahController@paycancle');
-         $cancel_url = 'http://www.trustechsol.com/';
+        $return_url = action('Front\MyFatoorahController@payreturn');
+         // $return_url = 'https://www.youtube.com/';
+        $cancel_url = action('Front\MyFatoorahController@paycancle');
+         // $cancel_url = 'http://www.trustechsol.com/';
 
         // dd($return_url);
       
   
         $item_name = $settings->title." Order";
         $item_number = Str::random(10);
-        $item_amount = (double) 160.0;
+        $item_amount = (double) $cart->totalPrice;
 
         // dd($item_amount);
 
@@ -100,6 +115,7 @@ class DealerHareerController extends Controller
                 'ItemName' => $product->name_en,
                 'Quantity' => (int)$x,
                 'UnitPrice' => $product->price * (int)$x,
+                ''
             );
         }
      
@@ -230,7 +246,7 @@ $data=$json["IsSuccess"];
                        $order['user_id'] = auth()->user()->id;
                        $order['cart'] = utf8_encode(bzcompress(serialize($cart), 9));
                        $order['totalQty'] = $vOrder->totalQty;
-                       $order['pay_amount'] = round($item_amount / $currency->value, 2);
+                       $order['pay_amount'] = round(($item_amount + $subs->per_delivery_charges + $subs->per_order_charges + $subs->preparation) / $currency->value, 2);
                        $order['method'] = $request->method;
                        $order['customer_email'] = auth()->user()->email;
                        $order['customer_name'] = auth()->user()->name;
@@ -264,34 +280,35 @@ $data=$json["IsSuccess"];
                        $order->save();
                       
                        
-                       foreach($cart->items as $prod)
-                       {
-                          $x = (string)$prod['stock'];
-                          if($x != null)
-                          {
-                            $product = Product::findOrFail($prod['item']['id']);
-                            $product->stock =  $prod['stock'];
-                            $product->update();                
-                          }
+                      foreach($cart->items as $prod)
+                        {   
+                            $x = (string)$prod['qty'];
+
+                            $y = (string)$prod['size_qty']; 
+                            if(!empty($x) & empty($y))
+                            {   
+                                $x = (int)$x;
+                                $product = Product::findOrFail($prod['item']['id']);
+                                $updateStock = $product->stock - $x; 
+                                $product->stock = $updateStock;
+                                $product->update();
+                                // dd($product);               
+                            }
+                            else if(!empty($y) && !empty($x)) {
+                                
+                                $product = Product::findOrFail($prod['item']['id']);
+                                $x = (int)$x;
+                                $y = (int)$y;
+                                $y = $y - $x;
+                                $temp = $product->size_qty;
+                                $temp[$prod['size_key']] = $y;
+                                $temp1 = implode(',', $temp);
+                                $product->size_qty =  $temp1;
+                                $product->update(); 
+
+                            }
                         }
 
-                       foreach($cart->items as $prod)
-                       {
-                           $x = (string)$prod['size_qty'];
-                           if(!empty($x))
-                           {
-                               $product = Product::findOrFail($prod['item']['id']);
-                               $x = (int)$x;
-                               $x = $x - $prod['qty'];
-                               $temp = $product->size_qty;
-                               $temp[$prod['size_key']] = $x;
-                               $temp1 = implode(',', $temp);
-                               $product->size_qty =  $temp1;
-                               $product->update();               
-                           }
-                       }
-               
-   
    
    
    
@@ -302,8 +319,7 @@ $data=$json["IsSuccess"];
                          {
              
                              $product = Product::findOrFail($prod['item']['id']);
-                             $product->stock =  $prod['stock'];
-                             $product->update();  
+                             
                              if($product->stock <= 5)
                              {
                                  $notification = new Notification();
@@ -316,56 +332,294 @@ $data=$json["IsSuccess"];
    
                 $notf = null;
    
-           foreach($cart->items as $prod)
-           {
-               if($prod['item']['user_id'] != 0)
-               {
-                   $vorder =  new VendorOrder();
-                   $vorder->order_id = $order->id;
-                   $vorder->user_id = $prod['item']['user_id'];
-                   $notf[] = $prod['item']['user_id'];
-                   $vorder->qty = $prod['qty'];
-                   $vorder->price = $prod['price'];
-                   $vorder->order_number = $order->order_number;             
-                   $vorder->save();
-               }
-   
-           }
-   
-           if(!empty($notf))
-           {
-               $users = array_unique($notf);
-               foreach ($users as $user) {
-                   $notification = new UserNotification();
-                   $notification->user_id = $user;
-                   $notification->order_number = $order->order_number;
-                   $notification->save();    
-               }
-           }
-   
+         foreach($cart->items as $prod)
+        {
+            if(auth()->user())
+            {
+                $vorder =  new VendorOrder;
+                $vorder->order_id = $order->id;
+                $vorder->user_id = auth()->user()->id;
+                $notf[] = auth()->user()->id;
+                $vorder->qty = $prod['qty'];
+                $vorder->price = $prod['price'];
+                $vorder->order_number = $order->order_number;             
+                $vorder->save();
+            }
+
+        }
+
+        if(!empty($notf))
+        {
+            $users = array_unique($notf);
+            foreach ($users as $user) {
+                $notification = new UserNotification;
+                $notification->user_id = $user;
+                $notification->order_number = $order->order_number;
+                $notification->save();    
+            }
+        }
+
    
     
       
         return redirect($payment_url);
-
-
-
-
-
-
-
-
-
-
-
-
-
     	
     			break;
 
 
     			case 'cashOnDelivery':
     				//Cash On Delivery
+
+
+              $myItems=[];
+              $totalQty=0;
+              $totalPrice=0;
+
+              $cart_items = explode(',', $vOrder->cart);
+                foreach ($cart_items as $key => $item) {
+
+
+
+                    $myCartItem = unserialize($item);
+                    // ($myCartItem);
+                    $prod = Product::find($myCartItem['item_id']);
+                    // ($prod);
+                    unset($myCartItem['item_id']);
+                    $myCartItem['item'] = $prod;
+
+                    $myCartItem['item_price'] = $prod->price;
+                    $myCartItem['price'] = $myCartItem['item_price']*$myCartItem['qty'];
+
+
+                    $myItems[] =  $myCartItem;
+                    $totalQty++;
+                    $totalPrice +=$myCartItem['price'];
+               
+                   }
+
+                   $cart = new VendorCart($myItems, $vOrder->totalQty, $myCartItem['price']);
+                   $gs = Generalsetting::findOrFail(1);
+
+
+
+                        $order = new Order;
+                       
+                        $success_url = action('Front\PaymentController@payreturn');
+                        
+                        $item_name = $gs->title." Order";
+                        $item_number = Str::random(10);
+                        
+                        $order['user_id'] = auth()->user()->id;
+                        $order['cart'] = utf8_encode(bzcompress(serialize($cart), 9)); 
+                        $order['totalQty'] = $vOrder->totalQty;
+                        $order['pay_amount'] = round(($cart->totalPrice + $subs->per_delivery_charges + $subs->per_order_charges + $subs->preparation) / $currency->value, 2);
+                        $order['method'] = 'Cash-On-Delivery';
+                        $order['shipping'] = $vOrder->shipping;
+                        $order['pickup_location'] = $vOrder->pickup_location;
+                        $order['customer_email'] = auth()->user()->email;
+                        $order['customer_name'] = auth()->user()->name;
+                        $order['shipping_cost'] = $vOrder->shipping_cost;
+                        $order['packing_cost'] = $vOrder->packing_cost;
+                        $order['tax'] = $vOrder->tax;
+                        $order['customer_phone'] = auth()->user()->phone;
+                        $order['order_number'] = $vOrder->order_number;
+                        $order['customer_address'] = auth()->user()->address;
+                        $order['customer_country'] = auth()->user()->country;
+                        $order['customer_city'] = auth()->user()->city;
+                        $order['customer_zip'] = auth()->user()->zip;
+                        $order['shipping_email'] = $vOrder->shipping_email;
+                        $order['shipping_name'] = $vOrder->shipping_name;
+                        $order['shipping_phone'] = $vOrder->shipping_phone;
+                        $order['shipping_address'] = $vOrder->shipping_address;
+                        $order['shipping_country'] = $vOrder->shipping_country;
+                        $order['shipping_city'] = $vOrder->shipping_city;
+                        $order['shipping_zip'] = $vOrder->shipping_zip;
+                        $order['order_note'] = $vOrder->order_notes;
+                        $order['coupon_code'] = $vOrder->coupon_code;
+                        $order['coupon_discount'] = $vOrder->coupon_discount;
+                        $order['dp'] = $vOrder->dp;
+                        $order['payment_status'] = "Pending";
+                        $order['currency_sign'] = $currency->sign;
+                        $order['currency_value'] = $currency->value;
+                        $order['vendor_shipping_id'] = 0;
+                        $order['vendor_packing_id'] = 0;
+
+                        // dd($order);
+                        $order->save();
+
+                        $track = new OrderTrack;
+                        $track->title = 'Pending';
+                        $track->text = 'You have successfully placed your order.';
+                        $track->order_id = $order->id;
+                        $track->save();
+
+                        $notification = new Notification;
+                        $notification->order_id = $order->id;
+                        $notification->save();
+
+                        foreach($cart->items as $prod)
+                        {   
+                            $x = (string)$prod['qty'];
+
+                            $y = (string)$prod['size_qty']; 
+                            if(!empty($x) & empty($y))
+                            {   
+                                $x = (int)$x;
+                                $product = Product::findOrFail($prod['item']['id']);
+                                ;
+                                $updateStock = $product->stock - $x; 
+                                $product->stock = $updateStock;
+                                $product->update();
+                                $importproduct = auth()->user()->myProducts()->where('product_id', $product->id)->first();
+                                $importproduct->stock = $updateStock;
+                                $importproduct->update();
+
+
+
+                                // dd($importproduct);               
+                            }
+                            else if(!empty($y) && !empty($x)) {
+                                
+                                $product = Product::findOrFail($prod['item']['id']);
+                                $x = (int)$x;
+                                $y = (int)$y;
+                                $y = $y - $x;
+                                $temp = $product->size_qty;
+                                $temp[$prod['size_key']] = $y;
+                                $temp1 = implode(',', $temp);
+                                $product->size_qty =  $temp1;
+                                $updateStock = $product->stock - $x; 
+                                $product->update(); 
+
+                                $importproduct = auth()->user()->myProducts()->where('product_id', $product->id)->first();
+
+                                $tempImport = $importproduct->size_qty;
+                                $tempImport[$prod['size_key']] = $y;
+                                $temp1Import = implode(',', $tempImport);
+                                $importproduct->size_qty =  $temp1Import;
+                                $importproduct->stock =  $updateStock;
+                                $importproduct->update();
+
+
+                            }
+                        }
+
+
+                  foreach($cart->items as $prod)
+                  {
+                      
+                          $product = Product::findOrFail($prod['item']['id']);
+                          if($product->stock <= 5)
+                          {
+                              $notification = new Notification;
+                              $notification->product_id = $product->id;
+                              $notification->save();                    
+                          }              
+                      
+                  }
+
+        $notf = null;
+
+        foreach($cart->items as $prod)
+        {
+            if(auth()->user())
+            {
+                $vorder =  new VendorOrder;
+                $vorder->order_id = $order->id;
+                $vorder->user_id = auth()->user()->id;
+                $notf[] = auth()->user()->id;
+                $vorder->qty = $prod['qty'];
+                $vorder->price = $prod['price'];
+                $vorder->order_number = $order->order_number;             
+                $vorder->save();
+            }
+
+        }
+
+        if(!empty($notf))
+        {
+            $users = array_unique($notf);
+            foreach ($users as $user) {
+                $notification = new UserNotification;
+                $notification->user_id = $user;
+                $notification->order_number = $order->order_number;
+                $notification->save();    
+            }
+        }
+
+
+
+        //Sending Email To Buyer
+
+        if($gs->is_smtp == 1)
+        {
+        $data = [
+            'to' => auth()->user()->email,
+            'type' => "new_order",
+            'cname' => auth()->user()->name,
+            'oamount' => "",
+            'aname' => "",
+            'aemail' => "",
+            'wtitle' => "",
+            'onumber' => $order->order_number,
+        ];
+
+        $mailer = new GeniusMailer();
+        $mailer->sendAutoOrderMail($data,$order->id);            
+        }
+        else
+        {
+           $to = $request->email;
+           $subject = "Your Order Placed!!";
+           $msg = "Hello ".$request->name."!\nYou have placed a new order.\nYour order number is ".$order->order_number.".Please wait for your delivery. \nThank you.";
+            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+           mail($to,$subject,$msg,$headers);            
+        }
+        //Sending Email To Admin
+        if($gs->is_smtp == 1)
+        {
+            $data = [
+                'to' => Pagesetting::find(1)->contact_email,
+                'subject' => "New Order Recieved!!",
+                'body' => "Hello Admin!<br>Your store has received a new order.<br>Order Number is ".$order->order_number.".Please login to your panel to check. <br>Thank you.",
+            ];
+
+            $mailer = new GeniusMailer();
+            $mailer->sendCustomMail($data);            
+        }
+        else
+        {
+           $to = Pagesetting::find(1)->contact_email;
+           $subject = "New Order Recieved!!";
+           $msg = "Hello Admin!\nYour store has recieved a new order.\nOrder Number is ".$order->order_number.".Please login to your panel to check. \nThank you.";
+            $headers = "From: ".$gs->from_name."<".$gs->from_email.">";
+           mail($to,$subject,$msg,$headers);
+        }
+
+
+
+        return redirect()->route('vendor-dashboard');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

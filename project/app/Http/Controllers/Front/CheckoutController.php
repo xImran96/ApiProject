@@ -378,6 +378,9 @@ class CheckoutController extends Controller
 
     public function cashondelivery(Request $request)
     {
+
+
+        // dd($request->all());
         if($request->pass_check) {
             $users = User::where('email','=',$request->personal_email)->get();
             if(count($users) == 0) {
@@ -416,6 +419,7 @@ class CheckoutController extends Controller
         $gs = Generalsetting::findOrFail(1);
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
+        dd($cart);
         foreach($cart->items as $key => $prod)
         {
         if(!empty($prod['item']['license']) && !empty($prod['item']['license_qty']))
@@ -442,6 +446,7 @@ class CheckoutController extends Controller
                 }
         }
         }
+        
         $order = new Order;
         $success_url = action('Front\PaymentController@payreturn');
         $item_name = $gs->title." Order";
@@ -449,7 +454,7 @@ class CheckoutController extends Controller
         $order['user_id'] = $request->user_id;
         $order['cart'] = utf8_encode(bzcompress(serialize($cart), 9)); 
         $order['totalQty'] = $request->totalQty;
-        $order['pay_amount'] = round($request->total / $curr->value, 2);
+        $order['pay_amount'] = round($request->total +  / $curr->value, 2);
         $order['method'] = $request->method;
         $order['shipping'] = $request->shipping;
         $order['pickup_location'] = $request->pickup_location;

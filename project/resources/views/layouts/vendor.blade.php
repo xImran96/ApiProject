@@ -252,21 +252,25 @@
                                     	<a href="{{ url('/profit') }}"><span> Profit</span></a>
                                     </li>
                                     <li>
-                                    	<a href="{{ route('vendor-banner') }}"><span>Finance </span></a>
+                                    	<a href="{{ route('finance') }}"><span>
+                                    		<!-- {{ $langg->lang454 }} -->
+                                    		Finance
+                                    	</span></a>
+
                                     </li>
                                   
 	                                    <li>
-	                                    
 	                                    	<a href="{{ route('vendor-link-store') }}"><span> Link Your Store</span></a>
+	                              
 	                                    </li>
 	                             
 	                                    <li>
-										<a href="{{ route('vendor-logs') }}"><span>
+											<a href="{{ route('vendor-logs') }}"><span>
 	                                    		<!-- {{ $langg->lang719 }} -->
 	                                    		Logs
 	                                    	</span></a>
 	                                    </li>
-	                            
+	                                
                                     <li>
                                     	<a href="{{ route('vendor-packages') }}"><span>
                                   					Upgrade PLan

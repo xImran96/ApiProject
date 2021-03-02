@@ -30,10 +30,15 @@ class ProductController extends Controller
         
             try {
                    $user = User::where('token', $this->userToken())->first();
-                    if(count($user->myProducts)!=0){
-                        return response()->json(['status'=>'Success 200', 'products'=>$user->myProducts]);
+                   if(!$user){
+                    return response()->json(['status'=>'Access token is missing or invalid, request new one 401']);  
+                }
+                     $importProducts = ImportProduct::where('user_id',$user->id)->get();
+                     
+                    if($importProducts){   
+                        return response()->json(['status'=>'Success 200', 'ImportProducts'=>$importProducts]);
                     }else{
-                        return response()->json(['status'=>'Not Found 404', 'products'=>`You Don't Have Any Imports`]);  
+                        return response()->json(['status'=>'Not Found 404', 'products'=>`This Product Does Not Exist`]);  
                     }
 
             } catch (\Throwable $th) {
@@ -84,13 +89,17 @@ class ProductController extends Controller
     //             return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
     //         }
          try {
-         if(!ImportProduct::where('id',$id)->exists())
+            $user = User::where('token', $this->userToken())->first();
+            if(!$user){
+                return response()->json(['status'=>'Access token is missing or invalid, request new one 401']);  
+            }
+         if(!ImportProduct::where('id',$id)->where('user_id',$user->id)->exists())
         {
-            return "Sorry the page does not exist.";
+            return response()->json(['status'=>'Not Found 404', 'products'=>`This Product Does Not Exist`]);  
         }
-        $roduct = ImportProduct::findOrFail($id);
+        $product = ImportProduct::findOrFail($id);
        
-        return response()->json(['success'=>$roduct]);
+        return response()->json(['success'=>$product]);
     }catch(\Throwable $th){
      return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
     }
@@ -130,4 +139,44 @@ class ProductController extends Controller
     {
         //
     }
+
+    public function count(){
+        try {
+            $user = User::where('token', $this->userToken())->first();
+            if(!$user){
+             return response()->json(['status'=>'Access token is missing or invalid, request new one 401']);  
+         }
+              $importProducts = ImportProduct::where('user_id',$user->id)->get();
+               
+             if($importProducts){   
+                 return response()->json(['status'=>'Success 200', 'total'=>count($importProducts)]);
+             }else{
+                 return response()->json(['status'=>'Not Found 404', 'products'=>`Products Does Not Exist`]);  
+             }
+
+     } catch (\Throwable $th) {
+         return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+     }
+    }
+      public function search($name){
+           
+        try {
+            $user = User::where('token', $this->userToken())->first();
+            if(!$user){
+             return response()->json(['status'=>'Access token is missing or invalid, request new one 401']);  
+         }
+              $importProducts = ImportProduct::where('user_id',$user->id)->where('name_en','LIKE','%'.$name.'%')->orWhere('name_ar','LIKE','%'.$name.'%')->get();
+               
+             if($importProducts){   
+                 return response()->json(['status'=>'Success 200', 'SearchProducts'=>$importProducts]);
+             }else{
+                 return response()->json(['status'=>'Not Found 404', 'products'=>`Products Does Not Exist`]);  
+             }
+
+     } catch (\Throwable $th) {
+         return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+     }
+          
+      } 
 }
+

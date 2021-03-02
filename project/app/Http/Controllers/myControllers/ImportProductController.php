@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\myControllers;
 
+use Image;
+use App\Models\User;
 use App\ImportProduct;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Attribute;
+use App\Models\DealerOrder;
 use App\Models\Subcategory;
 use Illuminate\Support\Str;
+// use Intervention\Image\Image;
 use Illuminate\Http\Request;
 use App\Models\Childcategory;
 use App\Models\VendorGallery;
-// use Intervention\Image\Image;
 use App\Models\Subchildcategory;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use Image;
 
 
 class ImportProductController extends Controller
@@ -619,6 +621,24 @@ class ImportProductController extends Controller
     
     public function showlinkstore(){
       return view('layouts.My-product.linkstore');
+    }
+
+    public function finance(){
+      $sum = 0;
+      $dealerOrders = DealerOrder::with('importProduct')->where('dealer_id',auth()->user()->id)->get();
+      foreach($dealerOrders as $dealerOrder){
+        // dd($dealerOrder->cart);
+       $sum+=$dealerOrder->importProduct->new_price;
+      }
+        
+      $active_balance = User::where('id',auth()->user()->id)->first();
+      $blc =  $active_balance->active_balance;
+      return view('layouts.My-product.finance',compact('sum','blc'));
+    }
+    
+    public function profitPerOrder(){
+      $dealerOrders = DealerOrder::with('importProduct')->where('dealer_id',auth()->user()->id)->get();
+      return view('layouts.My-product.ProfitPerOrder',compact('dealerOrders'));
     }
 
 }

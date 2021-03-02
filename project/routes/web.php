@@ -25,6 +25,8 @@ Route::get('/gallery/deletegallery', 'myControllers\ImportProductController@dest
 Route::post('/vendorproducts/upload/update/{id}', 'myControllers\ImportProductController@uploadUpdate')->name('vendor-product-upload-updates');
 Route::get('/vendorgallery/show', 'myControllers\ImportProductController@showgallery')->name('vendor-gallery-shows');
 Route::get('/linkstore/show', 'myControllers\ImportProductController@showlinkstore')->name('vendor-link-store');
+Route::get('/finance', 'myControllers\ImportProductController@finance')->name('finance');
+Route::get('/profit-per-order', 'myControllers\ImportProductController@profitPerOrder')->name('profitPerOrder');
 
 
 // Route::get('import_Product',function(){

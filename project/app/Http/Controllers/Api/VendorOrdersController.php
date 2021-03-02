@@ -29,7 +29,7 @@ class VendorOrdersController extends Controller
 
     public function index()
     {
-
+          
        
 
         try{
@@ -146,6 +146,7 @@ class VendorOrdersController extends Controller
                         'user_id'=>$user->id,
                         'topic'=>'Vendor',
                         'code'=>200,
+<<<<<<< HEAD
                         'log_topic'=>'Vendor-Order',
                         'log_message'=> $order->order_number.' '.$order->customer_name.' has place order Successfully.',
                         'log_level'=>'order-placed',
@@ -160,6 +161,17 @@ class VendorOrdersController extends Controller
         }
 
               
+=======
+                        'log_topic'=>'Order-Placed',
+                        'log_message'=> $order->id.' '.$order->order_number.' is Placed Successfully.',
+                        'log_level'=>'recieved_order',
+                        ]);
+
+      
+
+
+           if($user->logs()->save( $log)){
+>>>>>>> 3c64034976c172828f24fd83ecfc6bb358c1774c
 
        
            
@@ -236,5 +248,33 @@ class VendorOrdersController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function cancel($id){
+       
+        try{
+            $user = User::where('token', $this->userToken())->first();
+            if(!$user){
+                return response()->json(['status'=>'Access token is missing or invalid, request new one 401']);  
+            }
+         if(!DealerOrder::where('id',$id)->where('dealer_id',$user->id)->exists())
+        {
+            return response()->json(['status'=>'Not Found 404', 'VendorOrder'=>`This Order Does Not Exist`]);  
+        }
+        $vendororder = DealerOrder::findOrFail($id);
+        $vendororder->status = 'declined';
+        $vendororder->update();
+        $vendororderDetail = DealerOrderDetail::where('dealer_id',$user->id)->where('dealer_order_id',$id)->first();
+        if($vendororderDetail){
+          $vendororderDetail->status = 'declined';
+          $vendororderDetail->update();
+        }
+         
+        
+       
+        return response()->json(['success'=>'Order Declined']);
+    }catch(\Throwable $th){
+     return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
+    }
     }
 }

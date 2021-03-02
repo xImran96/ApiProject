@@ -45,7 +45,7 @@
 	}
 </style>
 @endsection
-
+ 
 @section('content')
 <section class="container">
 	<div class="content-area">
