@@ -39,8 +39,8 @@ class ImportProductController extends Controller
            if ($checkProduct) {
               return "you alredy imported this product";
            }
-      $checkigProfitPercentage = ImportProduct::where('profit_percentage', '>' ,0)->first();
-
+      $checkigProfitPercentage = User::where('id',auth()->user()->id)->first();
+     
          	$product = new ImportProduct;
             $product->sku = $originalProduct['sku'];
          	$product->product_type = $originalProduct['product_type'];
@@ -191,6 +191,7 @@ class ImportProductController extends Controller
 
     public function update(Request $request, $id)
     {
+      
       // return $request;
         //--- Validation Section
       //   dd($request->all()); 
@@ -210,6 +211,7 @@ class ImportProductController extends Controller
         $data = ImportProduct::findOrFail($id);
         $sign = Currency::where('is_default','=',1)->first();
         $input = $request->all();
+        
 
         // $input['name'] = [
         //     'ar'=>$request->input('name_ar'),
@@ -233,6 +235,13 @@ class ImportProductController extends Controller
                 }
                 $input['file'] = null;
             }
+            //profit percentage code for individual product.
+        
+         $data->profit_percentage = $request->profit_percentage;
+         $getPercentage = ($data->price*$request->profit_percentage)/100;
+         $newPrice = $data->price+$getPercentage;
+         $data->specific_percentage_status = 1;
+         $data->new_price = $newPrice;
 
 
             // Check Physical
@@ -478,6 +487,7 @@ class ImportProductController extends Controller
            $jsonAttr = json_encode($attrArr);
            $input['attributes'] = $jsonAttr;
          }
+         
 
          $data->update($input);
         //-- Logic Section Ends

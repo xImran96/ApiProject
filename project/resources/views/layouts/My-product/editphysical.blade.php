@@ -875,7 +875,7 @@
 												</div>
 
 
-												<div class="row">
+												{{-- <div class="row">
 													<div class="col-lg-12">
 														<div class="left-area">
 															<h4 class="heading">
@@ -889,17 +889,17 @@
 													<div class="col-lg-12">
 														<input name="price" type="number" class="input-field" placeholder="e.g 20" step="0.01" min="0" value="{{$data->new_price}}" required="">
 													</div>
-												</div>
+												</div> --}}
 
 												<div class="row">
 													<div class="col-lg-12">
 														<div class="left-area">
-																<h4 class="heading">{{ __('Product Previous Price') }}*</h4>
+																<h4 class="heading">{{ __('Product Profit Percentage') }}*</h4>
 																<p class="sub-heading">{{ __('(Optional)') }}</p>
 														</div>
 													</div>
 													<div class="col-lg-12">
-														<input name="previous_price" step="0.01" type="number" class="input-field" placeholder="e.g 20" value="{{$data->original_price}}" min="0">
+														<input name="profit_percentage" step="0.01" type="number" class="input-field"  value="{{$data->profit_percentage}}" min="0">
 													</div>
 												</div>
 
