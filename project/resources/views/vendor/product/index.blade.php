@@ -131,7 +131,7 @@
 														@foreach($categoriesWiseProducts as $product)
 														<tr>
 															<td><img src="{{$product->photo}}"></td>
-															<td>{{$product->slug}}</td>
+															<td>{{$product->name_en}}</td>
 															<td>{{$product->type}}</td>
 															<td>{{$product->stock}}</td>
 															<td>{{$product->price}}</td>
@@ -158,7 +158,7 @@
 														@foreach($products as $product)
 														<tr>
 															<td><img src="{{$product->photo}}"></td>
-															<td>{{$product->slug}}</td>
+															<td>{{$product->name_en}}</td>
 															<td>{{$product->type}}</td>
 															<td>{{$product->stock}}</td>
 															<td>{{$product->price}}</td>

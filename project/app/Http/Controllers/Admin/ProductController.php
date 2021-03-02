@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Childcategory;
-use App\Models\Subcategory;
+use DB;
+use Image;
+use Validator;
 use Datatables;
 use Carbon\Carbon;
+use App\ImportProduct;
+use App\Models\Gallery;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Currency;
-use App\Models\Gallery;
 use App\Models\Attribute;
-use App\Models\AttributeOption;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Models\Subcategory;
 use Illuminate\Support\Str;
 
-use Validator;
-use Image;
-use DB;
+use Illuminate\Http\Request;
+use App\Models\Childcategory;
+use App\Models\AttributeOption;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
@@ -237,6 +238,7 @@ class ProductController extends Controller
     //*** POST Request
     public function uploadUpdate(Request $request,$id)
     {
+        
         //--- Validation Section
 
         // dd($request->all());
@@ -762,13 +764,14 @@ class ProductController extends Controller
     //*** POST Request
     public function update(Request $request, $id)
     {
+        
       // return $request;
         //--- Validation Section
         // dd($request->all()); 
         $rules = [
                'file'       => 'mimes:zip'
                 ];
-
+        
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
@@ -778,6 +781,10 @@ class ProductController extends Controller
 
 
         //-- Logic Section
+        
+        $importProudcts = ImportProduct::where('product_id',$id)->get();
+     
+       
         $data = Product::findOrFail($id);
         $sign = Currency::where('is_default','=',1)->first();
         $input = $request->all();
@@ -790,6 +797,22 @@ class ProductController extends Controller
         //     'ar'=>$request->input('details_ar'),
         //     'en'=>$request->input('details')
         // ];
+
+        //changing stock for import products if change by hareer products.
+        if($importProudcts){
+          foreach($importProudcts as $importProudct){
+              $importProudct->stock = $request->stock;
+              $importProudct->price = $request->price;
+              $getPercentage = ($request->price * $importProudct->profit_percentage)/100;
+ 
+              $newPrice = $request->price+$getPercentage;
+             
+             $importProudct->new_price = $newPrice;
+           
+              $importProudct->save();
+          
+        }
+    }
             //Check Types
             if($request->type_check == 1)
             {
@@ -1062,24 +1085,24 @@ class ProductController extends Controller
         $prod->update();
 
 
-        if (count($prod->imports)!=0) {
+        // if (count($prod->imports)!=0) {
             
-                $input2 = $input;
+        //         $input2 = $input;
 
 
-            foreach ($prod->imports as $import) {
+        //     foreach ($prod->imports as $import) {
 
 
-                $profit =  $import->profit_percentage;
-                $profitGet = ($profit / 100) * $prod->price;
-                $newPrice = $prod->price + $profitGet;
-                $input2['profit_percentage'] = $profit;
-                $input2['import_price'] = $newPrice;
-                $import->update($input2);
+        //         $profit =  $import->profit_percentage;
+        //         $profitGet = ($profit / 100) * $prod->price;
+        //         $newPrice = $prod->price + $profitGet;
+        //         $input2['profit_percentage'] = $profit;
+        //         $input2['import_price'] = $newPrice;
+        //         $import->update($input2);
 
-            }
+        //     }
 
-        }
+        // }
         
 
         //--- Redirect Section
