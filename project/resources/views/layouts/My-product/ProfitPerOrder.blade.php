@@ -32,11 +32,10 @@
                                                     <thead>
                                                        
                                                         <tr>
-                                                            <th>Product Name</th>
-                                                            <th>Slug</th>
-                                                            <th>Hareer Price</th>
-                                                            <th>Profit Percentage</th>
-                                                            <th>New Price</th>
+                                                            <th>Order Nummber</th>
+                                                            <th>Vendor Order Amount</th>
+                                                            <th>Hareer Order</th>
+                                                            <th>Profit</th>
                                                             
                                                           
                                                         </tr>
@@ -45,13 +44,13 @@
 
 
                                               <tbody>
-                                                @foreach($dealerOrders as $dealerOrder)
+                                                @foreach($vOrders as $order)
                                                 <tr>
-                                                    <td>{{$dealerOrder->importProduct->name_en}}</td>
-                                                    <td>{{$dealerOrder->importProduct->slug}}</td>
-                                                    <td>{{$dealerOrder->importProduct->price}}</td>
-                                                    <td>{{$dealerOrder->importProduct->profit_percentage}}</td>
-                                                    <td>{{$dealerOrder->importProduct->new_price}}</td>
+                                                    <td>{{$order->order_number}}</td>
+                                                    <td>{{$order->vendor_order_pay_amount}}</td>
+                                                    <td>{{$order->pay_amount}}</td>
+                                                    <td>{{$order->per_order_profit}}</td>
+                                                    <td></td>
                                                 </tr>
                                                 @endforeach
                                                   

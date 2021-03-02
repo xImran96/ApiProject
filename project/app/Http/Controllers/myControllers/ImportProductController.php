@@ -11,6 +11,8 @@ use App\Models\Currency;
 use App\Models\Attribute;
 use App\Models\DealerOrder;
 use App\Models\Subcategory;
+use App\Models\Invoice;
+use App\Models\Order;
 use Illuminate\Support\Str;
 // use Intervention\Image\Image;
 use Illuminate\Http\Request;
@@ -39,8 +41,8 @@ class ImportProductController extends Controller
            if ($checkProduct) {
               return "you alredy imported this product";
            }
-      $checkigProfitPercentage = ImportProduct::where('profit_percentage', '>' ,0)->first();
-
+      $checkigProfitPercentage = User::where('id',auth()->user()->id)->first();
+     
          	$product = new ImportProduct;
             $product->sku = $originalProduct['sku'];
          	$product->product_type = $originalProduct['product_type'];
@@ -191,6 +193,7 @@ class ImportProductController extends Controller
 
     public function update(Request $request, $id)
     {
+      
       // return $request;
         //--- Validation Section
       //   dd($request->all()); 
@@ -210,6 +213,7 @@ class ImportProductController extends Controller
         $data = ImportProduct::findOrFail($id);
         $sign = Currency::where('is_default','=',1)->first();
         $input = $request->all();
+        
 
         // $input['name'] = [
         //     'ar'=>$request->input('name_ar'),
@@ -233,6 +237,13 @@ class ImportProductController extends Controller
                 }
                 $input['file'] = null;
             }
+            //profit percentage code for individual product.
+        
+         $data->profit_percentage = $request->profit_percentage;
+         $getPercentage = ($data->price*$request->profit_percentage)/100;
+         $newPrice = $data->price+$getPercentage;
+         $data->specific_percentage_status = 1;
+         $data->new_price = $newPrice;
 
 
             // Check Physical
@@ -478,6 +489,7 @@ class ImportProductController extends Controller
            $jsonAttr = json_encode($attrArr);
            $input['attributes'] = $jsonAttr;
          }
+         
 
          $data->update($input);
         //-- Logic Section Ends
@@ -625,20 +637,25 @@ class ImportProductController extends Controller
 
     public function finance(){
       $sum = 0;
-      $dealerOrders = DealerOrder::with('importProduct')->where('dealer_id',auth()->user()->id)->get();
-      foreach($dealerOrders as $dealerOrder){
-        // dd($dealerOrder->cart);
-       $sum+=$dealerOrder->importProduct->new_price;
-      }
-        
+      // $dealerOrders = DealerOrder::with('importProduct')->where('dealer_id',auth()->user()->id)->get();
+      // foreach($dealerOrders as $dealerOrder){
+      //   // dd($dealerOrder->cart);
+      //  $sum+=$dealerOrder->pay_amount;
+      // }
+
+       $sum = auth()->user()->orders()->sum('per_order_profit');
+       // dd($sum);
+       return $invoices = Invoice::with('order')->get();
+       dd($invoices);         
       $active_balance = User::where('id',auth()->user()->id)->first();
       $blc =  $active_balance->active_balance;
       return view('layouts.My-product.finance',compact('sum','blc'));
     }
     
     public function profitPerOrder(){
-      $dealerOrders = DealerOrder::with('importProduct')->where('dealer_id',auth()->user()->id)->get();
-      return view('layouts.My-product.ProfitPerOrder',compact('dealerOrders'));
+      $vOrders = auth()->user()->orders;
+      // dd($vOrders);
+      return view('layouts.My-product.ProfitPerOrder',compact('vOrders'));
     }
 
 }

@@ -13,6 +13,7 @@ use App\Models\Product;
 use App\Models\UserNotification;
 use App\Models\VendorOrder;
 use App\Models\OrderTrack;
+use App\Models\Invoice;
 use Session;
 use App\Models\Notification;
 use Str;
@@ -42,8 +43,16 @@ class DealerHareerController extends Controller
     			case 'My fatoora':
     				//my fatoora
 
+              $checkOrder = Order::where('order_number', $vOrder->order_number)->first();
 
-               $myItems=[];
+              if($checkOrder != null) 
+               {
+                    return redirect()->route('dealer-order-index')
+                    ->with('unsuccess', 'Order Already Placed
+                    '); 
+               } 
+               else{
+              $myItems=[];
               $totalQty=0;
               $totalPrice=0;
 
@@ -59,7 +68,7 @@ class DealerHareerController extends Controller
                     unset($myCartItem['item_id']);
                         
                     $myCartItem['item'] = $prod;
-
+                    $myCartItem['stock'] = $product->stock;
 
                     $myCartItem['item_price'] = $prod->price;
                     $myCartItem['price'] = $myCartItem['item_price']*$myCartItem['qty'];
@@ -83,17 +92,17 @@ class DealerHareerController extends Controller
         $order = new Order();
         $paypal_email = $settings->paypal_business;
      
-        $return_url = action('Front\MyFatoorahController@payreturn');
-         // $return_url = 'https://www.youtube.com/';
-        $cancel_url = action('Front\MyFatoorahController@paycancle');
-         // $cancel_url = 'http://www.trustechsol.com/';
+        // $return_url = action('Front\MyFatoorahController@payreturn');
+         $return_url = 'https://www.youtube.com/';
+        // $cancel_url = action('Front\MyFatoorahController@paycancle');
+         $cancel_url = 'http://www.trustechsol.com/';
 
         // dd($return_url);
       
   
         $item_name = $settings->title." Order";
         $item_number = Str::random(10);
-        $item_amount = (double) $cart->totalPrice;
+        $item_amount = (double) $cart->totalPrice + $serviceCharges;
 
         // dd($item_amount);
 
@@ -114,8 +123,7 @@ class DealerHareerController extends Controller
             $data = array(
                 'ItemName' => $product->name_en,
                 'Quantity' => (int)$x,
-                'UnitPrice' => $product->price * (int)$x,
-                ''
+                'UnitPrice' => ($product->price * (int)$x) + $serviceCharges ,
             );
         }
      
@@ -172,13 +180,12 @@ $data=$json["IsSuccess"];
         
 //             "items": [
 //                        { 
-//                     "qty":"1",
-//                     "size_key": "",
-//                     "size_qty": "3",
-//                     "size_price":"medium",
+//                      "qty":"1",
+//                      "size_key": "",
+//                      "size_qty": "3",
+//                      "size_price":"medium",
 //                      "size":"12",
 //                      "color":"pink",
-//                      "stock":"",
 //                      "price":"220.8",
 //                      "item_id":"103",
 //                      "license":"",
@@ -240,13 +247,17 @@ $data=$json["IsSuccess"];
 
 
           $payment_url = $json["Data"]["InvoiceURL"];
-// dd($payment_url);
+
        // Redirect to paypal IPN
-   
+                      
+                        $myPayAmount = round(($cart->totalPrice + $subs->per_delivery_charges + $subs->per_order_charges + $subs->preparation) / $currency->value, 2);
+
+                        $countProfit = $vOrder->pay_amount - $myPayAmount;
+
                        $order['user_id'] = auth()->user()->id;
                        $order['cart'] = utf8_encode(bzcompress(serialize($cart), 9));
                        $order['totalQty'] = $vOrder->totalQty;
-                       $order['pay_amount'] = round(($item_amount + $subs->per_delivery_charges + $subs->per_order_charges + $subs->preparation) / $currency->value, 2);
+                       $order['pay_amount'] = $myPayAmount;
                        $order['method'] = $request->method;
                        $order['customer_email'] = auth()->user()->email;
                        $order['customer_name'] = auth()->user()->name;
@@ -275,12 +286,22 @@ $data=$json["IsSuccess"];
                        $order['dp'] = $vOrder->dp;   
                        $order['vendor_shipping_id'] = 0;
                        $order['vendor_packing_id'] = 0;
-   
+                       $order['vendor_order_pay_amount'] = $vOrder->pay_amount;
+                       $order['per_order_profit'] = $countProfit;
+      
 
                        $order->save();
+
+                       $invoice = Invoice::create([
+                                    'user_id'=>auth()->user()->id,
+                                    'order_id'=>$order->id,
+                                    'method'=>$order->method,
+                                    'pay_amount'=>$order->pay_amount
+                          ]);
                       
                        
-                      foreach($cart->items as $prod)
+   
+                        foreach($cart->items as $prod)
                         {   
                             $x = (string)$prod['qty'];
 
@@ -289,10 +310,17 @@ $data=$json["IsSuccess"];
                             {   
                                 $x = (int)$x;
                                 $product = Product::findOrFail($prod['item']['id']);
+                                ;
                                 $updateStock = $product->stock - $x; 
                                 $product->stock = $updateStock;
                                 $product->update();
-                                // dd($product);               
+                                $importproduct = auth()->user()->myProducts()->where('product_id', $product->id)->first();
+                                $importproduct->stock = $updateStock;
+                                $importproduct->update();
+
+
+
+                                // dd($importproduct);               
                             }
                             else if(!empty($y) && !empty($x)) {
                                 
@@ -304,13 +332,23 @@ $data=$json["IsSuccess"];
                                 $temp[$prod['size_key']] = $y;
                                 $temp1 = implode(',', $temp);
                                 $product->size_qty =  $temp1;
+                                $updateStock = $product->stock - $x; 
                                 $product->update(); 
+
+                                $importproduct = auth()->user()->myProducts()->where('product_id', $product->id)->first();
+
+                                $tempImport = $importproduct->size_qty;
+                                $tempImport[$prod['size_key']] = $y;
+                                $temp1Import = implode(',', $tempImport);
+                                $importproduct->size_qty =  $temp1Import;
+                                $importproduct->stock =  $updateStock;
+                                $importproduct->update();
+
 
                             }
                         }
 
-   
-   
+
    
                      foreach($cart->items as $prod)
                      {
@@ -363,6 +401,8 @@ $data=$json["IsSuccess"];
     
       
         return redirect($payment_url);
+
+          }
     	
     			break;
 
@@ -370,6 +410,15 @@ $data=$json["IsSuccess"];
     			case 'cashOnDelivery':
     				//Cash On Delivery
 
+
+              $checkOrder = Order::where('order_number', $vOrder->order_number)->first();
+
+              if($checkOrder != null) 
+               {
+                    return redirect()->route('dealer-order-index')->with('unsuccess', 'Order Already Placed
+                    ');   
+               } 
+               else{
 
               $myItems=[];
               $totalQty=0;
@@ -386,7 +435,7 @@ $data=$json["IsSuccess"];
                     // ($prod);
                     unset($myCartItem['item_id']);
                     $myCartItem['item'] = $prod;
-
+                    $myCartItem['stock'] = $product->stock;
                     $myCartItem['item_price'] = $prod->price;
                     $myCartItem['price'] = $myCartItem['item_price']*$myCartItem['qty'];
 
@@ -409,10 +458,15 @@ $data=$json["IsSuccess"];
                         $item_name = $gs->title." Order";
                         $item_number = Str::random(10);
                         
+
+                        $myPayAmount = round(($cart->totalPrice + $subs->per_delivery_charges + $subs->per_order_charges + $subs->preparation) / $currency->value, 2);
+
+                        $countProfit = $vOrder->pay_amount - $myPayAmount;
+
                         $order['user_id'] = auth()->user()->id;
                         $order['cart'] = utf8_encode(bzcompress(serialize($cart), 9)); 
                         $order['totalQty'] = $vOrder->totalQty;
-                        $order['pay_amount'] = round(($cart->totalPrice + $subs->per_delivery_charges + $subs->per_order_charges + $subs->preparation) / $currency->value, 2);
+                        $order['pay_amount'] = $myPayAmount;
                         $order['method'] = 'Cash-On-Delivery';
                         $order['shipping'] = $vOrder->shipping;
                         $order['pickup_location'] = $vOrder->pickup_location;
@@ -443,9 +497,17 @@ $data=$json["IsSuccess"];
                         $order['currency_value'] = $currency->value;
                         $order['vendor_shipping_id'] = 0;
                         $order['vendor_packing_id'] = 0;
+                        $order['vendor_order_pay_amount'] = $vOrder->pay_amount;
+                        $order['per_order_profit'] = $countProfit;
 
-                        // dd($order);
                         $order->save();
+
+                        $invoice = Invoice::create([
+                                    'user_id'=>auth()->user()->id,
+                                    'order_id'=>$order->id,
+                                    'method'=>$order->method,
+                                    'pay_amount'=>$order->pay_amount
+                          ]);
 
                         $track = new OrderTrack;
                         $track->title = 'Pending';
@@ -598,7 +660,7 @@ $data=$json["IsSuccess"];
 
 
 
-        return redirect()->route('vendor-dashboard');
+        return redirect()->route('vendor-dashboard')->with('success','Order Placed Successfully');
 
 
 
@@ -608,7 +670,7 @@ $data=$json["IsSuccess"];
 
 
 
-
+}
 
 
 

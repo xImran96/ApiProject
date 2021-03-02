@@ -308,7 +308,7 @@
                                                                         
                                                                         @php
 
-                                                                            
+
                                                                             $product = auth()->user()->myProducts()->where('product_id', $item['item_id'])->first();
 
                                                                             
@@ -327,8 +327,9 @@
 
                                                                         <td>
 
-                                                                            {{ $item['price'] }}
-                                                                           
+                                                                            {{ $product->price*$item['qty'] }}
+
+
                                                             
                                                                         </td>
 

@@ -30,7 +30,9 @@ class InvoiceController extends Controller
         try {
             $user = User::where('token', $this->userToken())->first();
              if(count($user->invoices)!=0){
-                 return response()->json(['status'=>'Success 200', 'invoices'=>$user->invoices]);
+                // $invoices = $user->invoices;
+                $invoices = Invoice::where('user_id', $user->id)->with('order')->get();
+                 return response()->json(['status'=>'Success 200', 'invoices'=>$invoices]);
              }else{
                  return response()->json(['status'=>'Not Found 404', 'orders'=>`You Don't Have Any Invoices`]);  
              }
@@ -78,7 +80,7 @@ class InvoiceController extends Controller
         }
         $invoice = Invoice::findOrFail($id);
        
-        return response()->json(['success'=>$invoice]);
+        return response()->json(['success'=>$invoice->with('order')]);
          }catch(\Throwable $th){
      return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
     }
