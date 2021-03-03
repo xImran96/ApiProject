@@ -249,7 +249,7 @@
 								</a>
 								<ul class="collapse list-unstyled" id="generall" data-parent="#accordion">
                                     <li>
-                                    	<a href="{{ url('/profit') }}"><span> Profit </span></a>
+                                    	<a href="{{ url('/profit') }}"><span> Profit</span></a>
                                     </li>
                                     <li>
                                     	<a href="{{ route('finance') }}"><span>

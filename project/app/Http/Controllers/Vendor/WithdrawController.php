@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Vendor;
 
-use App\Models\User;
-use App\Models\Withdraw;
-use App\Models\Generalsetting;
 use Auth;
+use App\Models\Log;
+use App\Models\User;
 use App\Models\Currency;
+use App\Models\Withdraw;
 use Illuminate\Http\Request;
+use App\Models\Generalsetting;
 use App\Http\Controllers\Controller;
 
 class WithdrawController extends Controller
@@ -66,7 +67,14 @@ class WithdrawController extends Controller
                 $newwithdraw['fee'] = $fee;
                 $newwithdraw['type'] = 'vendor';
                 $newwithdraw->save();
-
+                $log = Log::create([
+                    'user_id'=>auth()->user()->id,
+                    'topic'=>'withdraw vendor',
+                    'code'=>200,
+                    'log_topic'=>'Vendor-withdraw',
+                    'log_message'=>'Withdraw Request Sent Successfully.',
+                    'log_level'=>'withdraw',
+                    ]);
                 return response()->json('Withdraw Request Sent Successfully.'); 
 
             }else{

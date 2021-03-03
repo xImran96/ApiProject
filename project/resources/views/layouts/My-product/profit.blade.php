@@ -73,6 +73,14 @@
 		<div class="content">
 			<h3>Set your profit</h3>
 			<p>You can change anytime and will update daily in your store</p>
+			@if(session('message'))
+			<p class="alert alert-success alert-dismissible fade show"  role="alert">{{session('message')}}
+		   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+			</p>
+			
+			@endif
 			<form method="POST" action="{{url('profitApply')}}">
 				@csrf
 			<ul class="mylist">

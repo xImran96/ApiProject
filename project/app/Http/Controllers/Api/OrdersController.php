@@ -29,9 +29,6 @@ class OrdersController extends Controller
 
     public function index()
     { 
-        // return $this->userToken();
-        // $user = User::where('token', $this->userToken())->first();
-        // return $user;
         try {
            
             $user = User::where('token', $this->userToken())->first();
@@ -67,6 +64,7 @@ class OrdersController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         try{
         $order  = new Order;
         $order->user_id =  $request->user_id;

@@ -88,6 +88,7 @@
 
                                                         $price = round($order->dealerOrder()->where('dealer_id','=',$user->id)->sum('price'),2);
 
+
                                                         if($user->shipping_cost != 0){
                                                             $price = $price  + round($user->shipping_cost * $order->currency_value , 2);
                                                             }
@@ -201,11 +202,7 @@
                                                             <th width="10%">:</th>
                                                             <td width="45%">{{$order->customer_city}}</td>
                                                         </tr>
-                                                        <tr>
-                                                            <th width="45%">{{ Lang::get('custom.last_post_paid_date') }}</th>
-                                                            <th width="10%">:</th>
-                                                            <td width="45%"> @if($last_post_paid_date) {{date('d-m-Y', strtotime($last_post_paid_date))}} @else {{Lang::get('custom.no_pervious_post_paid_order')}} @endif</td>
-                                                        </tr>
+                                                        
                                                         <tr>
                                                             <th width="45%">{{ $langg->lang563 }}</th>
                                                             <th width="10%">:</th>
@@ -278,38 +275,6 @@
                                 </div>
                                 @endif
                             </div>
-                            @if($installments)
-                                <div class="col-lg-12 order-details-table">
-                                    <div class="mr-table">
-                                        <h4 class="title">{{ __('custom.installments') }}</h4>
-                                        <div class="table-responsiv">
-                                                <table id="example2" class="table table-hover dt-responsive" cellspacing="0" width="100%">
-                                                    <thead>
-                                                        <tr>
-                            <tr>
-                                <th>{{ __('custom.installments') }}</th>
-                                <th>{{ __('custom.date_installment')}}</th>
-                                <th>{{ __('custom.value_installment') }}</th>
-                       
-                            </tr>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                            @foreach($installments as $installment)
-                                <tr>
-                                        <td>
-                                        {{$installment->id}} 
-                                        </td>
-                                        <td>{{$installment->date}}</td>
-                                        <td>{{$order->currency_sign}}{{ round ($installment->value * $order->currency_value , 2) }}</td>
-                                </tr>
-                            @endforeach
-                                                    </tbody>
-                                                </table>
-                                        </div>
-                                    </div>
-                                </div>
-                          @endif
                             <div class="row">
                                     <div class="col-lg-12 order-details-table">
                                         <div class="mr-table">
@@ -318,29 +283,80 @@
                                                     <table id="example2" class="table table-hover dt-responsive" cellspacing="0" width="100%">
                                                         <thead>
                                                             <tr>
-                                <tr>
+                                
                                     <th>{{ $langg->lang567 }}</th>
-                                    <th>{{ $langg->lang568 }}</th>
+                                    <!-- <th>{{ $langg->lang568 }}</th> -->
                                     <th>{{ $langg->lang569 }}</th>
                                     <th>{{ $langg->lang570 }}</th>
                                     <th>{{ $langg->lang539 }}</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
                                     <th>{{ $langg->lang574 }}</th>
-                                </tr>
+                                
+
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
 
+                                                        <tbody>
+                                                            @foreach($cart as $item)
+
+
+
+
+                                                                <tr>
+                                                                        <td>{{ $item['item_id'] }}</td>
+                                                                        
+                                                                        @php
+
+
+                                                                            $product = auth()->user()->myProducts()->where('product_id', $item['item_id'])->first();
+
+                                                                            
+                                                                        @endphp
+
+                                                                        <td>{{ $product->status ?? 'not available' }}</td>
+                                                                        <td>
+                                                                            {{ $product->name_en ?? 'not available' }}
+                                                                        </td>
+
+                                                                        <td></td>
+                                                                        <td>{{ $item['qty'] }}</td>
+                                                                        <td>
+                                                                            {{ $product->price ?? 'not available' }}
+                                                                        </td>
+
+                                                                        <td>
+
+                                                                            {{ $product->price*$item['qty'] }}
+
+
+                                                            
+                                                                        </td>
+
+
+
+                                                                </tr>
+
+
+                                                            @endforeach
                                                         </tbody>
                                                     </table>
                                             </div>
                                         </div>
                                     </div>
+                                    <br>
                                     <div class="col-lg-12 ">
                                         <div class="text-left">
                                         <a class="btn sendEmail send" href="javascript:;" class="send" data-email="{{ $order->customer_email }}" data-toggle="modal" data-target="#vendorform">
                                                 <i class="fa fa-send"></i> {{ $langg->lang576 }}
                                         </a>
+                                     <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
+                                      Make Order
+                                    </button>
                                         </div>
+
+
+
                                         @if($order->method == "post_paid" && $order->post_paid_confirm==0)
                                         <div class="text-right">
                                             <a href="{{route('vendor-confirm-order',$order->order_number) }}" class="btn btn-success" class="send" >
@@ -357,7 +373,49 @@
             </div>
 
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mx-auto" id="exampleModalLabel">Hareer Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <hr>
+      <div class="modal-body">
+            <form method="POST" action="{{ route('vendor-hareer-order') }}">
+                @csrf
+                <input type="hidden" name="order_number" value="{{ $order->order_number }}">
+                <div class="row">
+                <div class="form-group col-md-6 text-center">
+                    <label>Cash On Delivery</label>
+                    <input type="radio" class="form-control" name="method" value="cashOnDelivery" required="required">
+                    
+                </div>
+                <div class="form-group col-md-6 text-center">
+                    <label>My Fatoora</label>
+                    <input type="radio" class="form-control" name="method" value="My fatoora" required="required">
+                    
+                </div>
+                </div>
+                <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-primary">Go</button>
+            </div>
+            </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        
+      </div>
     </div>
+  </div>
+</div>
+
+
+</div>
 
 
     {{-- Confrim Post Paid Payment Modal --}}

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Vendor;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Auth;
+use Image;
+use App\Models\Log;
 use App\Models\Gallery;
 use App\Models\Product;
-use Image;
-use Auth;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class GalleryController extends Controller
 {
@@ -27,7 +28,21 @@ class GalleryController extends Controller
             $data[0] = 1;
             $data[1] = $prod->galleries;
         }
-        return response()->json($data);              
+
+                        $log = new Log([
+                        'topic'=>'Gallery',
+                        'code'=>200,
+                        'log_topic'=>'View-gallery',
+                        'log_message'=> $prod_id.' '.$prod_sku.' Gallery Viewed.',
+                        'log_level'=>'',
+                        ]);
+
+                auth()->user()->logs()->save($log);
+            
+
+
+        return response()->json($data); 
+
     }  
 
     public function store(Request $request)
@@ -53,7 +68,7 @@ class GalleryController extends Controller
                   }
             }
         }
-        
+
         return response()->json($data);      
     } 
 

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\myControllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Log;
 use App\Models\User;
 use App\ImportProduct;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ProfitController extends Controller
 {
@@ -35,8 +36,18 @@ class ProfitController extends Controller
        	 
        	  
        }
+
+
+        $log = Log::create([
+                        'user_id'=>auth()->user()->id,
+                        'topic'=>'Profit',
+                        'code'=>200,
+                        'log_topic'=>'Vendor-Set-Profit',
+                        'log_message'=>'Profit added has place order Successfully.',
+                        'log_level'=>'profit change',
+        ]);
        $vendor->profit_percentage = $req->percentage;
        $vendor->save();
-       return back();
+       return redirect()->back()->with('message','Profit Added Successfully');
     }
 }

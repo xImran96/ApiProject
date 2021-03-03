@@ -35,8 +35,8 @@
                             <div class="col-md-12 col-lg-6 col-xl-6">
                                 <div class="mycard bg1">
                                     <div class="left">
-                                        <h5 class="title">Profit Per Order </h5>
-                                        <span class="number"></span>
+                                        <h5 class="title">Profit Per Order</h5>
+                                        <span class="number">{{ $sum }}</span>
                                         <a href="{{route('profitPerOrder')}}" class="link">{{ $langg->lang471 }}</a>
                                     </div>
                                     <div class="right d-flex align-self-center">

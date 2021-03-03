@@ -124,6 +124,9 @@ class StripeController extends Controller
                     $sub->txnid = $charge['balance_transaction'];
                     $sub->charge_id = $charge['id'];
                     $sub->status = 1;
+                    $sub->per_delivery_charges = $subs->per_delivery_charges;
+                    $sub->per_order_charges = $subs->per_order_charges;
+                    $sub->preparation_cost = $subs->preparation_cost; 
                     $sub->save();
                     if($settings->is_smtp == 1)
                     {
@@ -241,6 +244,9 @@ class StripeController extends Controller
                     $sub->txnid = $charge['balance_transaction'];
                     $sub->charge_id = $charge['id'];
                     $sub->status = 1;
+                    $sub->per_delivery_charges = $subs->per_delivery_charges;
+                    $sub->per_order_charges = $subs->per_order_charges;
+                    $sub->preparation_cost = $subs->preparation_cost; 
                     $sub->save();
                     if($settings->is_smtp == 1)
                     {
@@ -271,7 +277,7 @@ class StripeController extends Controller
                         'log_level'=>'upgrade_subscription',
                         ]);
 
-                    $user->logs()->save( $log);
+                    $user->logs()->save($log);
 
 
                     return redirect()->route('vendor-dashboard')->with('success','Vendor Plan Upgraded Successfully');

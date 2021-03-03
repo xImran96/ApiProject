@@ -42,15 +42,17 @@
 
 
                                               <tbody>
+                                                
                                                 @foreach($orders as $orderr) 
                                                 @php 
                                                 $qty = $orderr->sum('qty');
                                                 $price = $orderr->sum('price');                                       
                                                 @endphp
+                   
                     @foreach($orderr as $order)
 
 
-@php 
+  @php 
 
   if($user->shipping_cost != 0){
       $price +=  round($user->shipping_cost * $order->order->currency_value , 2);

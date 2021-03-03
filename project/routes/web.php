@@ -5,6 +5,10 @@
 
 
 */
+Route::get('cache', function () {
+    \Artisan::call('config:cache');
+    return "ok";
+});
 
 
 Route::get('/profit','myControllers\ProfitController@showProfitForm');
@@ -1141,6 +1145,9 @@ Route::get('/logs/datatables', 'Vendor\LogsController@datatables')->name('vendor
   Route::get('/upgrade-plan', 'Vendor\UpgradePlanController@package')->name('vendor-packages');
 
   Route::get('/upgrade/subscription/{id}', 'Vendor\UpgradePlanController@vendorPackages')->name('vendor-upgrade');
+
+  Route::post('/make-order', 'Vendor\DealerHareerController@makeOrder')->name('vendor-hareer-order');
+
 
     //IMPORT SECTION
     Route::get('/products/import/create', 'Vendor\ImportController@createImport')->name('vendor-import-create');

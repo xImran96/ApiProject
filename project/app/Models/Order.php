@@ -18,4 +18,11 @@ class Order extends Model
         return $this->hasMany('App\Models\OrderTrack','order_id');
     }
 
+
+
+    public function invoice()
+    {
+        return $this->hasMany('App\Models\Invoice');
+    }
+
 }
