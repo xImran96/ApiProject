@@ -14,6 +14,7 @@ use App\Models\UserNotification;
 use App\Models\VendorOrder;
 use App\Models\OrderTrack;
 use App\Models\Invoice;
+use App\Models\log;
 use Session;
 use App\Models\Notification;
 use Str;
@@ -68,7 +69,7 @@ class DealerHareerController extends Controller
                     unset($myCartItem['item_id']);
                         
                     $myCartItem['item'] = $prod;
-                    $myCartItem['stock'] = $product->stock;
+                    $myCartItem['stock'] = $prod->stock;
 
                     $myCartItem['item_price'] = $prod->price;
                     $myCartItem['price'] = $myCartItem['item_price']*$myCartItem['qty'];
@@ -292,6 +293,9 @@ $data=$json["IsSuccess"];
 
                        $order->save();
 
+                       $vOrder->status = "processing";
+                       $vOrder->save();
+
                        $invoice = Invoice::create([
                                     'user_id'=>auth()->user()->id,
                                     'order_id'=>$order->id,
@@ -370,21 +374,21 @@ $data=$json["IsSuccess"];
    
                 $notf = null;
    
-         foreach($cart->items as $prod)
-        {
+        //  foreach($cart->items as $prod)
+        // {
             if(auth()->user())
             {
                 $vorder =  new VendorOrder;
                 $vorder->order_id = $order->id;
                 $vorder->user_id = auth()->user()->id;
                 $notf[] = auth()->user()->id;
-                $vorder->qty = $prod['qty'];
-                $vorder->price = $prod['price'];
+                $vorder->qty = $order->totalQty;
+                $vorder->price = $myPayAmount;
                 $vorder->order_number = $order->order_number;             
                 $vorder->save();
             }
 
-        }
+        // }
 
         if(!empty($notf))
         {
@@ -397,7 +401,18 @@ $data=$json["IsSuccess"];
             }
         }
 
-   
+           $log = Log::create([
+                        'user_id'=>auth()->user()->id,
+                        'topic'=>'Vendor-order',
+                        'code'=>200,
+                        'log_topic'=>'Vendor-Order',
+                        'log_message'=> $order->order_number.' '.$order->customer_name.' has processed to hareer order Successfully.',
+                        'log_level'=>'order-placed',
+                          ]);
+
+
+
+
     
       
         return redirect($payment_url);
@@ -435,7 +450,7 @@ $data=$json["IsSuccess"];
                     // ($prod);
                     unset($myCartItem['item_id']);
                     $myCartItem['item'] = $prod;
-                    $myCartItem['stock'] = $product->stock;
+                    $myCartItem['stock'] = $prod->stock;
                     $myCartItem['item_price'] = $prod->price;
                     $myCartItem['price'] = $myCartItem['item_price']*$myCartItem['qty'];
 
@@ -501,6 +516,9 @@ $data=$json["IsSuccess"];
                         $order['per_order_profit'] = $countProfit;
 
                         $order->save();
+
+                       $vOrder->status = "processing";
+                       $vOrder->save();
 
                         $invoice = Invoice::create([
                                     'user_id'=>auth()->user()->id,
@@ -582,21 +600,21 @@ $data=$json["IsSuccess"];
 
         $notf = null;
 
-        foreach($cart->items as $prod)
-        {
+        // foreach($cart->items as $prod)
+        // {
             if(auth()->user())
             {
                 $vorder =  new VendorOrder;
                 $vorder->order_id = $order->id;
                 $vorder->user_id = auth()->user()->id;
                 $notf[] = auth()->user()->id;
-                $vorder->qty = $prod['qty'];
-                $vorder->price = $prod['price'];
+                $vorder->qty = $order->totalQty;
+                $vorder->price = $myPayAmount;
                 $vorder->order_number = $order->order_number;             
                 $vorder->save();
             }
 
-        }
+        // }
 
         if(!empty($notf))
         {
@@ -610,6 +628,15 @@ $data=$json["IsSuccess"];
         }
 
 
+
+        $log = Log::create([
+                        'user_id'=>auth()->user()->id,
+                        'topic'=>'Vendor-order',
+                        'code'=>200,
+                        'log_topic'=>'Vendor-Order',
+                        'log_message'=> $order->order_number.' '.$order->customer_name.' has processed to hareer order Successfully.',
+                        'log_level'=>'order-placed',
+        ]);
 
         //Sending Email To Buyer
 

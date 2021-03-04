@@ -146,7 +146,6 @@ class VendorOrdersController extends Controller
                         'user_id'=>$user->id,
                         'topic'=>'Vendor',
                         'code'=>200,
-<<<<<<< HEAD
                         'log_topic'=>'Vendor-Order',
                         'log_message'=> $order->order_number.' '.$order->customer_name.' has place order Successfully.',
                         'log_level'=>'order-placed',
@@ -161,17 +160,6 @@ class VendorOrdersController extends Controller
         }
 
               
-=======
-                        'log_topic'=>'Order-Placed',
-                        'log_message'=> $order->id.' '.$order->order_number.' is Placed Successfully.',
-                        'log_level'=>'recieved_order',
-                        ]);
-
-      
-
-
-           if($user->logs()->save( $log)){
->>>>>>> 3c64034976c172828f24fd83ecfc6bb358c1774c
 
        
            

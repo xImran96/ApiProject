@@ -76,18 +76,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-    //       try {
-    //                $user = User::where('token', $this->userToken())->first();
-    //                 if(count($user->myProducts)!=0){
-    //                     return response()->json(['status'=>'Success 200', 'products'=>$user->myProducts]);
 
-    //                 }else{
-    //                     return response()->json(['status'=>'Not Found 404', 'products'=>`You Don't Have Any Imports`]);  
-    //                 }
-
-    //         } catch (\Throwable $th) {
-    //             return response()->json(['status'=>'Internal Server Error 500', 'Error'=>$th]);
-    //         }
          try {
             $user = User::where('token', $this->userToken())->first();
             if(!$user){

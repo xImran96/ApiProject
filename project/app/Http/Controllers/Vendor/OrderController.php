@@ -92,7 +92,9 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         $order = Order::where('order_number', '=', $slug)->first();
+        // dd($order);
         $cart = unserialize(bzdecompress(utf8_decode($order->cart)));
+        // dd($cart->items);
         return view('vendor.order.invoice', compact('user', 'order', 'cart'));
     }
 

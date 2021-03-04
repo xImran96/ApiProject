@@ -310,7 +310,7 @@
 
 
                                                                             $product = auth()->user()->myProducts()->where('product_id', $item['item_id'])->first();
-
+ 
                                                                             
                                                                         @endphp
 
@@ -350,8 +350,8 @@
                                         <a class="btn sendEmail send" href="javascript:;" class="send" data-email="{{ $order->customer_email }}" data-toggle="modal" data-target="#vendorform">
                                                 <i class="fa fa-send"></i> {{ $langg->lang576 }}
                                         </a>
-                                     <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
-                                      Make Order
+                                     <button type="button" class="btn send sendEmail float-right" data-toggle="modal" data-target="#exampleModal">
+                                      Processed Order
                                     </button>
                                         </div>
 
@@ -378,7 +378,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title mx-auto" id="exampleModalLabel">Hareer Order</h5>
+        <h5 class="modal-title mt-3 mx-auto" id="exampleModalLabel">Hareer Order</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

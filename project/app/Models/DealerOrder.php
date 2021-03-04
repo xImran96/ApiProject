@@ -10,7 +10,7 @@ class DealerOrder extends Model
     	protected $guarded = [];
 
 
-        public function dealerOrder()
+     public function dealerOrder()
     {
         return $this->hasMany('App\Models\DealerOrderDetail');
     }

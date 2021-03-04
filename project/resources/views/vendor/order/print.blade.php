@@ -89,6 +89,7 @@ html {
                         </div>
                 </div>
                 @endif
+
                 <div class="col-lg-6" style="width:50%;">
                         <div class="invoice__orderDetails" style="margin-top:5px;">
                             <p><strong>{{ $langg->lang587 }}</strong></p>
@@ -98,17 +99,36 @@ html {
                             <span><strong>{{ $langg->lang561 }}</strong>: {{ $order->customer_country }}</span>
                         </div>
                 </div>
+                <div class="col-lg-6" style="width:50%;">
+                        <div class="invoice__orderDetails" style="margin-top:5px;">
+                            <p><strong>
+                                <!-- {{ $langg->lang587 }} --> Shipping Address
+                            </strong></p>
+                            <span><strong>
+                                <!-- {{ $langg->lang557 }} --> Shipping Name
+                            </strong>: {{ $order->shipping_name}}</span><br>
+                            <span><strong>
+                                {{ $langg->lang560 }}
+                            </strong>: {{ $order->shipping_address }}</span><br>
+                            <span><strong>
+                                {{ $langg->lang562 }}
+                            </strong>: {{ $order->shipping_city }}</span><br>
+                            <span><strong>{{ $langg->lang561 }}</strong>: {{ $order->shipping_country }}</span>
+                        </div>
+                </div>
             </div>
-
+                <br>
                 <div class="col-lg-12">
                     <div class="invoice_table">
                         <div class="mr-table">
                             <div class="table-responsive">
                                 <table id="example2" class="table table-hover dt-responsive" cellspacing="0"
-                                    width="100%">
-                                    <thead style="border-top:1px solid rgba(0, 0, 0, 0.1) !important;">
+                                    width="100%" >
+                                    <thead>
                                         <tr>
                                             <th>{{ $langg->lang591 }}</th>
+                                            <th>{{ $langg->lang595 }}</th>
+                                            <th>Item Price</th>
                                             <th>{{ $langg->lang539 }}</th>
                                             <th>{{ $langg->lang600 }}</th>
                                         </tr>
@@ -116,132 +136,89 @@ html {
                                     <tbody>
                                         @php
                                         $subtotal = 0;
-                                        $tax = 0;
                                         $data = 0;
+                                        $tax = 0;
+                                        $subs = auth()->user()->subscribes()->orderBy('id', 'desc')->first();
                                         @endphp
+
                                         @foreach($cart->items as $product)
-                                        @if($product['item']['user_id'] != 0)
-                                            @if($product['item']['user_id'] == $user->id)
                                         <tr>
-                                            <td width="50%">
-                                                @if($product['item']['user_id'] != 0)
-                                                @php
-                                                $user = App\Models\User::find($product['item']['user_id']);
-                                                @endphp
-                                                @if(isset($user))
-                                                {{ $product['item']['name']}}
-                                                @else
-                                                {{$product['item']['name']}}
-                                                @endif
+                                            <td> 
+                                                <a target="_blank"
+                                                    href="{{ route('vendor.product', $product['item']['slug']) }}">
 
-                                                @else
-                                                {{ $product['item']['name']}}
-                                                @endif
+                                                    {{ $product['item']['name_en'] }}
+                                                </a>
                                             </td>
-
+                                            <td>{{ $product['qty'] }}</td>
+                                            <td>{{ $product['item_price'] }}</td>
                                             <td>
-                                                @if($product['size'])
-                                               <p>
-                                                    <strong>{{ $langg->lang312 }} :</strong> {{str_replace('-',' ',$product['size'])}}
-                                               </p>
-                                               @endif
-                                                @if($product['color'])
-                                                <p>
-                                                        <strong>{{ __('color') }} :</strong> <span style="width: 20px; height: 5px; display: block; border: 10px solid {{$product['color'] == "" ? "white" : '#'.$product['color']}};"></span>
-                                                </p>
-                                                @endif
-                                                <p>
-                                                        <strong>{{ $langg->lang754 }} :</strong> {{$order->currency_sign}}{{ round($product['item_price'] * $order->currency_value , 2) }}
-                                                </p>
-                                               <p>
-                                                    <strong>{{ $langg->lang595 }} :</strong> {{$product['qty']}} {{ $product['item']['measure'] }}
-                                               </p>
-                                                    @if(!empty($product['keys']))
-
-                                                    @foreach( array_combine(explode(',', $product['keys']), explode(',', $product['values']))  as $key => $value)
-                                                    <p>
-
-                                                        <b>{{ ucwords(str_replace('_', ' ', $key))  }} : </b> {{ $value }} 
-
-                                                    </p>
-                                                    @endforeach
-
-                                                    @endif
-
-                                            </td>
-
-                                            <td>{{$order->currency_sign}}{{ round($product['price'] * $order->currency_value , 2) }}
-                                            </td>
-                                            @php
-                                            $subtotal += round($product['price'] * $order->currency_value, 2);
-                                            @endphp
+                                                      @if($product['size_key'] != null)
+                                                <ul>
+                                                    <li>Size : {{ $product['size_key'] }}</li>
+                                                    <li>Size Qty: {{ $product['size_qty'] }}</li>
+                                                    <li>Size Price: {{ $product['size_price'] }}</li>
+                                                </ul>
+                                                 @endif
+                                         </td>
+                                            <td>{{ $product['price'] }}</td>
 
                                         </tr>
-
-                                        @endif
-                                    @endif
-
+                                            <!-- {{ $subtotal += $product['price'] }} -->
                                         @endforeach
+                                       
+                                    </tbody>
 
-                                        <tr class="semi-border">
-                                            <td colspan="1"></td>
-                                            <td><strong>{{ $langg->lang597 }}</strong></td>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4">{{ $langg->lang597 }}</td>
                                             <td>{{$order->currency_sign}}{{ round($subtotal, 2) }}</td>
-
-                                        </tr>
-                                        @if(Auth::user()->id == $order->vendor_shipping_id)
-                                        @if($order->shipping_cost != 0)
-                                            @php 
-                                            $price = round(($order->shipping_cost / $order->currency_value),2);
-                                            @endphp
-                                            @if(DB::table('shippings')->where('price','=',$price)->count() > 0)
-                                            <tr class="no-border">
-                                                <td colspan="1"></td>
-                                                <td><strong>{{ DB::table('shippings')->where('price','=',$price)->first()->title }}({{$order->currency_sign}})</strong></td>
-                                                <td>{{ round($order->shipping_cost , 2) }}</td>
-                                            </tr>
-                                            @endif
-                                        @endif
-                                        @endif
-                                        @if(Auth::user()->id == $order->vendor_packing_id)
-                                        @if($order->packing_cost != 0)
-                                            @php 
-                                            $pprice = round(($order->packing_cost / $order->currency_value),2);
-                                            @endphp
-                                            @if(DB::table('packages')->where('price','=',$pprice)->count() > 0)
-                                            <tr class="no-border">
-                                                <td colspan="1"></td>
-                                                <td><strong>{{ DB::table('packages')->where('price','=',$pprice)->first()->title }}({{$order->currency_sign}})</strong></td>
-                                                <td>{{ round($order->packing_cost , 2) }}</td>
-                                            </tr>
-                                            @endif
-                                        @endif
-                                        @endif
-
-                                        @if($order->tax != 0)
-                                        <tr class="no-border">
-                                            <td colspan="1"></td>
-                                            <td><strong>{{ $langg->lang599 }}({{$order->currency_sign}})</strong></td>
-
-                                            @php
-                                                $tax = ($subtotal / 100) * $order->tax;
-                                                $subtotal =  $subtotal + $tax;
-                                            @endphp
-
-                                            <td>{{round($tax, 2)}}</td>
                                         </tr>
 
-                                        @endif
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td>
+                                                <!-- {{ $langg->lang600 }} -->
+                                                Per Delivery Charges
+                                            </td>
+                                            <td>{{$order->currency_sign}}{{ round(($subtotal += $subs->per_delivery_charges), 2) }}
+                                            </td>
+                                        </tr>
 
-                                        <tr class="final-border">
-                                            <td colspan="1"></td>
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td>
+                                                <!-- {{ $langg->lang600 }} -->
+                                                Per Order Charges
+                                            </td>
+                                            <td>{{$order->currency_sign}}{{ round(($subtotal += $subs->per_order_charges), 2) }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td>
+                                                <!-- {{ $langg->lang600 }} -->
+                                                Preparation Cost
+                                            </td>
+                                            <td>{{$order->currency_sign}} {{ round(($subtotal += $subs->preparation_cost), 2) }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="3"></td>
                                             <td>{{ $langg->lang600 }}</td>
                                             <td>{{$order->currency_sign}}{{ round(($subtotal + $data), 2) }}
                                             </td>
                                         </tr>
 
-                                    </tbody>
-
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td>{{ $langg->lang600 }}</td>
+                                            <td>{{$order->currency_sign}}{{ round(($subtotal + $data), 2) }}
+                                            </td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
