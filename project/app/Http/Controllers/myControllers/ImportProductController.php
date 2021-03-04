@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\myControllers;
 
 use Image;
+use App\Models\Log;
 use App\Models\User;
+use App\Models\Order;
 use App\ImportProduct;
+use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Attribute;
 use App\Models\DealerOrder;
 use App\Models\Subcategory;
-use App\Models\Invoice;
-use App\Models\Order;
-use Illuminate\Support\Str;
 // use Intervention\Image\Image;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Childcategory;
 use App\Models\VendorGallery;
@@ -39,7 +40,7 @@ class ImportProductController extends Controller
            $checkProduct = ImportProduct::where('product_id',$product_id)->where('user_id',auth()->user()->id)->first();
           
            if ($checkProduct) {
-              return "you alredy imported this product";
+            return redirect()->back()->with('message','You already imported this product');
            }
       $checkigProfitPercentage = User::where('id',auth()->user()->id)->first();
      
@@ -63,7 +64,7 @@ class ImportProductController extends Controller
          	$product->size_qty= $originalProduct['size_qty'];
          	$product->size_price = $originalProduct['size_price'];
          	$product->color = $originalProduct['color'];
-         	$product->price = $originalProdsuct['price'];
+         	$product->price = $originalProduct['price'];
          	$product->details_en = $originalProduct['details_en'];
          	$product->details_ar = $originalProduct['details_ar'];
          	$product->stock = $originalProduct['stock'];
@@ -120,7 +121,15 @@ class ImportProductController extends Controller
            
              
             if ($product->Save()) {
-              return 'imported successfully';
+              $log = Log::create([
+                'user_id'=>auth()->user()->id,
+                'topic'=>'import product',
+                'code'=>200,
+                'log_topic'=>'Vendor-import-product',
+                'log_message'=>'Product imported successfully.',
+                'log_level'=>'product imported',
+                 ]);
+              return redirect()->back()->with('message','Product imported successfully');
              }else{
                return 'something went wrong';
              }
@@ -168,6 +177,14 @@ class ImportProductController extends Controller
       $myProduct = ImportProduct::find($id);
       $delete = $myProduct->delete();
       if ($delete) {
+        $log = Log::create([
+          'user_id'=>auth()->user()->id,
+          'topic'=>'import product delete',
+          'code'=>200,
+          'log_topic'=>'Vendor-delete-import-product',
+          'log_message'=>'Vendor deleted imported product successfully.',
+          'log_level'=>'import product delete',
+           ]);
          return back();
       }
     }
@@ -524,6 +541,14 @@ class ImportProductController extends Controller
         
 
         //--- Redirect Section
+        $log = Log::create([
+          'user_id'=>auth()->user()->id,
+          'topic'=>'import product edit',
+          'code'=>200,
+          'log_topic'=>'Vendor-edit-imported-product',
+          'log_message'=>'Vendor edited imported product Successfully.',
+          'log_level'=>'imported product edited',
+           ]);
         $msg = 'Product Updated Successfully.<a href="'.route('my-products').'">View Product Lists.</a>';
         return response()->json($msg);
         //--- Redirect Section Ends
@@ -555,6 +580,14 @@ class ImportProductController extends Controller
                   }
             }
         }
+        $log = Log::create([
+          'user_id'=>auth()->user()->id,
+          'topic'=>'imported product gallery',
+          'code'=>200,
+          'log_topic'=>'Vendor-edit-import porudct gallery',
+          'log_message'=>'Vendor edited imported product gallery Successfully.',
+          'log_level'=>'gallery change',
+]);
         return response()->json($data);      
     } 
 
@@ -567,6 +600,7 @@ class ImportProductController extends Controller
             if (file_exists(public_path().'/assets/images/galleries/'.$gal->photo)) {
                 unlink(public_path().'/assets/images/galleries/'.$gal->photo);
             }
+            
         $gal->delete();
             
     } 
@@ -614,6 +648,14 @@ class ImportProductController extends Controller
         $img->save(public_path().'/assets/images/thumbnails/'.$thumbnail);
         $data->thumbnail  = $thumbnail;
         $data->update();
+        $log = Log::create([
+          'user_id'=>auth()->user()->id,
+          'topic'=>'image updated',
+          'code'=>200,
+          'log_topic'=>'Vendor-change-image',
+          'log_message'=>'Vendro updated the image Successfully.',
+          'log_level'=>'image change',
+          ]);
         return response()->json(['status'=>true,'file_name' => $image_name]);
     }
 

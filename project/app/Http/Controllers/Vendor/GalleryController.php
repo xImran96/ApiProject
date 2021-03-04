@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Vendor;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Auth;
+use Image;
+use App\Models\Log;
 use App\Models\Gallery;
 use App\Models\Product;
-use Image;
-use Auth;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class GalleryController extends Controller
 {

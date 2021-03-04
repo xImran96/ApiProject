@@ -44,6 +44,7 @@
   $categories = App\Models\Category::all();
 
   @endphp
+	
 
 					<input type="hidden" id="headerdata" value="PRODUCT">
 					<div class="content-area">
@@ -109,7 +110,14 @@
 							<div class="row">
 								<div class="col-lg-12">
 									<div class="mr-table allproduct">
-						
+										@if(session('message'))
+										<p class="alert alert-success alert-dismissible fade show"  role="alert">{{session('message')}}
+									   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										  <span aria-hidden="true">&times;</span>
+										</button>
+										</p>
+										
+										@endif
 
                         @include('includes.vendor.form-success')  
 
@@ -157,7 +165,7 @@
 														@else
 														@foreach($products as $product)
 														<tr>
-															<td><img src="{{$product->photo}}"></td>
+															<td><img src="{{asset('assets/images/products/'.$product->photo)}}"></td>
 															<td>{{$product->name_en}}</td>
 															<td>{{$product->type}}</td>
 															<td>{{$product->stock}}</td>

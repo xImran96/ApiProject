@@ -17,7 +17,7 @@ class DealerOrdersController extends Controller
     {
         $user = Auth::user();
         $orders = DealerOrderDetail::where('dealer_id', '=', $user->id)->orderBy('id', 'desc')->get()->groupBy('order_number');
-        // dd($orders);
+      
         return view('vendor.dealer.index', compact('user', 'orders'));
 
     }

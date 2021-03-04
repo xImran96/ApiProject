@@ -454,7 +454,7 @@ class CheckoutController extends Controller
         $order['user_id'] = $request->user_id;
         $order['cart'] = utf8_encode(bzcompress(serialize($cart), 9)); 
         $order['totalQty'] = $request->totalQty;
-        $order['pay_amount'] = round($request->total +  / $curr->value, 2);
+        $order['pay_amount'] = round($request->total / $curr->value, 2);
         $order['method'] = $request->method;
         $order['shipping'] = $request->shipping;
         $order['pickup_location'] = $request->pickup_location;

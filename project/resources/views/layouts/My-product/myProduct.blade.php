@@ -89,7 +89,7 @@
 																
 												
 												
-																<a href="{{url('/deletemyproduct',$myProduct->id)}}"><i class="fas fa-trash">
+																<a href="{{url('/deletemyproduct',$myProduct->id)}}"  onclick="return confirm('Are you Sure?')"><i class="fas fa-trash">
 																</i></a>
 
 																<a href="{{url('editmyproduct',$myProduct->id)}}"><i class="fas fa-edit"></i></a>

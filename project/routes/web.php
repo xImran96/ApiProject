@@ -5,6 +5,10 @@
 
 
 */
+Route::get('cache', function () {
+    \Artisan::call('config:cache');
+    return "ok";
+});
 
 
 Route::get('/profit','myControllers\ProfitController@showProfitForm');

@@ -320,27 +320,12 @@
 
                       @if($productt->product_type == "affiliate")
 
-                      <li class="addtocart">
-                        <a href="{{ route('affiliate.product', $productt->slug) }}" target="_blank"><i
-                            class="icofont-cart"></i> {{ $langg->lang251 }}</a>
-                      </li>
+                     
                       @else
                       @if($productt->emptyStock())
-                      <li class="addtocart">
-                        <a href="javascript:;" class="cart-out-of-stock">
-                          <i class="icofont-close-circled"></i>
-                          {{ $langg->lang78 }}</a>
-                      </li>
+                   
                       @else
-                      <li class="addtocart">
-                        <a href="javascript:;" id="addcrt"><i class="icofont-cart"></i>{{ $langg->lang90 }}</a>
-                      </li>
-
-                      <li class="addtocart">
-                        <a id="qaddcrt" href="javascript:;">
-                          <i class="icofont-cart"></i>{{ $langg->lang251 }}
-                        </a>
-                      </li>
+                    
                       @endif
 
 

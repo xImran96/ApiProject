@@ -1081,7 +1081,7 @@
                                             '<input type="hidden" value="'+arr[k]['id']+'">'+
                                             '</span>'+
                                             '<a href="'+'{{asset('assets/images/galleries').'/'}}'+arr[k]['photo']+'" target="_blank">'+
-                                            'c+
+                                            
                                             '</a>'+
                                         '</div>'+
                                   	'</div>');
