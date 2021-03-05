@@ -10,9 +10,7 @@
             <p class="sub-title">
                 {{ $langg->lang226 }}
             </p>
-            <h2 class="title">
-              {{ $vendor->shop_name }}
-            </h2>
+            <h1 class="title">{{ $vendor->shop_name }}</h1>
           </div>
         </div>
       </div>

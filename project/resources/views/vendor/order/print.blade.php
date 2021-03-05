@@ -89,7 +89,6 @@ html {
                         </div>
                 </div>
                 @endif
-
                 <div class="col-lg-6" style="width:50%;">
                         <div class="invoice__orderDetails" style="margin-top:5px;">
                             <p><strong>{{ $langg->lang587 }}</strong></p>

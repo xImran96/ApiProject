@@ -96,9 +96,7 @@ class StripeController extends Controller
 
         if ($validator->passes()) {
 
-            // $stripe = Stripe::make(Config::get('services.stripe.secret'));
-            
-            $stripe = Stripe::make('sk_test_ohy2h6O0GLN0b8CcPTuheVvO00bcCIo72D');
+            $stripe = Stripe::make(Config::get('services.stripe.secret'));
             try{
                 $token = $stripe->tokens()->create([
                     'card' =>[

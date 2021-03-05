@@ -133,6 +133,26 @@
 												<div class="row">
 													<div class="col-lg-12">
 														<div class="left-area">
+<<<<<<< HEAD
+=======
+																<h4 class="heading">{{ __('suppliers') }}*</h4>
+														</div>
+													</div>
+													<div class="col-lg-12">
+															<select id="user_id" name="user_id" required="">
+																	<option>{{ __('Select suppliers') }}</option>
+
+                                              @foreach($vendors as $vendor)
+                                                  <option  value="{{$vendor->id}}" {{$vendor->id == $data->user_id ? "selected":""}} >   {{ $vendor->shop_name }}</option>
+                                              @endforeach
+						                                     </select>
+													</div>
+												</div>
+
+												<div class="row">
+													<div class="col-lg-12">
+														<div class="left-area">
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
 																<h4 class="heading">{{ __('Sub Category') }}*</h4>
 														</div>
 													</div>
@@ -808,6 +828,40 @@
 						                                <textarea name="meta_description" class="input-field" placeholder="{{ __('Details') }}">{{ $data->meta_description }}</textarea>
 						                              </div>
 						                            </div>
+<<<<<<< HEAD
+=======
+												  </div>
+												  <div class="row">
+						                            <div class="col-lg-12">
+						                              <div class="left-area">
+						                                  <h4 class="heading">{{ __('Meta Tags') }} *</h4>
+						                              </div>
+						                            </div>
+						                            <div class="col-lg-12">
+						                              <ul id="metatags_ar" class="myTags">
+						                              	@if(!empty($data->meta_tag_ar))
+							                                @foreach ($data->meta_tag_ar as $element)
+							                                  <li>{{  $element }}</li>
+							                                @endforeach
+						                                @endif
+						                              </ul>
+						                            </div>
+						                          </div>
+
+						                          <div class="row">
+						                            <div class="col-lg-12">
+						                              <div class="left-area">
+						                                <h4 class="heading">
+						                                    {{ __('Meta Description') }} *
+						                                </h4>
+						                              </div>
+						                            </div>
+						                            <div class="col-lg-12">
+						                              <div class="text-editor">
+						                                <textarea name="meta_description" class="input-field" placeholder="{{ __('Details') }}">{{ $data->meta_description_ar }}</textarea>
+						                              </div>
+						                            </div>
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
 						                          </div>
 						                        </div>
 

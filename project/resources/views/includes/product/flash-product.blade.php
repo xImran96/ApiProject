@@ -4,7 +4,11 @@
 @if(Carbon\Carbon::now()->format('Y-m-d') < Carbon\Carbon::parse($prod->discount_date)->format('Y-m-d'))
 
 
+<<<<<<< HEAD
 	<a href="{{ route('front.product', $prod->slug) }}" class="item">
+=======
+	<a href="{{ route('front.product', [$prod->id, $prod->slug_name]) }}" class="item">
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
 		<div class="item-img">
 			@if(!empty($prod->features))
 				<div class="sell-area">
@@ -40,7 +44,11 @@
 						</li>
 					</ul>
 				</div>
+<<<<<<< HEAD
 			<img class="img-fluid" src="{{ $prod->thumbnail ? asset('assets/images/thumbnails/'.$prod->thumbnail):asset('assets/images/noimage.png') }}" alt="">
+=======
+			<img class="img-fluid" src="{{ $prod->thumbnail ? asset('assets/images/thumbnails/'.$prod->thumbnail):asset('assets/images/noimage.png') }}" alt="{{ Session::get('language') != 1 ? $prod->name_ar : $prod->name_en }}" title="{{ Session::get('language') != 1 ? $prod->name_ar : $prod->name_en }}">
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
 		</div>
 		<div class="info">
 			<div class="stars">

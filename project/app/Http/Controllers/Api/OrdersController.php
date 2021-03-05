@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\User;
 use Auth;
+use Validator;
 use App\Models\Invoice;
 
 
@@ -64,10 +65,13 @@ class OrdersController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        $user = User::where('token', $this->userToken())->first();
+
+    
         try{
+     
         $order  = new Order;
-        $order->user_id =  $request->user_id;
+        $order->user_id =  $user->id;
         $order->cart =    $request->cart;
         $order->method =  $request->method;
         $order->shipping = $request->shipping;
@@ -111,49 +115,12 @@ class OrdersController extends Controller
         
        if($order->save()){
          
-        $invoice  = new Invoice;
-        $invoice->user_id =  $request->user_id;
-        $invoice->order_id = $order->id;
-        $invoice->cart =    $request->cart;
-        $invoice->method =  $request->method;
-        $invoice->shipping = $request->shipping;
-        $invoice->pickup_location =  $request->pickup_location;
-        $invoice->totalQty = $request->totalQty;
-        $invoice->pay_amount =  $request->pay_amount; 
-        $invoice->txnid = $request->txnid;
-        $invoice->charge_id = $request->charge_id;
-        $invoice->order_number = $request->order_number;
-        $invoice->payment_status = $request->payment_status;
-        $invoice->customer_email = $request->customer_email;
-        $invoice->customer_name = $request->customer_name;
-        $invoice->customer_country =  $request->customer_country;
-        $invoice->customer_phone = $request->customer_phone;
-        $invoice->customer_address = $request->customer_address;
-        $invoice->customer_city = $request->customer_city;
-        $invoice->customer_zip = $request->customer_zip;
-        $invoice->shipping_name = $request->shipping_name;
-        $invoice->shipping_country =$request->shipping_country;
-        $invoice->shipping_email = $request->shipping_email;
-        $invoice->shipping_phone =$request->shipping_phone;
-        $invoice->shipping_address = $request->shipping_address;
-        $invoice->shipping_city = $request->shipping_city;
-        $invoice->shipping_zip = $request->shipping_zip;
-        $invoice->order_note=$request->order_note;
-        $invoice->coupon_code = $request->coupon_code;
-        $invoice->coupon_discount = $request->coupon_discount ;
-        $invoice->status = $request->status;
-        $invoice->post_paid_confirm = $request->post_paid_confirm;
-        $invoice->affilate_user = $request->affilate_user;
-        $invoice->affilate_charge = $request->affilate_charge;
-        $invoice->currency_sign = $request->currency_sign;
-        $invoice->currency_value = $request->currency_value;
-        $invoice->shipping_cost =  $request->shipping_cost;
-        $invoice->packing_cost = $request->packing_cost;
-        $invoice->tax =  $request->tax;
-        $invoice->dp = $request->dp ;
-        $invoice->pay_id =  $request->pay_id;
-        $invoice->vendor_shipping_id =  $request->vendor_shipping_id;
-        $invoice->vendor_packing_id = $request->vendor_packing_id;
+        $invoice = Invoice::create([
+            'user_id'=> $user->id,
+            'order_id'=>$order->id,
+            'method'=>$order->method,
+            'pay_amount'=>$order->pay_amount
+        ]);
         if($invoice->save()){
             return response()->json(['success'=>'200']);
         }

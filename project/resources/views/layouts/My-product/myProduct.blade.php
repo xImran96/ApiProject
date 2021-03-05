@@ -31,10 +31,6 @@
 <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=602ba54ff71937001207d4cc&product=inline-share-buttons" async="async"></script>
 @endsection
 @section('content')  
-  @php
-  $myProducts = App\ImportProduct::where('user_id',auth()->user()->id)->paginate(10);
-
-  @endphp
 
 					<input type="hidden" id="headerdata" value="PRODUCT">
 					<div class="content-area">

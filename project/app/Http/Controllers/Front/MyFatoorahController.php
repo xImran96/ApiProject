@@ -23,17 +23,13 @@ class MyFatoorahController extends Controller
     //
 
     public function store(Request $request){
-
-      // dd($request->all());
-
         if (!Session::has('cart')) {
            return redirect()->route('front.cart')->with('success',"You don't have any product to checkout.");
         }
    
            if($request->pass_check) {
                $users = User::where('email','=',$request->personal_email)->get();
-               if(count($users) == 0){
-
+               if(count($users) == 0) {
                    if ($request->personal_pass == $request->personal_confirm){
                        $user = new User();
                        $user->name = $request->personal_name; 
@@ -44,50 +40,32 @@ class MyFatoorahController extends Controller
                        $user->affilate_code = md5($request->name.$request->email);
                        $user->email_verified = 'Yes';
                        $user->save();
-                       Auth::guard('web')->login($user);    
-
-                   }
-
-                   else
-                   
-                   {
-                   
+                       Auth::guard('web')->login($user);                     
+                   }else{
                        return redirect()->back()->with('unsuccess',"Confirm Password Doesn't Match.");     
-                   
                    }
-               
                }
-               
-               else
-                {
-               
+               else {
                    return redirect()->back()->with('unsuccess',"This Email Already Exist.");  
-               
                }
            }
    
    
         $oldCart = Session::get('cart');
-        
-        // dd(Session::get('cart')); 
         $cart = new Cart($oldCart);
-        
-
-        dd($cart);
                if (Session::has('currency')) 
                {
                  $curr = Currency::find(Session::get('currency'));
                }
                else
-                {
+               {
                    $curr = Currency::where('is_default','=',1)->first();
-                }
+               }
            foreach($cart->items as $key => $prod)
            {
-            // dd($prod);
            if(!empty($prod['item']['license']) && !empty($prod['item']['license_qty']))
-                {
-                 foreach($prod['item']['license_qty']as $ttl => $dtl)
+           {
+                   foreach($prod['item']['license_qty']as $ttl => $dtl)
                    {
                        if($dtl != 0)
                        {
@@ -100,14 +78,14 @@ class MyFatoorahController extends Controller
                            $produc->update();
                            $temp =  $produc->license;
                            $license = $temp[$ttl];
-                           $oldCart = Session::has('cart') ? Session::get('cart') : null;
-                           $cart = new Cart($oldCart);
-                           $cart->updateLicense($prod['item']['id'],$license);  
-                           Session::put('cart',$cart);
+                            $oldCart = Session::has('cart') ? Session::get('cart') : null;
+                            $cart = new Cart($oldCart);
+                            $cart->updateLicense($prod['item']['id'],$license);  
+                            Session::put('cart',$cart);
                            break;
                        }                    
                    }
-               }
+           }
            }
         $settings = Generalsetting::findOrFail(1);
         $order = new Order();
@@ -124,7 +102,6 @@ class MyFatoorahController extends Controller
         $item_number = Str::random(10);
         $item_amount = (double)$request->total;
 
-        // dd($item_amount);
         // Append amount& currency (£) to quersytring so it cannot be edited in html
         $InvoiceItems = null;
         foreach($cart->items as $prod)
@@ -134,6 +111,7 @@ class MyFatoorahController extends Controller
             $x = (string)$prod['qty'];
            // dd((int)$x);
             //dd($product->price * (int)$x);
+         
             $data = array(
                 'ItemName' => $product->name_en,
                 'Quantity' => (int)$x,
@@ -146,26 +124,19 @@ class MyFatoorahController extends Controller
         $arr = array_map('strval', array_keys($data)); // values strings
         $arr = json_encode($data); // int strings
      
-
-        
-        // dd($arr);
+       
+        //dd($arr);
         //The item name and amount can be brought in dynamically by querying the $_POST['item_number'] variable.
-        $token = "ytMSqvTCONA-yaRAxs-WeD8S4b-gRqZDbBk8tH9LWEOPCL9GLfMF-KBJXDKLWW6ye27t3c9Gv6wzNh5YpFIKqKv5OEIeDeSuwCysHaDhLy9Kh7v1oJSlAtORMnNCusqob9uEa1j1kp_1horXh131TEsK7lmqQaKF9s93iTFLWbtcq_EtqYbc29CsVqaJM-AfS9Gcqs9-zZFTL0chnFoU55nyUbvnZ68tH4GkVxLu48UwCF_JQQkblzMxTgjPqHUQJDl-1DSxYZJj_Cg3qZJWeSJkBMkzhRPzDWpelo4QcknOtWiOmkdhXAI-n4UCWE7L_vAEtc7b-BkNIz_1GSDxx51H5KY6YN1FmDEJiGX2XKPzqqlR-aQ92ur30utuQV8_qDriKLNIDoaPYcQHshEcqajQVo8EMF7W9LO_2b695oU2h5SOH-e3ol14iqKheF_nWEw749n1cDhgEBLR_yC81Uz3x3j-yMQLfurir_v9D7Wjv4PMS-e5mq2e3A_wXzoGjTg3yNABZsijH7OCJ7ulGToT6E2lhFEx-f1S_Ya4GJNREOV-1LfADWF3y_GE4xBGK1Il2lfv8cfeHqPzhBURloRZZ0OkC5nvXTNyKTRgUDAnRO17GzKQh4Kt8x7Ojmfw8AtZNJ7z3LkJ_BtS_jOqQxJgR474XvE7z1wLhth9-dmfDHnY"; #token value to be placed here;
+        $token =  "ytMSqvTCONA-yaRAxs-WeD8S4b-gRqZDbBk8tH9LWEOPCL9GLfMF-KBJXDKLWW6ye27t3c9Gv6wzNh5YpFIKqKv5OEIeDeSuwCysHaDhLy9Kh7v1oJSlAtORMnNCusqob9uEa1j1kp_1horXh131TEsK7lmqQaKF9s93iTFLWbtcq_EtqYbc29CsVqaJM-AfS9Gcqs9-zZFTL0chnFoU55nyUbvnZ68tH4GkVxLu48UwCF_JQQkblzMxTgjPqHUQJDl-1DSxYZJj_Cg3qZJWeSJkBMkzhRPzDWpelo4QcknOtWiOmkdhXAI-n4UCWE7L_vAEtc7b-BkNIz_1GSDxx51H5KY6YN1FmDEJiGX2XKPzqqlR-aQ92ur30utuQV8_qDriKLNIDoaPYcQHshEcqajQVo8EMF7W9LO_2b695oU2h5SOH-e3ol14iqKheF_nWEw749n1cDhgEBLR_yC81Uz3x3j-yMQLfurir_v9D7Wjv4PMS-e5mq2e3A_wXzoGjTg3yNABZsijH7OCJ7ulGToT6E2lhFEx-f1S_Ya4GJNREOV-1LfADWF3y_GE4xBGK1Il2lfv8cfeHqPzhBURloRZZ0OkC5nvXTNyKTRgUDAnRO17GzKQh4Kt8x7Ojmfw8AtZNJ7z3LkJ_BtS_jOqQxJgR474XvE7z1wLhth9-dmfDHnY"; #token value to be placed here;
         $basURL = "https://api.myfatoorah.com";   
-        
-        $curl = curl_init();
-    
-        curl_setopt_array($curl, array(
-  
-        CURLOPT_URL => "$basURL/v2/SendPayment",
-  
-        CURLOPT_CUSTOMREQUEST => "POST",
-        
-        CURLOPT_POSTFIELDS => "{\"NotificationOption\":\"ALL\",\"CustomerName\": \"$request->name\",\"DisplayCurrencyIso\": \"SAR\",\"MobileCountryCode\":\"+965\",\"CustomerMobile\": \"$request->phone\",\"CustomerEmail\": \"$request->email\",\"InvoiceValue\": $item_amount, \"CallBackUrl\": \"$return_url\",\"ErrorUrl\": \"$cancel_url\",\"Language\": \"en\", \"CustomerReference\" :\"ref $request->user_id\",\"CustomerCivilId\":$request->user_id,\"UserDefinedField\": \"Custom field\", \"ExpireDate\": \"\",\"CustomerAddress\" :{\"Block\":\"\",\"Street\":\"\",\"HouseBuildingNo\":\"\",\"Address\":\"$request->address\",\"AddressInstructions\":\"\"},  \"InvoiceItems\": [$arr]}",
-        
-        CURLOPT_HTTPHEADER => array("Authorization: Bearer $token","Content-Type: application/json"),
+$curl = curl_init();
+curl_setopt_array($curl, array(
+  CURLOPT_URL => "$basURL/v2/SendPayment",
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => "{\"NotificationOption\":\"ALL\",\"CustomerName\": \"$request->name\",\"DisplayCurrencyIso\": \"SAR\",\"MobileCountryCode\":\"+965\",\"CustomerMobile\": \"$request->phone\",\"CustomerEmail\": \"$request->email\",\"InvoiceValue\": $item_amount, \"CallBackUrl\": \"$return_url\",\"ErrorUrl\": \"$cancel_url\",\"Language\": \"en\", \"CustomerReference\" :\"ref $request->user_id\",\"CustomerCivilId\":$request->user_id,\"UserDefinedField\": \"Custom field\", \"ExpireDate\": \"\",\"CustomerAddress\" :{\"Block\":\"\",\"Street\":\"\",\"HouseBuildingNo\":\"\",\"Address\":\"$request->address\",\"AddressInstructions\":\"\"},  \"InvoiceItems\": [$arr]}",
+    CURLOPT_HTTPHEADER => array("Authorization: Bearer $token","Content-Type: application/json"),
 
-        ));
+));
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
 $response = curl_exec($curl);
@@ -177,19 +148,15 @@ if ($err) {
 } else {
   echo "$response '<br />'";
 }
-
 $json  = json_decode((string)$response, true);
-// dd($json);
 //echo "json  json: $json '<br />'";
 $data=$json["IsSuccess"];
-// dd($data);
 if(!$data)
 {
     return redirect()->route('front.checkout')->with('unsuccess','Payment Cancelled.');
 
 }
 $payment_url = $json["Data"]["InvoiceURL"];
-// dd($payment_url);
        // Redirect to paypal IPN
    
                        $order['user_id'] = $request->user_id;
@@ -230,7 +197,6 @@ $payment_url = $json["Data"]["InvoiceURL"];
    
            if (Session::has('affilate')) 
            {
-            dd(Session::has('affilate'));
                $val = $request->total / $curr->value;
                $val = $val / 100;
                $sub = $val * $gs->affilate_charge;
@@ -334,7 +300,7 @@ $payment_url = $json["Data"]["InvoiceURL"];
    
    
      
-      
+   
         return redirect($payment_url);
    
     }

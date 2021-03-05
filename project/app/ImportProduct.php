@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Session;
 class ImportProduct extends Model
 {
     //
-	 protected $fillable = ['product_id','category_id','product_type',
+	  protected $fillable = ['product_id','category_id','product_type',
     'affiliate_link','sku','min_order_qty', 'subcategory_id', 'childcategory_id',
      'attributes', 'name_en','name_ar', 'photo', 'size','size_qty','size_price',
       'color', 'details_en','details_ar','price','previous_price','stock','policy','status',
@@ -19,7 +19,8 @@ class ImportProduct extends Model
        'sale','features','colors','product_condition','ship','meta_tag',
        'meta_description','youtube','type','file','license','license_qty'
        ,'link','platform','region','licence_type','measure','discount_date',
-       'is_discount','whole_sell_qty','whole_sell_discount','catalog_id','slug','profit_percentage','import_price'];
+       'is_discount','whole_sell_qty','whole_sell_discount','catalog_id','slug','profit_percentage','import_price','new_price'];
+
 public function category()
     {
         return $this->belongsTo('App\Models\Category')->withDefault(function ($data) {
@@ -55,7 +56,7 @@ public function category()
 
     public function users()
     {
-        return $this->belongsToMany('App\Models\Product');
+        return $this->belongsToMany('App\Models\User');
     }
 
 

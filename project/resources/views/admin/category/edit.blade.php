@@ -20,7 +20,11 @@
                             </div>
                           </div>
                           <div class="col-lg-7">
+<<<<<<< HEAD
                             <input type="text" class="input-field" name="name_en" placeholder="{{ __('Enter Name') }}" required="" value="{{$data->name_en)}}">
+=======
+                            <input type="text" class="input-field" name="name_en" placeholder="{{ __('Enter Name') }}" required="" value="{{$data->name_en}}">
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
                           </div>
                         </div>
 

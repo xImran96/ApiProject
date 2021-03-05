@@ -47,11 +47,12 @@
 
 											<td class="first-column top">{{ $langg->lang71 }}</td>
 											@foreach($products as $product)
+                      <?php $productt = App\Models\Product::find($product['item']['id']) ?>
 											<td class="product-image-title c{{$product['item']['id']}}">
 
 													<img class="img-fluid" src="{{ $product['item']['thumbnail'] ? asset('assets/images/thumbnails/'.$product['item']['thumbnail']):asset('assets/images/noimage.png') }}" alt="Compare product['item']">
 
-												<a href="{{ route('front.product', $product['item']['slug']) }}">
+												<a href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}">
 													<h4 class="title">
 															{{ $product['item']['name'] }}
 													</h4>

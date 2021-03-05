@@ -146,17 +146,11 @@
 															<td>{{$product->status}}</td>
 															<td id="import">
 																
-													<!-- 			<i class="fas fa-cloud-upload-alt">
-											<input type="hidden" value="{{$product->id}}">
-																</i> -->
-												<form action="{{url('/import_Product')}}" method="POST">
-													@csrf
-					<input type="hidden" name="product_id" value="{{$product->id}}">
-													<button type="submit" class="importBtn">
+													<a href="{{ route('import.product', $product->id) }}" class="importBtn">
 																	<i class="fas fa-cloud-upload-alt">
 																</i>
-																</button>
-																</form>
+																</a>
+												
 																
 																
 															</td>
@@ -173,19 +167,13 @@
 															<td>{{$product->status}}</td>
 															<td id="import">
 																
-													<!-- 			<i class="fas fa-cloud-upload-alt">
-											<input type="hidden" value="{{$product->id}}">
-																</i> -->
-												<form action="{{url('/import_Product')}}" method="POST">
-													@csrf
-					<input type="hidden" name="product_id" value="{{$product->id}}">
-													<button type="submit" class="importBtn">
+										
+													<a href="{{ route('import.product', $product->id) }}" class="importBtn" onclick="return confirm('Are You Sure!')">
 																	<i class="fas fa-cloud-upload-alt">
 																</i>
-																</button>
-																</form>
-																
-																
+																</a>
+												
+																																
 															</td>
 														</tr>
 														@endforeach

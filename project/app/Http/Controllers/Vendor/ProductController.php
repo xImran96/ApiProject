@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\Attribute;
 use App\Models\AttributeOption;
+use App\Models\User;
 use Auth;
 use DB;
 use Datatables;
@@ -48,14 +49,15 @@ class ProductController extends Controller
     //*** JSON Request
     public function datatables()
     {
-    	 $user = Auth::user();
+         $user = Auth::user();
+         
          $datas = $user->products()->where('product_type','normal')->orderBy('id','desc')->get();
 
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
                             ->editColumn('name', function(Product $data) {
-                                $name = strlen(strip_tags($data->name)) > 50 ? substr(strip_tags($data->name),0,50).'...' : strip_tags($data->name);
-                                $id = '<small>Product ID: <a href="'.route('front.product', $data->slug).'" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
+                                $name = strlen(strip_tags($data->name_en)) > 50 ? substr(strip_tags($data->name_en),0,50).'...' : strip_tags($data->name_en);
+                                $id = '<small>Product ID: <a href="" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
                                 return  $name.'<br>'.$id;
                             })
                             ->editColumn('price', function(Product $data) {
@@ -87,8 +89,8 @@ class ProductController extends Controller
          //--- Integrating This Collection Into Datatables
          return Datatables::of($datas)
                             ->editColumn('name', function(Product $data) {
-                                $name = strlen(strip_tags($data->name)) > 50 ? substr(strip_tags($data->name),0,50).'...' : strip_tags($data->name);
-                                $id = '<small>Product ID: <a href="'.route('front.product', $data->slug).'" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
+                                $name = strlen(strip_tags($data->name_en)) > 50 ? substr(strip_tags($data->name_en),0,50).'...' : strip_tags($data->name_en);
+                                $id = '<small>Product ID: <a href="'.route('front.product', [$data->id, $data->slug_name]).'" target="_blank">'.sprintf("%'.08d",$data->id).'</a></small>';
                                 return  $name.'<br>'.$id;
                             })
                             ->editColumn('price', function(Product $data) {
@@ -743,13 +745,14 @@ class ProductController extends Controller
         $data = Product::findOrFail($id);
         $sign = Currency::where('is_default','=',1)->first();
 
+        $vendors=User::where('is_vendor',2)->get();
 
         if($data->type == 'Digital')
-            return view('vendor.product.edit.digital',compact('cats','data','sign'));
+            return view('admin.product.edit.digital',compact('cats','data','sign','vendors'));
         elseif($data->type == 'License')
-            return view('vendor.product.edit.license',compact('cats','data','sign'));
+            return view('admin.product.edit.license',compact('cats','data','sign','vendors'));
         else
-            return view('vendor.product.edit.physical',compact('cats','data','sign'));
+            return view('admin.product.edit.physical',compact('cats','data','sign','vendors'));
     }
 
 

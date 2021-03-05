@@ -3,7 +3,7 @@
 		<li>
 			<div class="single-box">
 				<div class="left-area">
-					<img src="{{ $prod->thumbnail ? asset('assets/images/thumbnails/'.$prod->thumbnail):asset('assets/images/noimage.png') }}" alt="">
+					<img src="{{ $prod->thumbnail ? asset('assets/images/thumbnails/'.$prod->thumbnail):asset('assets/images/noimage.png') }}" alt="{{ Session::get('language') != 1 ? $prod->name_ar : $prod->name_en }}" title="{{ Session::get('language') != 1 ? $prod->name_ar : $prod->name_en }}">
 				</div>
 				<div class="right-area">
 						<div class="stars">
@@ -21,7 +21,7 @@
 
 			</a></h4>
 			@endif
-							<p class="text"><a href="{{ route('front.product',$prod->slug) }}">{{ mb_strlen($prod->name,'utf-8') > 35 ? mb_substr($prod->name,0,35,'utf-8').'...' : $prod->name }}</a></p>
+							<p class="text"><a href="{{ route('front.product', [$prod->id, $prod->slug_name]) }}">{{ mb_strlen($prod->name,'utf-8') > 35 ? mb_substr($prod->name,0,35,'utf-8').'...' : $prod->name }}</a></p>
 				</div>
 			</div>
 		</li>

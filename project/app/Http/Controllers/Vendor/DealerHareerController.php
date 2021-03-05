@@ -15,6 +15,7 @@ use App\Models\VendorOrder;
 use App\Models\OrderTrack;
 use App\Models\Invoice;
 use App\Models\log;
+use App\ImportProduct;
 use Session;
 use App\Models\Notification;
 use Str;
@@ -36,7 +37,7 @@ class DealerHareerController extends Controller
        $subs = auth()->user()->subscribes()->where('status',1)->orderBy('id','desc')->first();
  // dd($subs);
     	 $gt = PaymentGateway::where('title', $request->method)->first();
-    	 $currency = Currency::where('name', $vOrder->currency_sign)->first();
+    	 $currency = Currency::where('sign', $vOrder->currency_sign)->first();
        $user = Auth::user();
        // dd($user);
 
@@ -63,7 +64,8 @@ class DealerHareerController extends Controller
                     $myCartItem = unserialize($item);
 
                     // ($myCartItem);
-                    $prod = Product::find($myCartItem['item_id']);
+                    $im_prod = ImportProduct::find($myCartItem['item_id']); 
+                    $prod = Product::find($im_prod->product_id);
 
                     // ($prod);
                     unset($myCartItem['item_id']);
@@ -446,7 +448,9 @@ $data=$json["IsSuccess"];
 
                     $myCartItem = unserialize($item);
                     // ($myCartItem);
-                    $prod = Product::find($myCartItem['item_id']);
+                    $im_prod = ImportProduct::find($myCartItem['item_id']); 
+                    $prod = Product::find($im_prod->product_id);
+
                     // ($prod);
                     unset($myCartItem['item_id']);
                     $myCartItem['item'] = $prod;
@@ -472,10 +476,9 @@ $data=$json["IsSuccess"];
                         
                         $item_name = $gs->title." Order";
                         $item_number = Str::random(10);
-                        
-
-                        $myPayAmount = round(($cart->totalPrice + $subs->per_delivery_charges + $subs->per_order_charges + $subs->preparation) / $currency->value, 2);
-
+                     
+                        $myPayAmount = round(($cart->totalPrice + $subs->per_delivery_charges + $subs->per_order_charges + $subs->preparation_cost) / $currency->value, 2);
+// dd($myPayAmount);
                         $countProfit = $vOrder->pay_amount - $myPayAmount;
 
                         $order['user_id'] = auth()->user()->id;

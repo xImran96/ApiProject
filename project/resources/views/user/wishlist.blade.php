@@ -48,7 +48,7 @@
 						</div>
 						<div class="right">
 							<h4 class="title">
-								<a href="{{ route('front.product', $wishlist->slug) }}">
+								<a href="{{ route('front.product', [$wishlist->id, $wishlist->slug_name]) }}">
 								{{ $wishlist->name }}
 								</a>
 							</h4>
@@ -76,6 +76,7 @@
 						<div class="right">
 							<h4 class="title">
 						<a href="{{ route('front.product', $wishlist->product->slug) }}">
+						<a href="{{ route('front.product', [$wishlist->product->id, $wishlist->product->slug_name]) }}">
 							{{ $wishlist->product->name }}
 						</a>
 							</h4>

@@ -5,28 +5,33 @@
    <div class="container">
       <div class="row">
          <div class="col-lg-12">
-            <ul class="pages">
-               <li>
-                  <a href="{{route('front.index')}}">{{ $langg->lang17 }}</a>
+            <ul class="pages" itemscope itemtype="http://schema.org/BreadcrumbList">
+               <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                  <a href="{{route('front.index')}}" itemprop="item"><span itemprop="name">{{ $langg->lang17 }}</span></a>
+                  <meta itemprop="position" content="1">
                </li>
                @if (!empty($cat))
-               <li>
-                  <a href="{{route('front.category', $cat->slug)}}">{{ $cat->name }}</a>
+               <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                  <a href="{{route('front.category', $cat->slug)}}" itemprop="item"><span itemprop="name">@if(Session::get('language')==2) {{ $cat->name_ar }} @else {{$cat->name_en}} @endif</span></a>
+                  <meta itemprop="position" content="2">
                </li>
                @endif
                @if (!empty($subcat))
-               <li>
-                  <a href="{{route('front.category', [$cat->slug, $subcat->slug])}}">{{ $subcat->name }}</a>
+               <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                  <a href="{{route('front.category', [$cat->slug, $subcat->slug])}}" itemprop="item"><span itemprop="name">@if(Session::get('language')==2) {{ $subcat->name_ar }} @else {{$subcat->name_en}} @endif</span></a>
+                  <meta itemprop="position" content="{{ !empty($cat) ? '3' : '2' }}">
                </li>
                @endif
                @if (!empty($childcat))
-               <li>
-                  <a href="{{route('front.category', [$cat->slug, $subcat->slug, $childcat->slug])}}">{{ $childcat->name }}</a>
+               <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                  <a href="{{route('front.category', [$cat->slug, $subcat->slug, $childcat->slug])}}" itemprop="item"><span itemprop="name">@if(Session::get('language')==2) {{ $childcat->name_ar }} @else {{$childcat->name_en}} @endif</span></a>
+                  <meta itemprop="position" content="{{ !empty($cat) ? (!empty($subcat) ? '4' : '3') : '2' }}">
                </li>
                @endif
                @if (empty($childcat) && empty($subcat) && empty($cat))
-               <li>
-                  <a href="{{route('front.category')}}">{{ $langg->lang36 }}</a>
+               <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                  <a href="{{route('front.category')}}" itemprop="item"><span itemprop="name">{{ $langg->lang36 }}</span></a>
+                  <meta itemprop="position" content="2">
                </li>
                @endif
 
@@ -39,6 +44,14 @@
 <!-- SubCategori Area Start -->
 <section class="sub-categori">
    <div class="container">
+      <style type="text/css">
+        h1 {
+          text-align: center;
+          font-size: 30px;
+          margin-bottom: 30px;
+        }
+      </style>
+      <h1>@if(!empty($childcat)){{Session::get('language') != 1 ? $childcat->name_ar : $childcat->name_en}}@elseif(!empty($subcat)){{Session::get('language') != 1 ? $subcat->name_ar : $subcat->name_en}}@elseif(!empty($cat)){{Session::get('language') != 1 ? $cat->name_ar : $cat->name_en}}@elseif(empty($childcat) && empty($subcat) && empty($cat)){{$langg->lang36}}@endif</h1>
       <div class="row">
          @include('includes.catalog')
          <div class="col-lg-9 order-first order-lg-last ajax-loader-parent">

@@ -48,7 +48,7 @@
 <div class="col-lg-7">
 <div class="right-area">
   <div class="product-info">
-      <h4 class="product-name"><a target="_blank" href="{{ route('front.product',$product->slug) }}">{{ $product->name }}</a></h4>
+      <h4 class="product-name"><a target="_blank" href="{{ route('front.product', [$product->id, $product->slug_name]) }}">{{ $product->name }}</a></h4>
         <div class="info-meta-1">
           <ul>
 
@@ -118,8 +118,8 @@
 
           </ul>
         </div>
-
-
+       
+        @if(Auth::guard('web')->check())
       <div class="product-price">
           <p class="title">{{ $langg->lang87 }} :</p>
           <p class="price"><span id="msizeprice">{{ $product->showPrice() }}</span>
@@ -130,6 +130,14 @@
             </a> 
           @endif
       </div>
+      @else 
+      <h6 class="price"><span class="add-to-cart-quick add-to-cart-btn login-to-show-price"
+        data-href="{{ route('user.login') }}">
+        <i class="icofont-eye"></i> {{ __('custom.login_to_show_price') }}
+
+      </span></h6>
+
+      @endif
       @if(!empty($product->size))
           <div class="mproduct-size">
               <p class="title">{{ $langg->lang88 }} :</p>

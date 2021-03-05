@@ -240,6 +240,7 @@
 										
 										<div class="order-area">
 											@foreach($products as $product)
+                      <?php $productt = App\Models\Product::find($product['item']['id']) ?>
 											<div class="order-item">
 												<div class="product-img">
 													<div class="d-flex">
@@ -250,7 +251,7 @@
 												</div>
 												<div class="product-content">
 													<p class="name"><a
-															href="{{ route('front.product', $product['item']['slug']) }}"
+															href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}"
 															target="_blank">{{ $product['item']['name'] }}</a></p>
 													<div class="unit-price">
 														<h5 class="label">{{ $langg->lang754 }} : </h5>
@@ -501,8 +502,7 @@
 @foreach($gateways as $gt)
 
 
-															<a class="nav-link payment" data-val="" data-show="yes" 
-															@if($gt->id==47) data-form="{{route('myfatoorah.submit')}}" @else data-form="{{route('post_paid.submit')}}"@endif   data-href="{{ route('front.load.payment',['slug1' => 'other','slug2' => $gt->id]) }}" id="v-pills-tab{{ $gt->id }}-tab" data-toggle="pill" href="#v-pills-tab{{ $gt->id }}" role="tab" aria-controls="v-pills-tab{{ $gt->id }}" aria-selected="false">
+															<a class="nav-link payment" data-val="" data-show="yes" @if($gt->id==47) data-form="{{route('myfatoorah.submit')}}" @else data-form="{{route('post_paid.submit')}}"@endif   data-href="{{ route('front.load.payment',['slug1' => 'other','slug2' => $gt->id]) }}" id="v-pills-tab{{ $gt->id }}-tab" data-toggle="pill" href="#v-pills-tab{{ $gt->id }}" role="tab" aria-controls="v-pills-tab{{ $gt->id }}" aria-selected="false">
 																	<div class="icon">
 																			<span class="radio"></span>
 																	</div>

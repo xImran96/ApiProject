@@ -75,13 +75,12 @@ class WithdrawController extends Controller
                     'log_message'=>'Withdraw Request Sent Successfully.',
                     'log_level'=>'withdraw',
                     ]);
+
                 return response()->json('Withdraw Request Sent Successfully.'); 
 
             }else{
                  return response()->json(array('errors' => [ 0 => 'Insufficient Balance.' ])); 
             }
         }
-            return response()->json(array('errors' => [ 0 => 'Please enter a valid amount.' ])); 
-
     }
 }

@@ -48,7 +48,6 @@ class VendorController extends Controller
         return view('admin.vendor.index');
     }
 
-
     //*** GET Request
     public function color()
     {

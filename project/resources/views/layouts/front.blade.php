@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ Session::get('language') != 1 ? 'ar' : 'en' }}">
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="f+e-Ww4=[Pp4wyEPLdVx4LxTsQ">
+  {!! Meta::toHtml() !!}
     @if(isset($page->meta_tag) && isset($page->meta_description))
         <meta name="keywords" content="{{ $page->meta_tag }}">
         <meta name="description" content="{{ $page->meta_description }}">
@@ -209,9 +209,11 @@
 			<div class="row ">
 				<div class="col-lg-2 col-sm-6 col-5 remove-padding">
 					<div class="logo">
-						<a href="{{ route('front.index') }}">
-							<img src="{{asset('assets/images/'.$gs->logo)}}" alt="">
-						</a>
+            <h1>
+  						<a href="{{ route('front.index') }}">
+  							<img src="{{asset('assets/images/'.$gs->logo)}}" alt="{{ env('APP_NAME') }}" title="{{ env('APP_NAME') }}">
+  						</a>
+            </h1>
 					</div>
 				</div>
 				<div class="col-lg-8 col-sm-12 remove-padding order-last order-sm-2 order-md-2">
@@ -221,7 +223,7 @@
 								<select name="category" id="category_select" class="categoris">
 									<option value="">{{ $langg->lang1 }}</option>
 									@foreach($categories as $data)
-									<option value="{{ $data->slug }}" {{ Request::route('category') == $data->slug ? 'selected' : '' }}>{{ $data->name_en }}</option>
+									<option value="{{ $data->slug }}" {{ Request::route('category') == $data->slug ? 'selected' : '' }}>@if(Session::get('language')==1) {{ $data->name_en }} @else {{$data->name_ar}} @endif</option>
 									@endforeach
 								</select>
 							</div>
@@ -248,10 +250,8 @@
 				</div>
 				<div class="col-lg-2 col-sm-6 col-7 remove-padding order-lg-last">
 					<div class="helpful-links">
-						<ul class="helpful-links-inner inline-block">
-
+						<ul class="helpful-links-inner">
 							<li class="my-dropdown"  data-toggle="tooltip" data-placement="top" title="{{ $langg->lang3 }}">
-
 								<a href="javascript:;" class="cart carticon">
 									<div class="icon">
 										<i class="icofont-cart"></i>
@@ -284,6 +284,8 @@
 									</div>
 								</a>
 							</li>
+
+
 						</ul>
 					</div>
 				</div>
@@ -401,7 +403,7 @@
 @yield('content')
 
 	<!-- Footer Area Start -->
-	<footer class="footer" id="footer" style="background: #fbcc3b">
+	<footer class="footer" id="footer" style="background: #000000">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-6 col-lg-4">
@@ -501,10 +503,10 @@
 							<li>
 								<div class="post">
 								  <div class="post-img">
-									<img style="width: 73px; height: 59px;" src="{{ asset('assets/images/blogs/'.$blog->photo) }}" alt="">
+									<img style="width: 73px; height: 59px;" src="{{ asset('assets/images/blogs/'.$blog->photo) }}" alt="{{$blog->title}}" title="{{$blog->title}}">
 								  </div>
 								  <div class="post-details">
-									<a href="{{ route('front.blogshow',$blog->id) }}">
+									<a href="{{ route('front.blogshow', [$blog->id, $blog->slug_title]) }}">
 										<h4 class="post-title">
 											{{mb_strlen($blog->title,'utf-8') > 45 ? mb_substr($blog->title,0,45,'utf-8')." .." : $blog->title}}
 										</h4>

@@ -14,7 +14,6 @@ use App\Models\Rating;
 use App\Models\Verification;
 use Auth;
 use Illuminate\Http\Request;
-
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;

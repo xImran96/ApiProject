@@ -60,7 +60,7 @@
                                      
                                           <div class="action-list">
                                         
-                                            <a href="{{route('dealer-order-show',$order->order->order_number)}}" class="btn btn-primary product-btn"><i class="fa fa-eye"></i> {{ $langg->lang539 }}</a>
+                                            <a href="{{route('vendor-order-show',$order->order->order_number)}}" class="btn btn-primary product-btn"><i class="fa fa-eye"></i> {{ $langg->lang539 }}</a>
 
                                             <td>{{$order->status}}</td>
 

@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Butschster\Head\Facades\Meta;
 use Session;
 
 use Validator;
@@ -187,6 +188,28 @@ class CatalogController extends Controller
 
       $data['prods'] = $prods;
 
+      Meta::setTitleSeparator('|')
+          ->setPaginationLinks($prods);
+
+      if (!empty($childcat)) {
+        Meta::prependTitle(Session::get('language') != 1 ? $childcat->name_ar : $childcat->name_en)
+            ->setKeywords(str_replace('-', ',', $childcat->slug))
+            ->setDescription($childcat->meta_description)
+            ->setCanonical(route('front.category', [$cat->slug, $subcat->slug, $childcat->slug]));
+      } elseif (!empty($subcat)) {
+        Meta::prependTitle(Session::get('language') != 1 ? $subcat->name_ar : $subcat->name_en)
+            ->setKeywords(str_replace('-', ',', $subcat->slug))
+            ->setDescription($subcat->meta_description)
+            ->setCanonical(route('front.category', [$cat->slug, $subcat->slug]));
+      } elseif (!empty($cat)) {
+        Meta::prependTitle(Session::get('language') != 1 ? $cat->name_ar : $cat->name_en)
+            ->setKeywords(str_replace('-', ',', $cat->slug))
+            ->setDescription($cat->meta_description)
+            ->setCanonical(route('front.category', $cat->slug));
+      } elseif (empty($childcat) && empty($subcat) && empty($cat)) {
+        Meta::setCanonical(route('front.category'));
+      }
+
       if($request->ajax()) {
 
       $data['ajax_check'] = 1;
@@ -235,21 +258,18 @@ class CatalogController extends Controller
 
     }
 
-    public function product($slug)
+    public function product($id, $slug)
     {
         $this->code_image();
-
-        $productt = Product::where('slug','=',$slug)->firstOrFail();
-
-        // dd($productt);
+        $productt = Product::findOrFail($id);
         if($productt->status == 0){
-          return response()->view('errors.404')->setStatusCode(404); 
+            return response()->view('errors.404')->setStatusCode(404); 
         }
-
+        elseif ($productt->slug_name != $slug) {
+            return redirect()->route('front.product', [$productt->id, $productt->slug_name])->setStatusCode(301);
+        }
         $productt->views+=1;
-        
         $productt->update();
-        
         if (Session::has('currency'))
         {
             $curr = Currency::find(Session::get('currency'));
@@ -271,6 +291,42 @@ class CatalogController extends Controller
         {
             $vendors = Product::where('status','=',1)->where('user_id','=',0)->take(8)->get();
         }
+        $gs = \App\Models\Generalsetting::findOrFail(1);
+        $product_description = trim(preg_replace('/\s\s+/', ' ', strip_tags(html_entity_decode($productt->meta_description != null ? $productt->meta_description : $productt->description))));
+        preg_match_all("/(\d+)/", $productt->showPrice(), $price);
+        $og = new \Butschster\Head\Packages\Entities\OpenGraphPackage('og');
+
+        $og->setType('product')
+           ->setSiteName($gs->title)
+           ->setTitle((Session::get('language') != 1 ? $productt->name_ar : $productt->name_en).' | '.$gs->title)
+           ->setDescription(substr($product_description, 0, 255))
+           ->setUrl(route('front.product', [$productt->id, $productt->slug_name]))
+           ->addImage(asset('assets/images/thumbnails/'.$productt->thumbnail));
+        $card = new \Butschster\Head\Packages\Entities\TwitterCardPackage('card');
+
+        $card->setType('product')
+             ->setSite('@'.$gs->title)
+             ->setTitle((Session::get('language') != 1 ? $productt->name_ar : $productt->name_en).' | '.$gs->title)
+             ->setDescription(substr($product_description, 0, 255));
+        Meta::setTitleSeparator('|')
+            ->prependTitle(Session::get('language') != 1 ? $productt->name_ar : $productt->name_en)
+            ->setKeywords(!empty($productt->meta_tag) ? implode(',', $productt->meta_tag ): '')
+            ->setDescription($product_description)
+            ->setCanonical(route('front.product', [$productt->id, $productt->slug_name]))
+            ->registerPackage($og)
+            ->addMeta('product:condition', [
+                'content' => $productt->product_condition == 2 ? 'new' : 'used'
+            ])
+            ->addMeta('product:availability', [
+                'content' => $productt->emptyStock() ? 'out of stock' : 'in stock'
+            ])
+            ->addMeta('product:price:amount', [
+                'content' => $price[0][0]
+            ])
+            ->addMeta('product:price:currency', [
+                'content' => strtoupper($curr->name)
+            ])
+            ->registerPackage($card);
         return view('front.product',compact('productt','curr','vendors'));
 
     }

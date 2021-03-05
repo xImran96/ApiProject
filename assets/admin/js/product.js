@@ -41,6 +41,11 @@
           allowSpaces: true 
           });
 
+          $("#metatags_ar").tagit({
+            fieldName: "meta_tag_ar[]",
+            allowSpaces: true 
+            });
+
           $("#tags").tagit({
           fieldName: "tags[]",
           allowSpaces: true 

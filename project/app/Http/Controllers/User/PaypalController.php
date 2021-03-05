@@ -82,7 +82,6 @@ class PaypalController extends Controller
                     $sub->save();
 
      return redirect('https://www.paypal.com/cgi-bin/webscr'.$querystring);
-     return redirect('https://www.sandbox.paypal.com/cgi-bin/webscr'.$querystring);
      //header('location:https://www.sandbox.paypal.com/cgi-bin/webscr'.$querystring);
 
  }
@@ -97,18 +96,17 @@ class PaypalController extends Controller
      }
 
 
+public function notify(Request $request){
 
-
-    public function notify(Request $request){
-
-        $raw_post_data = file_get_contents('php://input');
-        $raw_post_array = explode('&', $raw_post_data);
-        $myPost = array();
-        foreach ($raw_post_array as $keyval) {
-            $keyval = explode ('=', $keyval);
-                if (count($keyval) == 2)
-                    $myPost[$keyval[0]] = urldecode($keyval[1]);
-        }
+    $raw_post_data = file_get_contents('php://input');
+    $raw_post_array = explode('&', $raw_post_data);
+    $myPost = array();
+    foreach ($raw_post_array as $keyval) {
+        $keyval = explode ('=', $keyval);
+        if (count($keyval) == 2)
+            $myPost[$keyval[0]] = urldecode($keyval[1]);
+    }
+    //return $myPost;
 
 
     // Read the post from PayPal system and add 'cmd'

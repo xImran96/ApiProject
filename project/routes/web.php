@@ -1332,11 +1332,11 @@ Route::get('/package/delete/{id}', 'Vendor\PackageController@destroy')->name('ve
 
   // BLOG SECTION
   Route::get('/blog','Front\FrontendController@blog')->name('front.blog');
-  Route::get('/blog/{id}','Front\FrontendController@blogshow')->name('front.blogshow');
   Route::get('/blog/category/{slug}','Front\FrontendController@blogcategory')->name('front.blogcategory');
   Route::get('/blog/tag/{slug}','Front\FrontendController@blogtags')->name('front.blogtags');
   Route::get('/blog-search','Front\FrontendController@blogsearch')->name('front.blogsearch');
   Route::get('/blog/archive/{slug}','Front\FrontendController@blogarchive')->name('front.blogarchive');
+  Route::get('/blog/{id}/{slug}','Front\FrontendController@blogshow')->name('front.blogshow');
   // BLOG SECTION ENDS
 
   // FAQ SECTION
@@ -1401,6 +1401,14 @@ Route::get('/package/delete/{id}', 'Vendor\PackageController@destroy')->name('ve
   Route::post('/item/reply/edit/{id}', 'Front\CatalogController@replyedit')->name('product.reply.edit');
   Route::get('/item/reply/delete/{id}', 'Front\CatalogController@replydelete')->name('product.reply.delete');
   // REPLY SECTION ENDS
+
+    // PRODCT SECTION
+  Route::get('/afbuy/{slug}','Front\CatalogController@affProductRedirect')->name('affiliate.product');
+  Route::get('/item/quick/view/{id}/','Front\CatalogController@quick')->name('product.quick');
+  Route::post('/item/review','Front\CatalogController@reviewsubmit')->name('front.review.submit');
+  Route::get('/item/view/review/{id}','Front\CatalogController@reviews')->name('front.reviews');
+  Route::get('/item/{id}/{slug}','Front\CatalogController@product')->name('front.product');
+  // PRODCT SECTION ENDS
 
   // CART SECTION
   Route::get('/carts/view','Front\CartController@cartview');

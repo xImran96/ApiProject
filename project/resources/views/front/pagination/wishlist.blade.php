@@ -13,7 +13,11 @@
 						</div>
 						<div class="right">
 							<h4 class="title">
+<<<<<<< HEAD
 								<a href="{{ route('front.product', $wishlist->slug) }}">
+=======
+								<a href="{{ route('front.product', [$wishlist->id, $wishlist->slug_name]) }}">
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
 								{{ $wishlist->name }}
 								</a>
 							</h4>
@@ -40,7 +44,11 @@
 						</div>
 						<div class="right">
 							<h4 class="title">
+<<<<<<< HEAD
 						<a href="{{ route('front.product', $wishlist->product->slug) }}">
+=======
+						<a href="{{ route('front.product', [$wishlist->product->id, $wishlist->product->slug_name]) }}">
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
 							{{ $wishlist->product->name }}
 						</a>
 							</h4>

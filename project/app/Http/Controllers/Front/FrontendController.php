@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use InvalidArgumentException;
 use Markury\MarkuryPost;
+use Butschster\Head\Facades\Meta;
 
 class FrontendController extends Controller
 {
@@ -137,6 +138,7 @@ class FrontendController extends Controller
         $sliders = DB::table('sliders')->get();
         $top_small_banners = DB::table('banners')->where('type','=','TopSmall')->get();
         $ps = DB::table('pagesettings')->find(1);
+        $vendors=User::whereIn('id',[123,101,328])->get();
         $feature_products =  Product::with('user')->where('featured','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(8)->get()->reject(function($item){
 
             if($item->user_id != 0){
@@ -147,8 +149,11 @@ class FrontendController extends Controller
             return false;
 
           });
-
-	    return view('front.index',compact('ps','sliders','top_small_banners','feature_products'));
+      $seo = DB::table('seotools')->first();
+      Meta::setKeywords($seo->meta_keys)
+          ->setDescription(isset($seo->meta_description) ? $seo->meta_description : null)
+          ->setCanonical(route('front.index'));
+	    return view('front.index',compact('ps','sliders','top_small_banners','feature_products','vendors'));
 	}
 
     public function extraIndex()
@@ -162,84 +167,85 @@ class FrontendController extends Controller
         $selectable = ['id','user_id','name_en','name_ar','slug','features','colors','thumbnail','price','previous_price','attributes','size','size_price','discount_date'];
         $discount_products =  Product::with('user')->where('is_discount','=',1)->where('status','=',1)->orderBy('id','desc')->take(8)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $best_products = Product::with('user')->where('best','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(6)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $top_products = Product::with('user')->where('top','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(8)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $big_products = Product::with('user')->where('big','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(6)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $hot_products =  Product::with('user')->where('hot','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(9)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $latest_products =  Product::with('user')->where('latest','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(9)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $trending_products =  Product::with('user')->where('trending','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(9)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
         $sale_products =  Product::with('user')->where('sale','=',1)->where('status','=',1)->select($selectable)->orderBy('id','desc')->take(9)->get()->reject(function($item){
 
-            if($item->user_id != 0){
-              if($item->user->is_vendor != 2){
-                return true;
-              }
-            }
+            // if($item->user_id != 0){
+            //   if($item->user->is_vendor != 2){
+            //     return true;
+            //   }
+            // }
             return false;
 
           });
+        
         return view('front.extraindex',compact('ps','services','reviews','large_banners','bottom_small_banners','best_products','top_products','hot_products','latest_products','big_products','trending_products','sale_products','discount_products','partners'));
     }
 
@@ -284,13 +290,13 @@ class FrontendController extends Controller
     {
         if(mb_strlen($slug,'utf-8') > 1){
             $search = $slug;
-            $prods = Product::where('status','=',1)->where('name', 'LIKE', "%{$search}%")->orWhere('name->ar', 'LIKE', "%{$search}%")->orWhere('name', 'like', $slug . '%')->take(10)->get()->reject(function($item){
+            $prods = Product::where('status','=',1)->where('name_en', 'LIKE', "%{$search}%")->orWhere('name_ar', 'LIKE', "%{$search}%")->orWhere('sku',$slug)->take(10)->get()->reject(function($item){
 
-                if($item->user_id != 0){
-                  if($item->user->is_vendor != 2){
-                    return true;
-                  }
-                }
+                // if($item->user_id != 0){
+                //   if($item->user->is_vendor != 2){
+                //     return true;
+                //   }
+                // }
                     return false;
             });
 
@@ -309,6 +315,8 @@ class FrontendController extends Controller
             if($request->ajax()){
                 return view('front.pagination.blog',compact('blogs'));
             }
+    Meta::setPaginationLinks($blogs)
+        ->setCanonical(route('front.blog'));
 		return view('front.blog',compact('blogs'));
 	}
 
@@ -355,13 +363,16 @@ class FrontendController extends Controller
         return view('front.blog',compact('blogs','date'));
     }
 
-    public function blogshow($id)
+    public function blogshow($id, $slug)
     {
         $this->code_image();
         $tags = null;
         $tagz = '';
         $bcats = BlogCategory::all();
         $blog = Blog::findOrFail($id);
+        if ($blog->slug_title != $slug) {
+            return redirect()->route('front.blogshow', [$blog->id, $blog->slug_title])->setStatusCode(301);
+        }
         $blog->views = $blog->views + 1;
         $blog->update();
         $name = Blog::pluck('tags')->toArray();
@@ -375,6 +386,36 @@ class FrontendController extends Controller
         $blog_meta_tag = $blog->meta_tag;
         $blog_meta_description = $blog->meta_description;
         return view('front.blogshow',compact('blog','bcats','tags','archives','blog_meta_tag','blog_meta_description'));
+
+        $gs = Generalsetting::findOrFail(1);
+        $blog_title = $blog->title;
+        $blog_description = trim(preg_replace('/\s\s+/', ' ', strip_tags(html_entity_decode($blog->meta_description))));
+        $og = new \Butschster\Head\Packages\Entities\OpenGraphPackage('og');
+        $og->setType('article')
+           ->setSiteName($gs->title)
+           ->setTitle($blog_title)
+           ->setDescription(substr($blog_description, 0, 255))
+           ->setUrl(route('front.blogshow', [$blog->id, $blog->slug_title]))
+           ->addImage(asset('assets/images/blogs/'.$blog->photo));
+
+        $card = new \Butschster\Head\Packages\Entities\TwitterCardPackage('card');
+        $card->setType('summary')
+             ->setSite('@'.$gs->title)
+             ->setTitle($blog_title)
+             ->setDescription(substr($blog_description, 0, 255));
+
+        Meta::setTitleSeparator('|')
+            ->prependTitle($blog_title)
+            ->setKeywords($blog->meta_tag)
+            ->setDescription($blog_description)
+            ->addMeta('author', [
+                'content' => $gs->title,
+            ])
+            ->setCanonical(route('front.blogshow', [$blog->id, $blog->slug_title]))
+            ->registerPackage($og)
+            ->registerPackage($card);
+
+        return view('front.blogshow',compact('blog','bcats','tags','archives','blog_title'));
     }
 
 
@@ -401,7 +442,11 @@ class FrontendController extends Controller
         {
             return response()->view('errors.404')->setStatusCode(404);
         }
-
+        Meta::setTitleSeparator('|')
+            ->prependTitle($page->title)
+            ->setKeywords($page->meta_tag)
+            ->setDescription($page->meta_description)
+            ->setCanonical(route('front.page', $slug));
         return view('front.page',compact('page'));
     }
 // -------------------------------- PAGE SECTION ENDS----------------------------------------

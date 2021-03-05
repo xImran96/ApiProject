@@ -27,11 +27,11 @@ class Product extends Model
     public static function filterProducts($collection)  
     {
         foreach ($collection as $key => $data) {
-            if($data->user_id != 0){
-                if($data->user->is_vendor != 2){
-                    unset($collection[$key]);
-                }
-            }
+            // if($data->user_id != 0){
+            //     if($data->user->is_vendor != 2){
+            //         unset($collection[$key]);
+            //     }
+            // }
             if(isset($_GET['max'])){
                  if($data->vendorSizePrice() >= $_GET['max']) {
                     unset($collection[$key]);
@@ -197,9 +197,9 @@ class Product extends Model
         });
         $price = $this->price;
 
-        if($this->user_id != 0){
-        $price = $this->price + $gs->fixed_commission + ($this->price/100) * $gs->percentage_commission ;
-        }
+        // if($this->user_id != 0){
+        // $price = $this->price + $gs->fixed_commission + ($this->price/100) * $gs->percentage_commission ;
+        // }
 
         if(!empty($this->size) && !empty($this->size_price)){
             $price += $this->size_price[0];
@@ -244,7 +244,7 @@ class Product extends Model
  
 
 
-        $price = round(($price) * $curr->value,2);
+        // $price = round(($price) * $curr->value,2);
         if($gs->currency_format == 0){
             return $curr->sign.$price;
         }
@@ -306,7 +306,7 @@ class Product extends Model
             return DB::table('currencies')->where('is_default','=',1)->first();
         });
     }
-        $price = round($price * $curr->value,2);
+      //  $price = round($price * $curr->value,2);
         if($gs->currency_format == 0){
             return $curr->sign.$price;
         }
@@ -383,10 +383,15 @@ class Product extends Model
     }
 
     public function showName() {
-        if(Session::get('language')==2) 
-        $name = mb_strlen( $this->name_ar,'utf-8') > 55 ? mb_substr( $this->name_ar,0,55,'utf-8').'...' :  $this->name_ar; 
-         else
-         $name = mb_strlen($this->name_en,'utf-8') > 55 ? mb_substr($this->name_en,0,55,'utf-8').'...' : $this->name_en;
+        if(Session::get('language')==2) {
+            $name = mb_strlen( $this->name_ar,'utf-8') > 55 ? mb_substr( $this->name_ar,0,55,'utf-8').'...' :  $this->name_ar; 
+
+        }
+         else 
+         {
+            $name = mb_strlen($this->name_en,'utf-8') > 55 ? mb_substr($this->name_en,0,55,'utf-8').'...' : $this->name_en;
+
+         }
         return $name;
     }
 
@@ -480,6 +485,15 @@ class Product extends Model
         return explode(',', $value);
     }
 
+    public function getMetaTagArAttribute($value)
+    {
+        if($value == null)
+        {
+            return '';
+        }
+        return explode(',', $value);
+    }
+
     public function getFeaturesAttribute($value)
     {
         if($value == null)
@@ -541,4 +555,22 @@ class Product extends Model
     }
 
 
+    private function slug_name($separator = '-')
+    {
+        if(!empty($this->name_en)) {
+            $string = trim($this->name_en);
+        } else if(!empty($this->name_ar)) {
+            $string = trim($this->name_ar);
+        }
+        $string = mb_strtolower($string, 'UTF-8');
+
+        $string = preg_replace("/[^\\pL\\pN]+/u", " ", $string);
+        
+        // Remove multiple dashes or whitespaces
+        $string = preg_replace("/[\s-]+/", " ", $string);
+        // Convert whitespaces and underscore to the given separator
+        $string = preg_replace("/[\s_]/", $separator, $string);
+
+       return rawurldecode($string);
+    }
 }

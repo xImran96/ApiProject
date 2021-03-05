@@ -32,13 +32,19 @@ class CategoriesController extends Controller
             if(!$user){
                 return response()->json(['status'=>'Access token is missing or invalid, request new one 401']);  
             }
-            $products = ImportProduct::where('user_id',$user->id)->get();
+            $products = $user->myProducts;
             if(!$products)
             {
                 return response()->json(['status'=>'Not Found 404', 'Categories'=>`Does not exist`]);  
             }
             foreach($products as $product){
-                array_push($category,$product->category);
+                $check = in_array($product->category, $category);
+                if($check != true){
+                    array_push($category,$product->category);
+                }
+                
+                
+                
                  
             }
             

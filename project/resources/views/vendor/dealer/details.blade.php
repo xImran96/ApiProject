@@ -291,6 +291,7 @@
                                     <th>{{ $langg->lang539 }}</th>
                                     <th>Qty</th>
                                     <th>Price</th>
+                                    <th>Drop-Shipping Price</th>
                                     <th>{{ $langg->lang574 }}</th>
                                 
 
@@ -308,26 +309,29 @@
                                                                         
                                                                         @php
 
-
-                                                                            $product = auth()->user()->myProducts()->where('product_id', $item['item_id'])->first();
- 
+                                                                            $ip_prod = App\ImportProduct::find($item['item_id']); 
+                                                                            
+                                                                            
                                                                             
                                                                         @endphp
 
-                                                                        <td>{{ $product->status ?? 'not available' }}</td>
+                                                                        <td>{{ $ip_prod->status ?? 'not available' }}</td>
                                                                         <td>
-                                                                            {{ $product->name_en ?? 'not available' }}
+                                                                            {{ $ip_prod->name_en ?? 'not available' }}
                                                                         </td>
 
                                                                         <td></td>
                                                                         <td>{{ $item['qty'] }}</td>
                                                                         <td>
-                                                                            {{ $product->price ?? 'not available' }}
+                                                                            {{ $ip_prod->price ?? 'not available' }} {{ $order->currency_sign}}
+                                                                        </td>
+                                                                        <td>
+                                                                            {{ $ip_prod->new_price ?? 'not available' }} {{ $order->currency_sign}}
                                                                         </td>
 
                                                                         <td>
 
-                                                                            {{ $product->price*$item['qty'] }}
+                                                                            {{ $ip_prod->new_price * $item['qty'] }} {{ $order->currency_sign}}
 
 
                                                             

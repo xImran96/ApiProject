@@ -137,6 +137,26 @@
 										</div>
 									</div>
 		
+<<<<<<< HEAD
+=======
+
+									<div class="row">
+										<div class="col-lg-12">
+											<div class="left-area">
+													<h4 class="heading">{{ __('suppliers') }}*</h4>
+											</div>
+										</div>
+										<div class="col-lg-12">
+												<select id="user_id" name="user_id" required="">
+														<option>{{ __('Select suppliers') }}</option>
+
+								  @foreach($vendors as $vendor)
+									  <option  value="{{$vendor->id}}" >   {{ $vendor->shop_name }}</option>
+								  @endforeach
+												 </select>
+										</div>
+									</div>
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
 									<div class="row">
 										<div class="col-lg-12">
 											<div class="left-area">
@@ -515,7 +535,11 @@
 											<div class="col-lg-12">
 												<div class="left-area">
 													<h4 class="heading">
+<<<<<<< HEAD
 														{{ __('Meta Description') }} *
+=======
+														{{ __('Meta Description') }} 
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
 													</h4>
 												</div>
 											</div>
@@ -526,7 +550,41 @@
 												</div>
 											</div>
 										</div>
+<<<<<<< HEAD
 									</div>
+=======
+
+										<div class="row">
+											<div class="col-lg-12">
+												<div class="left-area">
+													<h4 class="heading">{{ __('Meta Tags') }}  * {{$langg->product_by_arabic}}</h4>
+												</div>
+											</div>
+											<div class="col-lg-12">
+												<ul id="metatags_ar" class="myTags">
+												</ul>
+											</div>
+										</div>
+		
+										<div class="row">
+											<div class="col-lg-12">
+												<div class="left-area">
+													<h4 class="heading">
+														{{ __('Meta Description') }} *{{$langg->product_by_arabic}}
+													</h4>
+												</div>
+											</div>
+											<div class="col-lg-12">
+												<div class="text-editor">
+													<textarea name="meta_description_ar" class="input-field"
+														placeholder="{{ __('Meta Description') }}"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+
+							
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
 	
 									<div class="row">
 										<div class="col-lg-12 text-center">

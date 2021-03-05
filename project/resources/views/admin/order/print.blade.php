@@ -147,7 +147,11 @@ html {
                                                 </p>
                                                 @endif
                                                 <p>
+<<<<<<< HEAD
                                                         <strong>{{ __('Price') }} :</strong> {{$order->currency_sign}}{{ $product['item_price'] * $order->currency_value , 2) }}
+=======
+                                                        <strong>{{ __('Price') }} :</strong> {{ App\Models\Product::convertPrice($product['item_price']) }}
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
                                                 </p>
                                                <p>
                                                     <strong>{{ __('Qty') }} :</strong> {{$product['qty']}} {{ $product['item']['measure'] }}

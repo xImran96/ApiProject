@@ -23,6 +23,7 @@
                         <div class="product-area">
                             <div class="row">
                                 <div class="col-lg-12">
+                                  
                                     <div class="mr-table allproduct">
                                         @include('includes.form-success') 
 
@@ -333,7 +334,7 @@
                       @if(count(auth()->user()->myProducts->where('product_id' , $productt->id)) == 0)
 
                      <li class="addtocart">
-                        <a id="qaddcrt" href="{{ route('import.product', $productt->id) }}">
+                        <a id="qaddcrt" onclick="return confirm('Are You Sure!')" href="{{ route('import.product', $productt->id) }}">
                           <i class="icofont-cart"></i>Import Product
                         </a>
                       </li>

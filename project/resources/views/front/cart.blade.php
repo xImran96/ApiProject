@@ -46,12 +46,20 @@
                     @if(Session::has('cart'))
 
                     @foreach($products as $product)
+<<<<<<< HEAD
+=======
+                    <?php $productt = App\Models\Product::find($product['item']['id']) ?>
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
 
                     <tr class="cremove{{ $product['item']['id'].$product['size'].$product['color'].str_replace(str_split(' ,'),'',$product['values']) }}">
                       <td class="product-img">
                         <div class="item">
                           <img src="{{ $product['item']['photo'] ? asset('assets/images/products/'.$product['item']['photo']):asset('assets/images/noimage.png') }}" alt="">
+<<<<<<< HEAD
                           <p class="name"><a href="{{ route('front.product', $product['item']['slug']) }}">{{mb_strlen($product['item']['name'],'utf-8') > 35 ? mb_substr($product['item']['name'],0,35,'utf-8').'...' : $product['item']['name']}}</a></p>
+=======
+                          <p class="name"><a href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}">{{mb_strlen($product['item']['name'],'utf-8') > 35 ? mb_substr($product['item']['name'],0,35,'utf-8').'...' : $product['item']['name']}}</a></p>
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
                         </div>
                       </td>
                                             <td>
@@ -280,7 +288,12 @@ if(qty<min_order_qty)
                 url:mainurl+"/reducebyone",
                 data:{id:pid,itemid:itemid,size_qty:size_qty,size_price:size_price},
                 success:function(data){
+<<<<<<< HEAD
               
+=======
+              if(data[0]!=-1)
+                {
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
                     $(".discount").html($("#d-val").val());
                     $(".cart-total").html(data[0]);
                     $(".main-total").html(data[3]);
@@ -289,7 +302,12 @@ if(qty<min_order_qty)
                     $("#prct"+itemid).html(data[4]);
                     $("#cqt"+itemid).html(data[1]);
                     $("#qty"+itemid).html(data[1]);
+<<<<<<< HEAD
                   }
+=======
+                  } 
+                }
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
           });
      }
     //  $('.xloader').addClass('d-none');

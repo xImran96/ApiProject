@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
 use App\Models\Log;
+use Session;
 
 use Validator;
 
@@ -29,8 +30,6 @@ class LoginController extends Controller
                   'email'   => 'required|email',
                   'password' => 'required'
                 ];
-
-         // dd($request->all());       
 
         $validator = Validator::make($request->all(), $rules);
         

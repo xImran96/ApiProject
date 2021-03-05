@@ -8,7 +8,9 @@ use App\Models\DealerOrder;
 use App\Models\DealerOrderDetail;
 use App\Models\User;
 use DB;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Log;
+use App\Models\Currency;
 use Illuminate\Support\Str;
 
 class VendorOrdersController extends Controller
@@ -68,8 +70,22 @@ class VendorOrdersController extends Controller
     public function store(Request $request)
     {
 
-             // dd($request->cart['items']);
+        
+           $validator = Validator::make($request->all(), [
+                'cart' => 'required',
+                'shipping' => 'required',
+                'shipping_details'=>'required',
+                'customer'=>'required',
+                'totalQty' => 'required',
+                'pay_amount' => 'required',
 
+           ]);
+
+            if ($validator->fails()) {
+                    
+                return response()->json($validator->errors());
+
+            }
             $myArray =[];
 
             for ($i=0; $i < count($request->cart['items']) ; $i++) { 
@@ -84,7 +100,10 @@ class VendorOrdersController extends Controller
             // dd($myArray2);
             $user = User::where('token', $this->userToken())->first();
 
-    
+            $currency = Currency::where('name', 'SAR')->first();
+
+
+    // dd($request->all());
         try{
 
 
@@ -121,10 +140,10 @@ class VendorOrdersController extends Controller
         $order->coupon_code = $request->coupon_code;
         $order->coupon_discount = $request->coupon_discount ;
         $order->status = $request->status;
-        $order->currency_sign = $request->currency['sign'];
-        $order->currency_value = $request->currency['value'];
-        $order->shipping_cost =  $request->shipping_cost;
-        $order->packing_cost = $request->packing_cost;
+        $order->currency_sign = $currency->sign;
+        $order->currency_value = $currency->value;
+        $order->shipping_cost =  0;
+        $order->packing_cost = 0;
         $order->tax = 0;
         $order->dp = $request->dp;
         $order->pay_id =  $request->pay_id;

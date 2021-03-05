@@ -6,8 +6,14 @@
       <div class="row">
         @include('includes.user-dashboard-sidebar')
                 <div class="col-lg-8">
+<<<<<<< HEAD
 <div class="user-profile-details">                     
         <div class="account-info">
+=======
+<div class="user-profile-details">
+                        
+<div class="account-info">
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
                             <div class="header-area">
                                 <h4 class="title">
                                     {{ $langg->lang409 }} <a class="mybtn1" href="{{route('user-package')}}"> <i class="fas fa-arrow-left"></i> {{ $langg->lang410 }}</a>

@@ -1,29 +1,64 @@
 @extends('layouts.front')
 
 @section('content')
+<?php preg_match_all("/(\d+)/", $productt->showPrice(), $price) ?>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": "{{ Session::get('language') != 1 ? $productt->name_ar : $productt->name_en }}",
+@if(count($productt->galleries) == 0)
+  "image": "{{filter_var($productt->photo, FILTER_VALIDATE_URL) ?$productt->photo:asset('assets/images/products/'.$productt->photo)}}",
+@else
+  "image": [
+    @foreach($productt->galleries as $gal)
+    "{{ asset('assets/images/galleries/'.$gal->photo) }}",
+    @endforeach
+    "{{filter_var($productt->photo, FILTER_VALIDATE_URL) ?$productt->photo:asset('assets/images/products/'.$productt->photo)}}"
+  ],
+@endif
+  "description": "{{ trim(preg_replace('/\s\s+/', ' ', strip_tags(html_entity_decode($productt->meta_description != null ? $productt->meta_description : $productt->description)))) }}",
+  "sku": "{{ $productt->sku }}",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ App\Models\Rating::ratings($productt->id) / 20 }}",
+    "reviewCount": "{{ count($productt->ratings) }}"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ route('front.product', [$productt->id, $productt->slug_name]) }}",
+    "priceCurrency": "{{ strtoupper($curr->name) }}",
+    "price": "{{ $price[0][0].'.00' }}",
+    "itemCondition": "{{ $productt->product_condition == 2 ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition' }}",
+    "availability": "{{ $productt->emptyStock() ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock' }}"
+  }
+}
+</script>
 
 <div class="breadcrumb-area">
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
-        <ul class="pages">
+        <ul class="pages" itemscope itemtype="http://schema.org/BreadcrumbList">
 
-          <li><a href="{{route('front.index')}}">{{ $langg->lang17 }}</a></li>
-          <li><a href="{{route('front.category',$productt->category->slug)}}">{{$productt->category->name}}</a></li>
+          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a href="{{route('front.index')}}" itemprop="item"><span itemprop="name">{{ $langg->lang17 }}</span></a><meta itemprop="position" content="1"></li>
+          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a href="{{route('front.category',$productt->category->slug)}}" itemprop="item"><span itemprop="name">{{$productt->category->name}}</span></a><meta itemprop="position" content="2"></li>
           @if($productt->subcategory_id != null)
-          <li><a
-              href="{{ route('front.subcat',['slug1' => $productt->category->slug, 'slug2' => $productt->subcategory->slug]) }}">{{$productt->subcategory->name}}</a>
+          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a
+              href="{{ route('front.subcat',['slug1' => $productt->category->slug, 'slug2' => $productt->subcategory->slug]) }}" itemprop="item"><span itemprop="name">{{$productt->subcategory->name}}</span></a>
+              <meta itemprop="position" content="3">
           </li>
           @endif
           @if($productt->childcategory_id != null)
-          <li><a
-              href="{{ route('front.childcat',['slug1' => $productt->category->slug, 'slug2' => $productt->subcategory->slug, 'slug3' => $productt->childcategory->slug]) }}">{{$productt->childcategory->name}}</a>
+          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a
+              href="{{ route('front.childcat',['slug1' => $productt->category->slug, 'slug2' => $productt->subcategory->slug, 'slug3' => $productt->childcategory->slug]) }}" itemprop="item"><span itemprop="name">{{$productt->childcategory->name}}</span></a>
+              <meta itemprop="position" content="{{ $productt->subcategory_id != null ? '4' : '3' }}">
           </li>
           @endif
           
-          <li><a href="{{ route('front.product', $productt->slug) }}">@if(Session::get('language')==2) {{$productt->name_ar}} @else {{$productt->name_en}} @endif   </a>
-         
-          <p>   </p>
+          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}" itemprop="item"><span itemprop="name">@if(Session::get('language') != 1) {{$productt->name_ar}} @else {{$productt->name_en}} @endif</span></a>
+            <meta itemprop="position" content="{{ $productt->subcategory_id != null ? ($productt->childcategory_id != null ? '5' : '4') : '3' }}">
+          </li>
         </ul>
       </div>
     </div>
@@ -31,7 +66,18 @@
 </div>
 
 <!-- Product Details Area Start -->
-<section class="product-details-page">
+<section class="product-details-page" itemscope itemtype="https://schema.org/Product">
+  <div itemprop="offers" itemtype="http://schema.org/Offer" itemscope>
+      <meta itemprop="url" content="{{ route('front.product', [$productt->id, $productt->slug_name]) }}" />
+      <meta itemprop="availability" content="{{ $productt->emptyStock() ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock' }}" />
+      <meta itemprop="priceCurrency" content="{{ strtoupper($curr->name) }}" />
+      <meta itemprop="itemCondition" content="{{ $productt->product_condition == 2 ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition' }}" />
+      <meta itemprop="price" content="{{ $price[0][0].'.00' }}" />
+  </div>
+  <div itemprop="aggregateRating" itemtype="http://schema.org/AggregateRating" itemscope>
+      <meta itemprop="reviewCount" content="{{ count($productt->ratings) }}" />
+      <meta itemprop="ratingValue" content="{{ App\Models\Rating::ratings($productt->id) / 20 }}" />
+  </div>
   <div class="container">
     <div class="row">
     <div class="col-lg-{{ $gs->reg_vendor == 1 ? '9' : '12' }}">
@@ -40,20 +86,20 @@
             <div class="col-lg-5 col-md-12">
 
           <div class="xzoom-container">
-              <img class="xzoom5" id="xzoom-magnific" src="{{filter_var($productt->photo, FILTER_VALIDATE_URL) ?$productt->photo:asset('assets/images/products/'.$productt->photo)}}" xoriginal="{{filter_var($productt->photo, FILTER_VALIDATE_URL) ?$productt->photo:asset('assets/images/products/'.$productt->photo)}}" />
+              <img class="xzoom5" id="xzoom-magnific" src="{{filter_var($productt->photo, FILTER_VALIDATE_URL) ?$productt->photo:asset('assets/images/products/'.$productt->photo)}}" xoriginal="{{filter_var($productt->photo, FILTER_VALIDATE_URL) ?$productt->photo:asset('assets/images/products/'.$productt->photo)}}" alt="{{ Session::get('language') != 1 ? $productt->name_ar : $productt->name_en }}" title="{{ Session::get('language') != 1 ? $productt->name_ar : $productt->name_en }}" itemprop="image" />
               <div class="xzoom-thumbs">
 
                 <div class="all-slider">
 
                     <a href="{{filter_var($productt->photo, FILTER_VALIDATE_URL) ?$productt->photo:asset('assets/images/products/'.$productt->photo)}}">
-                  <img class="xzoom-gallery5" width="80" src="{{filter_var($productt->photo, FILTER_VALIDATE_URL) ?$productt->photo:asset('assets/images/products/'.$productt->photo)}}" title="The description goes here">
+                  <img class="xzoom-gallery5" width="80" src="{{filter_var($productt->photo, FILTER_VALIDATE_URL) ?$productt->photo:asset('assets/images/products/'.$productt->photo)}}" alt="{{ Session::get('language') != 1 ? $productt->name_ar : $productt->name_en }}" title="{{ Session::get('language') != 1 ? $productt->name_ar : $productt->name_en }}">
                     </a>
 
                 @foreach($productt->galleries as $gal)
 
 
                     <a href="{{asset('assets/images/galleries/'.$gal->photo)}}">
-                  <img class="xzoom-gallery5" width="80" src="{{asset('assets/images/galleries/'.$gal->photo)}}" title="The description goes here">
+                  <img class="xzoom-gallery5" width="80" src="{{asset('assets/images/galleries/'.$gal->photo)}}" alt="{{ Session::get('language') != 1 ? $gal->name_ar : $gal->name_en }}" title="{{ Session::get('language') != 1 ? $gal->name_ar : $gal->name_en }}" itemprop="image">
                     </a>
 
                 @endforeach
@@ -68,7 +114,7 @@
             <div class="col-lg-7">
               <div class="right-area">
                 <div class="product-info">
-                  <h4 class="product-name">@if(Session::get('language')==2) {{$productt->name_ar}} @else {{$productt->name_en}} @endif</h4>
+                  <h1 class="product-name" itemprop="name">@if(Session::get('language')==1) {{$productt->name_en}} @else {{$productt->name_ar}} @endif</h1>
                   <div class="info-meta-1">
                     <ul>
 
@@ -311,62 +357,7 @@
                       </li>
                       @endif
 
-
-                      @if(auth()->user())
-                      @if(count(auth()->user()->myProducts->where('product_id' , $productt->id)) == 0)
-
-                                 <li class="addtocart">
-                                    <button class="btn-warning btn" data-toggle="modal" data-target="#exampleModal">
-                                      <i class="icofont-cart"></i> Import Product
-                                  </button>
-                                </li>
-                                @endif
-                          @endif      
-
                       @endif
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Import Product</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-          <form method="POST" action="{{ route('imports.store') }}">
-            @csrf
-            <input type="hidden" name="product_id" value="{{ $productt->id }}">
-            <div>
-                <label>Name</label>
-                <h4>@if(Session::get('language')==2) {{$productt->name_ar}} @else {{$productt->name_en}} @endif</h4>
-            </div>
-
-            <div class="form-group">
-                <label>Profit %</label>
-                <input type="number" name="profit" class="form-control" required="required">
-            </div>
-
-            <div>
-             <button type="submit" class="btn btn-primary">Import Product</button>
-             </div>
-
-          </form>  
-      
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-       
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
 
                       @if(Auth::guard('web')->check())
                       <li class="favorite">
@@ -416,7 +407,7 @@
                   @endif
                   @if( $productt->sku != null )
                   <p class="p-sku">
-                    {{ $langg->lang77 }}: <span class="idno">{{ $productt->sku }}</span>
+                    {{ $langg->lang77 }}: <span class="idno" itemprop="sku">{{ $productt->sku }}</span>
                   </p>
                   @endif
       @if($gs->is_report)
@@ -462,8 +453,8 @@
                       </ul>
                     </div>
                     <div class="tab-content-wrapper">
-                      <div id="tabs-1" class="tab-content-area">
-                        <p> @if(Session::get('language')==2) {{$productt->details_ar}} @else {{$productt->details_en}} @endif </p>
+                      <div id="tabs-1" class="tab-content-area" itemprop="description">
+                        <p> @if(Session::get('language')==1) {{$productt->details_en}} @else {{$productt->details_ar}} @endif </p>
                       </div>
                       <div id="tabs-2" class="tab-content-area">
                         <p>{!! $productt->policy !!}</p>
@@ -1064,7 +1055,10 @@ $('.qtminus').click(function(){
 
   var qty = $('.qttotal').html();
   var min_order=1;
+<<<<<<< HEAD
   
+=======
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
     @if($productt->min_order_qty) 
   min_order =  {{$productt->min_order_qty}}
   if(min_order+1 >= qty)

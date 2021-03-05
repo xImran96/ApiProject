@@ -247,6 +247,10 @@
                                     </thead>
                                     <tbody>
                                         @foreach($cart->items as $product)
+<<<<<<< HEAD
+=======
+                                        <?php $productt = App\Models\Product::find($product['item']['id']) ?>
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
                                         <tr>
                                             <td>{{ $product['item']['id'] }}</td>
                                             <td>
@@ -258,15 +262,26 @@
                                                 @endphp
                                                 @if(isset($user))
                                                 <a target="_blank"
+<<<<<<< HEAD
                                                     href="{{ route('front.product', $product['item']['slug']) }}">{{mb_strlen($product['item']['name'],'utf-8') > 30 ? mb_substr($product['item']['name'],0,30,'utf-8').'...' : $product['item']['name']}}</a>
                                                 @else
                                                 <a target="_blank"
                                                     href="{{ route('front.product', $product['item']['slug']) }}">{{mb_strlen($product['item']['name'],'utf-8') > 30 ? mb_substr($product['item']['name'],0,30,'utf-8').'...' : $product['item']['name']}}</a>
+=======
+                                                    href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}">{{mb_strlen($product['item']['name'],'utf-8') > 30 ? mb_substr($product['item']['name'],0,30,'utf-8').'...' : $product['item']['name']}}</a>
+                                                @else
+                                                <a target="_blank"
+                                                    href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}">{{mb_strlen($product['item']['name'],'utf-8') > 30 ? mb_substr($product['item']['name'],0,30,'utf-8').'...' : $product['item']['name']}}</a>
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
                                                 @endif
                                                 @else
 
                                                 <a target="_blank" class="d-block"
+<<<<<<< HEAD
                                                     href="{{ route('front.product', $product['item']['slug']) }}">{{mb_strlen($product['item']['name'],'utf-8') > 30 ? mb_substr($product['item']['name'],0,30,'utf-8').'...' : $product['item']['name']}}</a>
+=======
+                                                    href="{{ route('front.product', [$productt->id, $productt->slug_name]) }}">{{mb_strlen($product['item']['name'],'utf-8') > 30 ? mb_substr($product['item']['name'],0,30,'utf-8').'...' : $product['item']['name']}}</a>
+>>>>>>> b97def46f19189690be84a036e8aa6c8f17e4aa6
 
                                                 @endif
                                                 @if($product['item']['type'] != 'Physical')

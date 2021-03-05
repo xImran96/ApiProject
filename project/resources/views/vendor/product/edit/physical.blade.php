@@ -54,7 +54,7 @@
 											</div>
 										</div>
 										<div class="col-lg-12">
-											<input type="text" class="input-field" placeholder="{{ $langg->lang632 }}" name="name_en" required="" value="{{ $data->getTranslation('name','en') }}">
+											<input type="text" class="input-field" placeholder="{{ $langg->lang632 }}" name="name_en" required="" value="{{ $data->name_en }}">
 										</div>
 
 									</div>
@@ -62,11 +62,11 @@
 										<div class="col-lg-12">
 											<div class="left-area">
 													<h4 class="heading">{{ $langg->lang632 }}* </h4>
-													<p class="sub-heading">{{ $langg->product_by_arabic }}</p>
+													<p class="sub-heading"></p>
 											</div>
 										</div>
 									<div class="col-lg-12">
-										<input type="text" class="input-field" placeholder="{{ $langg->lang632 }}" name="name_ar" required="" value="{{ $data->getTranslation('name','ar') }}">
+										<input type="text" class="input-field" placeholder="{{ $langg->lang632 }}" name="name_ar" required="" value="{{ $data->name_ar }}">
 									</div>
 									</div>
 									<div class="row">
@@ -107,7 +107,7 @@
 
 
 									</div>
-
+								
 									<div class="row">
 										<div class="col-lg-12">
 											<div class="left-area">
@@ -136,11 +136,11 @@
 													<option value="">{{ $langg->lang639 }}</option>
 										  @if($data->subcategory_id == null)
 										  @foreach($data->category->subs as $sub)
-										  <option data-href="{{ route('vendor-childcat-load',$sub->id) }}" value="{{$sub->id}}" >{{$sub->name}}</option>
+										  <option data-href="{{ route('vendor-childcat-load',$sub->id) }}" value="{{$sub->id}}" >  @if(Session::get('language')==2)   {{ $sub->name_ar }} @else  {{ $sub->name_en }} @endif   </option>
 										  @endforeach
 										  @else
 										  @foreach($data->category->subs as $sub)
-										  <option data-href="{{ route('vendor-childcat-load',$sub->id) }}" value="{{$sub->id}}" {{$sub->id == $data->subcategory_id ? "selected":""}} >{{$sub->name}}</option>
+										  <option data-href="{{ route('vendor-childcat-load',$sub->id) }}" value="{{$sub->id}}" {{$sub->id == $data->subcategory_id ? "selected":""}} > @if(Session::get('language')==2)   {{ $sub->name_ar }} @else  {{ $sub->name_en }} @endif </option>
 										  @endforeach
 										  @endif
 
@@ -675,7 +675,7 @@
 								<div class="row" id="stckprod">
 									<div class="col-lg-12">
 										<div class="left-area">
-											<h4 class="heading">{{ $langg->min_order_qty }}*</h4>
+											<h4 class="heading">*</h4>
 						
 										</div>
 									</div>
@@ -742,7 +742,7 @@
 										</div>
 										<div class="col-lg-12">
 											<div class="text-editor">
-												<textarea name="details" class="nic-edit-p">{{$data->getTranslation('details','en')}}</textarea>
+												<textarea name="details_en" class="nic-edit-p">{{$data->details_en}}</textarea>
 											</div>
 										</div>
 									</div>
@@ -751,13 +751,13 @@
 										<div class="col-lg-12">
 											<div class="left-area">
 												<h4 class="heading">
-														{{ $langg->lang680 }}* {{$langg->product_by_arabic}}
+														{{ $langg->lang680 }}* 
 												</h4>
 											</div>
 										</div>
 										<div class="col-lg-12">
 											<div class="text-editor">
-												<textarea name="details_ar" class="nic-edit-p">{{$data->getTranslation('details','ar')}}</textarea>
+												<textarea name="details_ar" class="nic-edit-p">{{$data->details_ar}}</textarea>
 											</div>
 										</div>
 									</div>

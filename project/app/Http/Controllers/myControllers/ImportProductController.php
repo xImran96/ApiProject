@@ -28,7 +28,9 @@ class ImportProductController extends Controller
 {
    public function showMyProducts()
    {
-      return view('layouts.My-product.myProduct');
+      $myProducts = auth()->user()->myProducts->paginate(10);
+      // dd($myProducts);
+      return view('layouts.My-product.myProduct', compact('myProducts'));
    }
     public function importProduct(Request $req)
     { 

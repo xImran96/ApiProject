@@ -28,13 +28,6 @@
                 </a>
               </li>
               
-              <li class="{{ $link == route('imports.index') ? 'active':'' }}">
-                <a href="{{ route('imports.index') }}">
-                  <!-- {{ $langg->lang200 }} -->
-                  My Products
-                </a>
-              </li>
-              
               @if(Auth::user()->IsVendor())
                 <li>
                   <a href="{{ route('vendor-dashboard') }}">

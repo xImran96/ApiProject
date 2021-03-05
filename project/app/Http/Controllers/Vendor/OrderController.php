@@ -62,6 +62,7 @@ class OrderController extends Controller
         }
      
         $cart = unserialize(bzdecompress(utf8_decode($order->cart)));
+        // dd($cart);
         return view('vendor.order.details', compact('user','installments', 'order', 'cart', 'bronze', 'sliver', 'gold', 'platinum', 'order_number', 'order_value', 'last_post_paid_date'));
     }
 
@@ -134,7 +135,9 @@ class OrderController extends Controller
         } else {
             return ['success' => true, 'message' => 3, 'total' => $cart_product_value];
         }
-        dd(unserialize(bzdecompress(utf8_decode($request->input('items')))));
+        // dd(unserialize(bzdecompress(utf8_decode($request->input('items')))));
+
+
     }
 
     public function saveinstallment(Request $request)
@@ -173,16 +176,14 @@ class OrderController extends Controller
 
     public function status($slug, $status)
     {
-    
         $mainorder = VendorOrder::where('order_number', '=', $slug)->first();
-                if ($mainorder->status == "completed") {
-                    return redirect()->back()->with('success', 'This Order is Already Completed');
-                } else {
+        if ($mainorder->status == "completed") {
+            return redirect()->back()->with('success', 'This Order is Already Completed');
+        } else {
 
             $user = Auth::user();
             $order = VendorOrder::where('order_number', '=', $slug)->where('user_id', '=', $user->id)->update(['status' => $status]);
             return redirect()->route('vendor-order-index')->with('success', 'Order Status Updated Successfully');
         }
     }
-
 }

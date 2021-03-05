@@ -7,98 +7,113 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
-          <ul class="pages">
+          <ul class="pages" itemscope itemtype="http://schema.org/BreadcrumbList">
 
           {{-- Category Breadcumbs --}}
 
           @if(isset($bcat))
                 
-              <li>
-                <a href="{{ route('front.index') }}">
-                  {{ $langg->lang17 }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="{{ route('front.index') }}" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang17 }}</span>
                 </a>
+                <meta itemprop="position" content="1">
               </li>
-              <li>
-                <a href="{{ route('front.blog') }}">
-                  {{ $langg->lang18 }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="{{ route('front.blog') }}" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang18 }}</span>
                 </a>
+                <meta itemprop="position" content="2">
               </li>
-              <li>
-                <a href="{{ route('front.blogcategory',$bcat->slug) }}">
-                  {{ $bcat->name }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="{{ route('front.blogcategory',$bcat->slug) }}" itemprop="item">
+                  <span itemprop="name">{{ $bcat->name }}</span>
                 </a>
+                <meta itemprop="position" content="3">
               </li>
 
           @elseif(isset($slug))
 
-              <li>
-                <a href="{{ route('front.index') }}">
-                  {{ $langg->lang17 }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="{{ route('front.index') }}" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang17 }}</span>
                 </a>
+                <meta itemprop="position" content="1">
               </li>
-              <li>
-                <a href="{{ route('front.blog') }}">
-                  {{ $langg->lang18 }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="{{ route('front.blog') }}" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang18 }}</span>
                 </a>
+                <meta itemprop="position" content="2">
               </li>
-              <li>
-                <a href="{{ route('front.blogtags',$slug) }}">
-                  {{ $langg->lang35 }}: {{ $slug }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="{{ route('front.blogtags',$slug) }}" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang35 }}: {{ $slug }}</span>
                 </a>
+                <meta itemprop="position" content="3">
               </li>
 
           @elseif(isset($search))
                 
-              <li>
-                <a href="{{ route('front.index') }}">
-                  {{ $langg->lang17 }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="{{ route('front.index') }}" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang17 }}</span>
                 </a>
+                <meta itemprop="position" content="1">
               </li>
-              <li>
-                <a href="{{ route('front.blog') }}">
-                  {{ $langg->lang18 }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="{{ route('front.blog') }}" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang18 }}</span>
                 </a>
+                <meta itemprop="position" content="2">
               </li>
-              <li>
-                <a href="Javascript:;">
-                  {{ $langg->lang36 }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="Javascript:;" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang36 }}</span>
                 </a>
+                <meta itemprop="position" content="3">
               </li>
-              <li>
-                <a href="Javascript:;">
-                  {{ $search }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="Javascript:;" itemprop="item">
+                  <span itemprop="name">{{ $search }}</span>
                 </a>
+                <meta itemprop="position" content="4">
               </li>
 
           @elseif(isset($date))
                 
-              <li>
-                <a href="{{ route('front.index') }}">
-                  {{ $langg->lang17 }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="{{ route('front.index') }}" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang17 }}</span>
                 </a>
+                <meta itemprop="position" content="1">
               </li>
-              <li>
-                <a href="{{ route('front.blog') }}">
-                  {{ $langg->lang18 }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="{{ route('front.blog') }}" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang18 }}</span>
                 </a>
+                <meta itemprop="position" content="2">
               </li>
-              <li>
-                <a href="Javascript:;">
-                  {{ $langg->lang37 }}: {{ date('F Y',strtotime($date)) }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="Javascript:;" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang37 }}: {{ date('F Y',strtotime($date)) }}</span>
                 </a>
+                <meta itemprop="position" content="3">
               </li>
 
           @else
                 
-              <li>
-                <a href="{{ route('front.index') }}">
-                  {{ $langg->lang17 }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="{{ route('front.index') }}" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang17 }}</span>
                 </a>
+                <meta itemprop="position" content="1">
               </li>
-              <li>
-                <a href="{{ route('front.blog') }}">
-                  {{ $langg->lang18 }}
+              <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a href="{{ route('front.blog') }}" itemprop="item">
+                  <span itemprop="name">{{ $langg->lang18 }}</span>
                 </a>
+                <meta itemprop="position" content="2">
               </li>
           @endif
 
@@ -112,6 +127,7 @@
   <!-- Blog Page Area Start -->
   <section class="blogpagearea">
     <div class="container">
+      <h1 style="text-align:center;font-size:30px">{{ $langg->lang18 }}</h1>
       <div id="ajaxContent">
 
       <div class="row">
@@ -121,7 +137,7 @@
               <div class="blog-box">
                 <div class="blog-images">
                     <div class="img">
-                    <img src="{{ $blogg->photo ? asset('assets/images/blogs/'.$blogg->photo):asset('assets/images/noimage.png') }}" class="img-fluid" alt="">
+                    <img src="{{ $blogg->photo ? asset('assets/images/blogs/'.$blogg->photo):asset('assets/images/noimage.png') }}" class="img-fluid" alt="{{ $blogg->title }}" title="{{ $blogg->title }}">
                     <div class="date d-flex justify-content-center">
                       <div class="box align-self-center">
                         <p>{{date('d', strtotime($blogg->created_at))}}</p>
@@ -131,7 +147,7 @@
                     </div>
                 </div>
                 <div class="details">
-                    <a href='{{route('front.blogshow',$blogg->id)}}'>
+                    <a href='{{route('front.blogshow', [$blogg->id, $blogg->slug_title])}}'>
                       <h4 class="blog-title">
                         {{mb_strlen($blogg->title,'utf-8') > 50 ? mb_substr($blogg->title,0,50,'utf-8')."...":$blogg->title}}
                       </h4>
@@ -139,7 +155,7 @@
                   <p class="blog-text">
                     {{substr(strip_tags($blogg->details),0,120)}}
                   </p>
-                  <a class="read-more-btn" href="{{route('front.blogshow',$blogg->id)}}">{{ $langg->lang38 }}</a>
+                  <a class="read-more-btn" href="{{route('front.blogshow', [$blogg->id, $blogg->slug_title])}}">{{ $langg->lang38 }}</a>
                 </div>
             </div>
         </div>
